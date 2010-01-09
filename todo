@@ -11,6 +11,7 @@
 	- advancecomp/advpng *
 	jpg:
 	- jpegoptim *
+	- libjpeg/jpegtran *
 	gif:
 	- optipng *
 	- gifsicle * (maybe)
