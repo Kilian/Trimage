@@ -1,1 +1,18 @@
 - Name project. (;))
+- make an index of available command line tools
+	All:
+	- imagemagick? *
+	png:
+	- optipng * (better version of pngcrush)
+	- pngnq *  (lossy, better version of pngquant)
+	- pngout http://www.jonof.id.au/kenutils
+	- pngcrush *
+	- pngquant * (lossy)
+	- advancecomp/advpng *
+	jpg:
+	- jpegoptim *
+	gif:
+	- optipng *
+	- gifsicle * (maybe)
+* = available in ubuntu
+
