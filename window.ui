@@ -6,73 +6,81 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>250</height>
+    <width>495</width>
+    <height>158</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>optimg</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QFrame" name="">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>680</width>
-      <height>230</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-      <horstretch>1</horstretch>
-      <verstretch>1</verstretch>
-     </sizepolicy>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <layout class="QGridLayout" name="gridLayout">
-       <property name="spacing">
-        <number>10</number>
-       </property>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="addfiles">
-         <property name="text">
-          <string>Add files</string>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QWidget" name="widget" native="true">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="horizontalSpacing">
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+         <property name="verticalSpacing">
+          <number>10</number>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>498</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="recompress">
-         <property name="text">
-          <string>Recompress</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QColumnView" name="processedfiles">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-        </widget>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="addfiles">
+           <property name="text">
+            <string>Add files</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>498</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="recompress">
+           <property name="text">
+            <string>Recompress</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="3">
+          <widget class="QColumnView" name="processedfiles">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>Drag files in here</string>
+           </property>
+           <property name="whatsThis">
+            <string>Drag files in here</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
-     </item>
-    </layout>
-   </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
