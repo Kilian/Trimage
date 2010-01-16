@@ -40,7 +40,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="">
+        <widget class="QFrame" name="frame">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
            <number>0</number>
@@ -70,11 +70,14 @@
                <string>Add file to the compression list</string>
               </property>
               <property name="text">
-               <string>Add files</string>
+               <string>&amp;Add files</string>
               </property>
               <property name="icon">
                <iconset>
                 <normaloff>list-add.png</normaloff>list-add.png</iconset>
+              </property>
+              <property name="shortcut">
+               <string>Alt+A</string>
               </property>
              </widget>
             </item>
@@ -126,11 +129,14 @@
                <string>Recompress selected images</string>
               </property>
               <property name="text">
-               <string>Recompress</string>
+               <string>&amp;Recompress</string>
               </property>
               <property name="icon">
                <iconset>
                 <normaloff>view-refresh.png</normaloff>view-refresh.png</iconset>
+              </property>
+              <property name="shortcut">
+               <string>Alt+R</string>
               </property>
               <property name="checkable">
                <bool>false</bool>
