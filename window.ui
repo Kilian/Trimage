@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>492</width>
+    <width>602</width>
     <height>170</height>
    </rect>
   </property>
@@ -70,7 +70,7 @@
                <string>Add file to the compression list</string>
               </property>
               <property name="text">
-               <string>&amp;Add files</string>
+               <string>&amp;Add and compress</string>
               </property>
               <property name="icon">
                <iconset>
@@ -92,7 +92,7 @@
                <enum>QFrame::Plain</enum>
               </property>
               <property name="text">
-               <string>Drag and drop files onto the table</string>
+               <string>Drag and drop images onto the table</string>
               </property>
               <property name="margin">
                <number>1</number>
