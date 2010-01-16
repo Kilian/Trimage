@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>446</width>
-    <height>176</height>
+    <width>492</width>
+    <height>170</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,6 +72,10 @@
               <property name="text">
                <string>Add files</string>
               </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>list-add.png</normaloff>list-add.png</iconset>
+              </property>
              </widget>
             </item>
             <item>
@@ -123,6 +127,10 @@
               </property>
               <property name="text">
                <string>Recompress</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>view-refresh.png</normaloff>view-refresh.png</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
