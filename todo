@@ -1,4 +1,3 @@
-- Name project. (;))
 - make an index of available command line tools
 	All:
 	- imagemagick? *
@@ -16,4 +15,7 @@
 	- optipng *
 	- gifsicle * (maybe)
 * = available in ubuntu
+
+trimage: simple gui for:
+optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dependencies (our primary platform)
 
