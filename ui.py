@@ -58,6 +58,7 @@ class Ui_trimage(object):
         icon.addPixmap(QtGui.QPixmap("list-add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addfiles.setIcon(icon)
         self.addfiles.setObjectName("addfiles")
+        self.addfiles.setAcceptDrops(True)
         self.horizontalLayout.addWidget(self.addfiles)
 
         self.label = QtGui.QLabel(self.frame)
@@ -90,6 +91,7 @@ class Ui_trimage(object):
         self.processedfiles = QtGui.QTableView(self.frame)
         self.processedfiles.setEnabled(True)
         self.processedfiles.setAcceptDrops(True)
+        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.processedfiles.setFrameShape(QtGui.QFrame.NoFrame)
         self.processedfiles.setFrameShadow(QtGui.QFrame.Plain)
         self.processedfiles.setLineWidth(0)

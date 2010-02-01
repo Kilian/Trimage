@@ -1,4 +1,5 @@
 import sys
+from os import system
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -14,14 +15,16 @@ class StartQT4(QMainWindow):
     self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"),  self); # todo use standardKey Quit.
     # set recompress to false
     self.ui.recompress.setEnabled(False)
-
     self.imagelist = []
 
     # connect signals with slots
     QObject.connect(self.ui.addfiles, SIGNAL("clicked()"), self.file_dialog)
     QObject.connect(self.ui.recompress, SIGNAL("clicked()"), self.recompress_files)
     QObject.connect(self.quit_shortcut, SIGNAL("activated()"), qApp, SLOT('quit()'))
+    QObject.connect(self.ui.processedfiles, SIGNAL("dragEnterEvent()"), self.file_drop)
 
+  def file_drop(self):
+    print "booya"
 
   def file_dialog(self):
     fd = QFileDialog(self)
@@ -40,29 +43,42 @@ class StartQT4(QMainWindow):
   def recompress_files(self):
     newimage = self.imagelist
     self.imagelist = []
-    for image in self.imagelist:
+    for image in newimage:
       self.compress_file(image[-1])
 
 
   def compress_file(self, filename):
+    print filename
     oldfile = QFileInfo(filename);
     name = oldfile.fileName()
     oldfilesize = oldfile.size()
 
     if name.endsWith("jpg"):
       print "run jpegoptim"
+      runfile = system('ls')
+
+    elif name.endsWith("png"):
+      runstr = 'optipng -force "' + str(filename) + '"'
+      runfile = system(runstr)
+
     else:
-      print "run optipng"
+      print "run something for gif"
+      runfile = system('ls')
 
-    newfile = oldfile # for now ;)
-    newfilesize = newfile.size()
-    newfilesizestr = size(newfilesize, system=alternative)
 
-    ratio = 100 - (newfilesize / oldfilesize * 100)
-    ratiostr = "%.1f%%" % ratio
+    if runfile == 0:
+      newfile = QFile(filename)
+      newfilesize = newfile.size()
+      newfilesizestr = size(newfilesize, system=alternative)
 
-    self.imagelist.append((name, newfilesizestr, ratiostr, filename))
-    self.update_table()
+      ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
+      ratiostr = "%.1f%%" % ratio
+
+      self.imagelist.append((name, newfilesizestr, ratiostr, filename))
+      self.update_table()
+
+    else:
+      print "uh. not good" #implement, something went wrong
 
 
   def update_table(self):
@@ -87,7 +103,8 @@ class StartQT4(QMainWindow):
     for row in range(nrows):
         tview.setRowHeight(row, 25)
     tview.setColumnWidth(0,400)
-
+    tview.setDragDropMode(QAbstractItemView.DropOnly)
+    tview.setAcceptDrops(True)
     self.enable_recompress()
 
 
