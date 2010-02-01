@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'window.ui'
 #
-# Created: Mon Feb  1 16:48:11 2010
+# Created: Mon Feb  1 19:37:17 2010
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,12 +13,15 @@ class Ui_trimage(object):
     def setupUi(self, trimage):
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
+
         self.centralwidget = QtGui.QWidget(trimage)
         self.centralwidget.setObjectName("centralwidget")
+
         self.gridLayout_2 = QtGui.QGridLayout(self.centralwidget)
         self.gridLayout_2.setMargin(0)
         self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setObjectName("gridLayout_2")
+
         self.widget = QtGui.QWidget(self.centralwidget)
         self.widget.setEnabled(True)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -27,20 +30,25 @@ class Ui_trimage(object):
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
         self.widget.setSizePolicy(sizePolicy)
         self.widget.setObjectName("widget")
+
         self.verticalLayout = QtGui.QVBoxLayout(self.widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setMargin(0)
         self.verticalLayout.setObjectName("verticalLayout")
+
         self.frame = QtGui.QFrame(self.widget)
         self.frame.setObjectName("frame")
+
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.frame)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setMargin(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setMargin(10)
         self.horizontalLayout.setObjectName("horizontalLayout")
+
         self.addfiles = QtGui.QPushButton(self.frame)
         font = QtGui.QFont()
         font.setPointSize(9)
@@ -51,6 +59,7 @@ class Ui_trimage(object):
         self.addfiles.setIcon(icon)
         self.addfiles.setObjectName("addfiles")
         self.horizontalLayout.addWidget(self.addfiles)
+
         self.label = QtGui.QLabel(self.frame)
         font = QtGui.QFont()
         font.setPointSize(8)
@@ -60,6 +69,7 @@ class Ui_trimage(object):
         self.label.setIndent(10)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
+
         spacerItem = QtGui.QSpacerItem(498, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.recompress = QtGui.QPushButton(self.frame)
@@ -67,14 +77,17 @@ class Ui_trimage(object):
         font.setPointSize(9)
         self.recompress.setFont(font)
         self.recompress.setCursor(QtCore.Qt.PointingHandCursor)
+
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("view-refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
         self.recompress.setIcon(icon1)
         self.recompress.setCheckable(False)
         self.recompress.setObjectName("recompress")
         self.horizontalLayout.addWidget(self.recompress)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
-        self.processedfiles = QtGui.QColumnView(self.frame)
+
+        self.processedfiles = QtGui.QTableView(self.frame)
         self.processedfiles.setEnabled(True)
         self.processedfiles.setAcceptDrops(True)
         self.processedfiles.setFrameShape(QtGui.QFrame.NoFrame)
@@ -87,6 +100,9 @@ class Ui_trimage(object):
         self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.processedfiles.setAlternatingRowColors(True)
         self.processedfiles.setTextElideMode(QtCore.Qt.ElideRight)
+        self.processedfiles.setShowGrid(True)
+        self.processedfiles.setGridStyle(QtCore.Qt.NoPen)
+        self.processedfiles.setSortingEnabled(True)
         self.processedfiles.setObjectName("processedfiles")
         self.verticalLayout_2.addWidget(self.processedfiles)
         self.verticalLayout.addWidget(self.frame)

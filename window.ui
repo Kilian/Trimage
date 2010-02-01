@@ -147,7 +147,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QColumnView" name="processedfiles">
+           <widget class="QTableView" name="processedfiles">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -190,6 +190,27 @@
             <property name="textElideMode">
              <enum>Qt::ElideRight</enum>
             </property>
+            <property name="showGrid">
+             <bool>true</bool>
+            </property>
+            <property name="gridStyle">
+             <enum>Qt::NoPen</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderHighlightSections">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderHighlightSections">
+             <bool>false</bool>
+            </attribute>
            </widget>
           </item>
          </layout>
