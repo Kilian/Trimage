@@ -1,25 +1,30 @@
 import sys
-from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+from hurry.filesize import *
+
 from ui import Ui_trimage
 
-class StartQT4(QtGui.QMainWindow):
+class StartQT4(QMainWindow):
   def __init__(self, parent=None):
-    QtGui.QWidget.__init__(self, parent)
+    QWidget.__init__(self, parent)
     self.ui = Ui_trimage()
     self.ui.setupUi(self)
-    self.quit_shortcut = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Q"),  self); # todo use standardKey Quit.
-
-    # connect signals with slots
-    QtCore.QObject.connect(self.ui.addfiles, QtCore.SIGNAL("clicked()"), self.file_dialog)
-    QtCore.QObject.connect(self.ui.recompress, QtCore.SIGNAL("clicked()"), self.recompress_files)
-    QtCore.QObject.connect(self.quit_shortcut, QtCore.SIGNAL("activated()"), QtGui.qApp, QtCore.SLOT('quit()'))
-
+    self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"),  self); # todo use standardKey Quit.
     # set recompress to false
     self.ui.recompress.setEnabled(False)
 
+    self.imagelist = []
+
+    # connect signals with slots
+    QObject.connect(self.ui.addfiles, SIGNAL("clicked()"), self.file_dialog)
+    QObject.connect(self.ui.recompress, SIGNAL("clicked()"), self.recompress_files)
+    QObject.connect(self.quit_shortcut, SIGNAL("activated()"), qApp, SLOT('quit()'))
+
 
   def file_dialog(self):
-    fd = QtGui.QFileDialog(self)
+    fd = QFileDialog(self)
     images = fd.getOpenFileNames(self,
                                  "Select one or more image files to compress",
                                  "", # directory
@@ -33,38 +38,91 @@ class StartQT4(QtGui.QMainWindow):
 
 
   def recompress_files(self):
-    # get list of currently processed files
-    # reprocess them
-    # update columnview
-    self.setWindowTitle("check too!")
+    newimage = self.imagelist
+    self.imagelist = []
+    for image in self.imagelist:
+      self.compress_file(image[-1])
 
 
   def compress_file(self, filename):
-    oldfile = QtCore.QFileInfo(filename);
+    oldfile = QFileInfo(filename);
     name = oldfile.fileName()
     oldfilesize = oldfile.size()
 
     if name.endsWith("jpg"):
-      self.jpg = True
-      # run jpegoptim
+      print "run jpegoptim"
     else:
-      self.jpg = False
-      #run optipng
+      print "run optipng"
 
-    newfile = oldfile
+    newfile = oldfile # for now ;)
     newfilesize = newfile.size()
+    newfilesizestr = size(newfilesize, system=alternative)
+
     ratio = 100 - (newfilesize / oldfilesize * 100)
-    ratio_str = "%.1f%%" % ratio
+    ratiostr = "%.1f%%" % ratio
 
-    # get new file size
-    # add to columnview name, newsize, ratio_str,
+    self.imagelist.append((name, newfilesizestr, ratiostr, filename))
+    self.update_table()
 
-  def add_to_tableview(self, filename, filesize, ratio):
-    # update table view with file info
-    self.setWindowTitle("check too!")
+
+  def update_table(self):
+    tview = self.ui.processedfiles
+
+    # set table model
+    tmodel = tri_table_model(self,
+                             self.imagelist,
+                             [' Filename ', ' Size ', ' Compressed '])
+    tview.setModel(tmodel)
+
+    # set minimum size of table
+    vh = tview.verticalHeader()
+    vh.setVisible(False)
+
+    # set horizontal header properties
+    hh = tview.horizontalHeader()
+    hh.setStretchLastSection(True)
+
+    # set all row heights
+    nrows = len(self.imagelist)
+    for row in range(nrows):
+        tview.setRowHeight(row, 25)
+    tview.setColumnWidth(0,400)
+
+    self.enable_recompress()
+
+
+class tri_table_model(QAbstractTableModel):
+  def __init__(self, parent, imagelist, header, *args):
+    """
+    mydata is list of tuples
+    header is list of strings
+    tuple length has to match header length
+    """
+    QAbstractTableModel.__init__(self, parent, *args)
+    self.imagelist = imagelist
+    self.header = header
+
+  def rowCount(self, parent):
+    return len(self.imagelist)
+
+  def columnCount(self, parent):
+    return len(self.header)
+
+  def data(self, index, role):
+    if not index.isValid():
+      return QVariant()
+    elif role != Qt.DisplayRole:
+      return QVariant()
+    return QVariant(self.imagelist[index.row()][index.column()])
+
+  def headerData(self, col, orientation, role):
+    if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+      return QVariant(self.header[col])
+    return QVariant()
+
 
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     myapp = StartQT4()
     myapp.show()
     sys.exit(app.exec_())
