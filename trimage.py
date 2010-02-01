@@ -37,7 +37,7 @@ class StartQT4(QtGui.QMainWindow):
     # update columnview
     self.setWindowTitle("check too!")
 
-  def compress_file(self, file):
+  def compress_file(self, filename):
     # check file extention
     # get file size
     # run correct command line tool and get reply
