@@ -72,7 +72,8 @@ class StartQT4(QMainWindow):
                                      "", # directory
                                      "Image files (*.png *.jpg)")
         for image in images:
-            self.compress_file(image)
+            if self.checkname(name):
+                self.compress_file(image)
 
 
     def enable_recompress(self):
