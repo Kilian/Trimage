@@ -68,7 +68,7 @@ class StartQT4(QMainWindow):
         print("booya")
 
     def checkname(self, filename):
-        if filename.endsWith("png") or filename.endsWith("jpg"):
+        if os.path.splitext(filename)[1].lower() in ["jpg", "jpeg", "png"]:
             return True
 
     def file_dialog(self):
@@ -76,7 +76,7 @@ class StartQT4(QMainWindow):
         images = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
             "", # directory
-            "Image files (*.png *.jpg)")
+            "Image files (*.png *.jpg *.jpeg)")
         for image in images:
             if self.checkname(image):
                 self.compress_file(image)

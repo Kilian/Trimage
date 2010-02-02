@@ -28,7 +28,7 @@ todo app wise
 - implement threading (and include advpng then)
 - errors need to go to standarderror
 - test with filenames in spaces (probably works already)
-
+- test differnt file name cases
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
