@@ -55,7 +55,7 @@ class StartQT4(QMainWindow):
 
     def file_from_cmd(self, image):
         self.showapp = False
-        if self.checkname(name):
+        if self.checkname(image):
             self.compress_file(image)
 
     def file_drop(self):
