@@ -37,7 +37,12 @@ class StartQT4(QMainWindow):
                       help="directory of images to compress")
 
     (options, args) = parser.parse_args()
-    print options
+
+    if options.filename:
+      print options
+
+    if options.directory:
+      print options
 
   def file_drop(self):
     print "booya"
