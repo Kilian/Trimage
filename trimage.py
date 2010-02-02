@@ -98,11 +98,11 @@ class StartQT4(QMainWindow):
         oldfilesize = oldfile.size()
         oldfilesizestr = size(oldfilesize, system=alternative)
 
-        if name.endsWith("jpg"):
+        if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg"]:
             runstr = 'jpegoptim --strip-all -f "' + str(filename) + '"'
             runfile = system(runstr)
 
-        elif name.endsWith("png"):
+        elif path.splitext(str(filename))[1].lower() in [".png"]:
             #runstr = ('optipng -force -o7 "' + str(filename)
             #+ '"; advpng -z4 "' + str(filename) + '"') ## don't do advpng yet
             runstr = 'optipng -force -o7 "' + str(filename) + '"'
