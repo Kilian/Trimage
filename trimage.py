@@ -1,6 +1,7 @@
 import sys
 from os import system
 from os import listdir
+from os import path
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from hurry.filesize import *
@@ -54,7 +55,7 @@ class StartQT4(QMainWindow):
         self.showapp = False
         imagedir = listdir(directory)
         for image in imagedir:
-            image = directory + "/" + image
+            image = path.join(directory, image)
             name = QFileInfo(image).fileName()
             if self.checkname(name):
                 self.compress_file(image)
