@@ -8,6 +8,36 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QUrl, QString
+import trimage
+
+
+class TrimageTableView(QtGui.QTableView):
+    def __init__(self, parent=None):
+        super(TrimageTableView, self).__init__(parent)
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasFormat("text/uri-list"):
+            if trimage.DEBUG:
+                print("Accepting event: %s" % list(event.mimeData().formats()))
+            event.accept()
+        else:
+            if trimage.DEBUG:
+                print("Rejecting event: %s" % list(event.mimeData().formats()))
+            event.ignore()
+    
+    def dragMoveEvent(self, event):
+        event.accept()
+
+    def dropEvent(self, event):
+        files = str(event.mimeData().data("text/uri-list")).strip().split()
+        for i, file in enumerate(files):
+            files[i] = QUrl(QString(file)).toLocalFile()
+        if trimage.DEBUG:
+            for file in files:
+                print("Drop received: %s" % file)
+
 
 class Ui_trimage(object):
     def setupUi(self, trimage):
@@ -88,18 +118,18 @@ class Ui_trimage(object):
         self.horizontalLayout.addWidget(self.recompress)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
-        self.processedfiles = QtGui.QTableView(self.frame)
+        self.processedfiles = TrimageTableView(self.frame)
         self.processedfiles.setEnabled(True)
-        self.processedfiles.setAcceptDrops(True)
-        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
+#        self.processedfiles.setAcceptDrops(True)
+#        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.processedfiles.setFrameShape(QtGui.QFrame.NoFrame)
         self.processedfiles.setFrameShadow(QtGui.QFrame.Plain)
         self.processedfiles.setLineWidth(0)
         self.processedfiles.setMidLineWidth(0)
         self.processedfiles.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.processedfiles.setTabKeyNavigation(True)
-        self.processedfiles.setDragEnabled(False)
-        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
+#        self.processedfiles.setDragEnabled(True)
+#        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.processedfiles.setAlternatingRowColors(True)
         self.processedfiles.setTextElideMode(QtCore.Qt.ElideRight)
         self.processedfiles.setShowGrid(True)
