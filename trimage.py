@@ -68,8 +68,8 @@ class StartQT4(QMainWindow):
     def file_drop(self):
         print("booya")
 
-    def checkname(self, filename):
-        if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg", ".png"]:
+    def checkname(self, name):
+        if path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]:
             return True
 
     def file_dialog(self):
