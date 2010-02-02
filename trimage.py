@@ -4,6 +4,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from hurry.filesize import *
+from optparse import OptionParser
 
 from ui import Ui_trimage
 
@@ -21,8 +22,22 @@ class StartQT4(QMainWindow):
     QObject.connect(self.ui.addfiles, SIGNAL("clicked()"), self.file_dialog)
     QObject.connect(self.ui.recompress, SIGNAL("clicked()"), self.recompress_files)
     QObject.connect(self.quit_shortcut, SIGNAL("activated()"), qApp, SLOT('quit()'))
-    QObject.connect(self.ui.processedfiles, SIGNAL("dragEnterEvent()"), self.file_drop)
 
+    parser = OptionParser(usage="%prog [-f] [-q] [-d]", version="%prog 1.0")
+    parser.add_option("-q", "--quiet",
+                      action="store_false", dest="verbose", default=True,
+                      help="don't print status messages to stdout")
+
+    parser.add_option("-f", "--file",
+                      action="store", type="string", dest="filename",
+                      help="image to compress")
+
+    parser.add_option("-d", "--directory",
+                      action="store", type="string", dest="directory",
+                      help="directory of images to compress")
+
+    (options, args) = parser.parse_args()
+    print options
 
   def file_drop(self):
     print "booya"

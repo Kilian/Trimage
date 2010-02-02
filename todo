@@ -25,7 +25,8 @@ optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dep
 todo app wise
 - implement drag and drop on table
 - clean up code, make it PEP-8
-- implement threading (and include advpng then)
+- implement threading (and include advpng then
+-
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
@@ -39,7 +40,7 @@ hurry.filesize (bundled)
 
 optipng 0.6.2.1
 jpgegoptim 1.2.2
-
+advancecomp 1.15
 ===========================================
 1.5:
 later versions:
