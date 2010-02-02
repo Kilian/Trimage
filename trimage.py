@@ -5,7 +5,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from hurry.filesize import *
 from optparse import OptionParser
-
 from ui import Ui_trimage
 
 DEBUG = True

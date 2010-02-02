@@ -9,7 +9,7 @@
 
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QUrl, QString
-import trimage
+#import trimage
 
 
 class TrimageTableView(QtGui.QTableView):
@@ -26,7 +26,7 @@ class TrimageTableView(QtGui.QTableView):
             if trimage.DEBUG:
                 print("Rejecting event: %s" % list(event.mimeData().formats()))
             event.ignore()
-    
+
     def dragMoveEvent(self, event):
         event.accept()
 
