@@ -12,18 +12,17 @@
 	- jpegoptim *
 	- libjpeg/jpegtran *
 	gif:
-	- optipng *
+	- optipng * no
 	- gifsicle * (maybe)
 * = available in ubuntu
 
 trimage: simple gui for:
 optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dependencies (our primary platform)
-
+^ no gif. optipng optimized gif by converting to png
 
 ==========================================
 todo app wise
-- implement jpegoptim
-- implement something for gifs
+- implement something for gifs (or not)
 - implement drag and drop on table
 - clean up code, make it PEP-8
 - figure out what to do with:

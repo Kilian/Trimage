@@ -23,8 +23,10 @@ class StartQT4(QMainWindow):
     QObject.connect(self.quit_shortcut, SIGNAL("activated()"), qApp, SLOT('quit()'))
     QObject.connect(self.ui.processedfiles, SIGNAL("dragEnterEvent()"), self.file_drop)
 
+
   def file_drop(self):
     print "booya"
+
 
   def file_dialog(self):
     fd = QFileDialog(self)
@@ -41,9 +43,9 @@ class StartQT4(QMainWindow):
 
 
   def recompress_files(self):
-    newimage = self.imagelist
+    imagelistcopy = self.imagelist
     self.imagelist = []
-    for image in newimage:
+    for image in imagelistcopy:
       self.compress_file(image[-1])
 
 
@@ -52,19 +54,20 @@ class StartQT4(QMainWindow):
     oldfile = QFileInfo(filename);
     name = oldfile.fileName()
     oldfilesize = oldfile.size()
+    oldfilesizestr = size(oldfilesize, system=alternative)
 
     if name.endsWith("jpg"):
-      print "run jpegoptim"
-      runfile = system('ls')
+      runstr = 'jpegoptim --strip-all -f "' + str(filename) + '"'
+      runfile = system(runstr)
 
     elif name.endsWith("png"):
-      runstr = 'optipng -force "' + str(filename) + '"'
+      #runstr = 'optipng -force -o7 "' + str(filename) + '"; advpng -z4 "' + str(filename) + '"' ## don't do advpng yet
+      runstr = 'optipng -force -o7 "' + str(filename) + '"'
       runfile = system(runstr)
 
     else:
       print "run something for gif"
       runfile = system('ls')
-
 
     if runfile == 0:
       newfile = QFile(filename)
@@ -74,7 +77,7 @@ class StartQT4(QMainWindow):
       ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
       ratiostr = "%.1f%%" % ratio
 
-      self.imagelist.append((name, newfilesizestr, ratiostr, filename))
+      self.imagelist.append((name, oldfilesizestr, newfilesizestr, ratiostr, filename))
       self.update_table()
 
     else:
@@ -87,7 +90,7 @@ class StartQT4(QMainWindow):
     # set table model
     tmodel = tri_table_model(self,
                              self.imagelist,
-                             [' Filename ', ' Size ', ' Compressed '])
+                             ['Filename', 'Old Size', 'New Size', 'Compressed'])
     tview.setModel(tmodel)
 
     # set minimum size of table
@@ -102,7 +105,7 @@ class StartQT4(QMainWindow):
     nrows = len(self.imagelist)
     for row in range(nrows):
         tview.setRowHeight(row, 25)
-    tview.setColumnWidth(0,400)
+    tview.setColumnWidth(0,300)
     tview.setDragDropMode(QAbstractItemView.DropOnly)
     tview.setAcceptDrops(True)
     self.enable_recompress()
