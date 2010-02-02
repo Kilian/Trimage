@@ -1,5 +1,6 @@
 import sys
 from os import system
+from os import listdir
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -17,16 +18,15 @@ class StartQT4(QMainWindow):
     # set recompress to false
     self.ui.recompress.setEnabled(False)
     self.imagelist = []
+    self.showapp = True
 
     # connect signals with slots
     QObject.connect(self.ui.addfiles, SIGNAL("clicked()"), self.file_dialog)
     QObject.connect(self.ui.recompress, SIGNAL("clicked()"), self.recompress_files)
     QObject.connect(self.quit_shortcut, SIGNAL("activated()"), qApp, SLOT('quit()'))
 
-    parser = OptionParser(usage="%prog [-f] [-q] [-d]", version="%prog 1.0")
-    parser.add_option("-q", "--quiet",
-                      action="store_false", dest="verbose", default=True,
-                      help="don't print status messages to stdout")
+    parser = OptionParser(version="%prog 1.0",
+                          description="GUI front-end to compress png and jpg images via optipng and jpegoptim")
 
     parser.add_option("-f", "--file",
                       action="store", type="string", dest="filename",
@@ -39,10 +39,24 @@ class StartQT4(QMainWindow):
     (options, args) = parser.parse_args()
 
     if options.filename:
-      print options
+      self.file_from_cmd(options.filename)
 
     if options.directory:
-      print options
+      self.dir_from_cmd(options.directory)
+
+  def dir_from_cmd(self, directory):
+    self.showapp = False
+    imagedir = listdir(directory)
+    for image in imagedir:
+      image = directory + "/" + image
+      name = QFileInfo(image).fileName()
+      if name.endsWith("png") or name.endsWith("jpg"):
+        self.compress_file(image)
+
+  def file_from_cmd(self, image):
+    self.showapp = False
+    if image.endsWith("png") or image.endsWith("jpg"):
+      self.compress_file(image)
 
   def file_drop(self):
     print "booya"
@@ -70,8 +84,7 @@ class StartQT4(QMainWindow):
 
 
   def compress_file(self, filename):
-    print filename
-    oldfile = QFileInfo(filename);
+    oldfile = QFileInfo(filename)
     name = oldfile.fileName()
     oldfilesize = oldfile.size()
     oldfilesizestr = size(oldfilesize, system=alternative)
@@ -160,6 +173,10 @@ class tri_table_model(QAbstractTableModel):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     myapp = StartQT4()
-    myapp.show()
+
+    if myapp.showapp:
+      myapp.show()
+    else:
+     quit()
     sys.exit(app.exec_())
 
