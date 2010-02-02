@@ -26,25 +26,23 @@ class StartQT4(QMainWindow):
 
         # connect signals with slots
         QObject.connect(self.ui.addfiles, SIGNAL("clicked()"),
-                        self.file_dialog)
+            self.file_dialog)
         QObject.connect(self.ui.recompress, SIGNAL("clicked()"),
-                        self.recompress_files)
+            self.recompress_files)
         QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
-                        qApp, SLOT('quit()'))
+            qApp, SLOT('quit()'))
 
         parser = OptionParser(version="%prog 1.0",
             description="GUI front-end to compress png and jpg images via "
-                        "optipng and jpegoptim")
+                "optipng and jpegoptim")
 
-        parser.add_option("-f", "--file",
-                          action="store", type="string", dest="filename",
-                          help="image to compress")
+        parser.add_option("-f", "--file", action="store", type="string",
+            dest="filename", help="image to compress")
 
-        parser.add_option("-d", "--directory",
-                          action="store", type="string", dest="directory",
-                          help="directory of images to compress")
+        parser.add_option("-d", "--directory", action="store", type="string",
+            dest="directory", help="directory of images to compress")
 
-        (options, args) = parser.parse_args()
+        options, args = parser.parse_args()
 
         if options.filename:
             self.file_from_cmd(options.filename)
@@ -67,7 +65,7 @@ class StartQT4(QMainWindow):
             self.compress_file(image)
 
     def file_drop(self):
-        print "booya"
+        print("booya")
 
     def checkname(self, filename):
         if filename.endsWith("png") or filename.endsWith("jpg"):
@@ -76,9 +74,9 @@ class StartQT4(QMainWindow):
     def file_dialog(self):
         fd = QFileDialog(self)
         images = fd.getOpenFileNames(self,
-                                 "Select one or more image files to compress",
-                                 "", # directory
-                                 "Image files (*.png *.jpg)")
+            "Select one or more image files to compress",
+            "", # directory
+            "Image files (*.png *.jpg)")
         for image in images:
             if self.checkname(image):
                 self.compress_file(image)
@@ -93,7 +91,7 @@ class StartQT4(QMainWindow):
             self.compress_file(image[-1])
 
     def compress_file(self, filename):
-        print filename
+        print(filename)
         oldfile = QFileInfo(filename)
         name = oldfile.fileName()
         oldfilesize = oldfile.size()
@@ -122,14 +120,14 @@ class StartQT4(QMainWindow):
             self.update_table()
 
         else:
-            print "uh. not good" #throw dialogbox error or something?
+            print("uh. not good") #throw dialogbox error or something?
 
     def update_table(self):
         tview = self.ui.processedfiles
 
         # set table model
-        tmodel = tri_table_model(self, self.imagelist,
-            ['Filename', 'Old Size', 'New Size', 'Compressed'])
+        tmodel = TriTableModel(self, self.imagelist,
+            ["Filename", "Old Size", "New Size", "Compressed"])
         tview.setModel(tmodel)
 
         # set minimum size of table
@@ -143,14 +141,12 @@ class StartQT4(QMainWindow):
         # set all row heights
         nrows = len(self.imagelist)
         for row in range(nrows):
-                tview.setRowHeight(row, 25)
+            tview.setRowHeight(row, 25)
         tview.setColumnWidth(0, 300)
-        #tview.setDragDropMode(QAbstractItemView.DropOnly)
-        #tview.setAcceptDrops(True)
         self.enable_recompress()
 
 
-class tri_table_model(QAbstractTableModel):
+class TriTableModel(QAbstractTableModel):
 
     def __init__(self, parent, imagelist, header, *args):
         """

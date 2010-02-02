@@ -1,29 +1,23 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'window.ui'
-#
-# Created: Mon Feb  1 19:37:17 2010
-#      by: PyQt4 UI code generator 4.4.4
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QUrl, QString
-#import trimage
+
+
+DEBUG = True
 
 
 class TrimageTableView(QtGui.QTableView):
+
     def __init__(self, parent=None):
         super(TrimageTableView, self).__init__(parent)
         self.setAcceptDrops(True)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat("text/uri-list"):
-            if trimage.DEBUG:
+            if DEBUG:
                 print("Accepting event: %s" % list(event.mimeData().formats()))
             event.accept()
         else:
-            if trimage.DEBUG:
+            if DEBUG:
                 print("Rejecting event: %s" % list(event.mimeData().formats()))
             event.ignore()
 
@@ -34,12 +28,13 @@ class TrimageTableView(QtGui.QTableView):
         files = str(event.mimeData().data("text/uri-list")).strip().split()
         for i, file in enumerate(files):
             files[i] = QUrl(QString(file)).toLocalFile()
-        if trimage.DEBUG:
+        if DEBUG:
             for file in files:
                 print("Drop received: %s" % file)
 
 
 class Ui_trimage(object):
+
     def setupUi(self, trimage):
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
@@ -120,16 +115,12 @@ class Ui_trimage(object):
 
         self.processedfiles = TrimageTableView(self.frame)
         self.processedfiles.setEnabled(True)
-#        self.processedfiles.setAcceptDrops(True)
-#        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.processedfiles.setFrameShape(QtGui.QFrame.NoFrame)
         self.processedfiles.setFrameShadow(QtGui.QFrame.Plain)
         self.processedfiles.setLineWidth(0)
         self.processedfiles.setMidLineWidth(0)
         self.processedfiles.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.processedfiles.setTabKeyNavigation(True)
-#        self.processedfiles.setDragEnabled(True)
-#        self.processedfiles.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.processedfiles.setAlternatingRowColors(True)
         self.processedfiles.setTextElideMode(QtCore.Qt.ElideRight)
         self.processedfiles.setShowGrid(True)
@@ -157,4 +148,3 @@ class Ui_trimage(object):
         self.recompress.setShortcut(QtGui.QApplication.translate("trimage", "Alt+R", None, QtGui.QApplication.UnicodeUTF8))
         self.processedfiles.setToolTip(QtGui.QApplication.translate("trimage", "Drag files in here", None, QtGui.QApplication.UnicodeUTF8))
         self.processedfiles.setWhatsThis(QtGui.QApplication.translate("trimage", "Drag files in here", None, QtGui.QApplication.UnicodeUTF8))
-
