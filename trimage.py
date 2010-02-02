@@ -7,26 +7,34 @@ from hurry.filesize import *
 from optparse import OptionParser
 from ui import Ui_trimage
 
+
 DEBUG = True
 
+
 class StartQT4(QMainWindow):
+
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
-        self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"),  self); # todo use standardKey Quit.
+        # todo use standardKey Quit.
+        self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"), self)
         # set recompress to false
         self.ui.recompress.setEnabled(False)
         self.imagelist = []
         self.showapp = True
 
         # connect signals with slots
-        QObject.connect(self.ui.addfiles, SIGNAL("clicked()"), self.file_dialog)
-        QObject.connect(self.ui.recompress, SIGNAL("clicked()"), self.recompress_files)
-        QObject.connect(self.quit_shortcut, SIGNAL("activated()"), qApp, SLOT('quit()'))
+        QObject.connect(self.ui.addfiles, SIGNAL("clicked()"),
+                        self.file_dialog)
+        QObject.connect(self.ui.recompress, SIGNAL("clicked()"),
+                        self.recompress_files)
+        QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
+                        qApp, SLOT('quit()'))
 
         parser = OptionParser(version="%prog 1.0",
-                              description="GUI front-end to compress png and jpg images via optipng and jpegoptim")
+            description="GUI front-end to compress png and jpg images via "
+                        "optipng and jpegoptim")
 
         parser.add_option("-f", "--file",
                           action="store", type="string", dest="filename",
@@ -39,7 +47,7 @@ class StartQT4(QMainWindow):
         (options, args) = parser.parse_args()
 
         if options.filename:
-           self.file_from_cmd(options.filename)
+            self.file_from_cmd(options.filename)
 
         if options.directory:
             self.dir_from_cmd(options.directory)
@@ -68,17 +76,15 @@ class StartQT4(QMainWindow):
     def file_dialog(self):
         fd = QFileDialog(self)
         images = fd.getOpenFileNames(self,
-                                     "Select one or more image files to compress",
-                                     "", # directory
-                                     "Image files (*.png *.jpg)")
+                                 "Select one or more image files to compress",
+                                 "", # directory
+                                 "Image files (*.png *.jpg)")
         for image in images:
             if self.checkname(name):
                 self.compress_file(image)
 
-
     def enable_recompress(self):
         self.ui.recompress.setEnabled(True)
-
 
     def recompress_files(self):
         imagelistcopy = self.imagelist
@@ -180,8 +186,7 @@ if __name__ == "__main__":
     myapp = StartQT4()
 
     if myapp.showapp:
-      myapp.show()
+        myapp.show()
     else:
-     quit()
+        quit()
     sys.exit(app.exec_())
-
