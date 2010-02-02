@@ -50,17 +50,20 @@ class StartQT4(QMainWindow):
     for image in imagedir:
       image = directory + "/" + image
       name = QFileInfo(image).fileName()
-      if name.endsWith("png") or name.endsWith("jpg"):
+      if self.checkname(name):
         self.compress_file(image)
 
   def file_from_cmd(self, image):
     self.showapp = False
-    if image.endsWith("png") or image.endsWith("jpg"):
+    if self.checkname(name):
       self.compress_file(image)
 
   def file_drop(self):
     print "booya"
 
+  def checkname(self, filename):
+    if filename.endsWith("png") or filename.endsWith("jpg"):
+      return True
 
   def file_dialog(self):
     fd = QFileDialog(self)
