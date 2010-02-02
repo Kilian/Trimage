@@ -33,7 +33,7 @@ class StartQT4(QMainWindow):
     images = fd.getOpenFileNames(self,
                                  "Select one or more image files to compress",
                                  "", # directory
-                                 "Image files (*.png *.gif *.jpg)")
+                                 "Image files (*.png *.jpg)")
     for image in images:
       self.compress_file(image)
 
@@ -65,10 +65,6 @@ class StartQT4(QMainWindow):
       runstr = 'optipng -force -o7 "' + str(filename) + '"'
       runfile = system(runstr)
 
-    else:
-      print "run something for gif"
-      runfile = system('ls')
-
     if runfile == 0:
       newfile = QFile(filename)
       newfilesize = newfile.size()
@@ -81,7 +77,7 @@ class StartQT4(QMainWindow):
       self.update_table()
 
     else:
-      print "uh. not good" #implement, something went wrong
+      print "uh. not good" #throw dialogbox error or something?
 
 
   def update_table(self):

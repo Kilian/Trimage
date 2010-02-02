@@ -20,14 +20,12 @@ trimage: simple gui for:
 optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dependencies (our primary platform)
 ^ no gif. optipng optimized gif by converting to png
 
+
 ==========================================
 todo app wise
-- implement something for gifs (or not)
 - implement drag and drop on table
 - clean up code, make it PEP-8
-- figure out what to do with:
-    - recompress and optipng ( −o7? ) not really doing anything
-    - lockup when opening files (i'd like it to not lock up the file dialog)
+- implement threading (and include advpng then)
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
@@ -35,10 +33,16 @@ todo else
 - figure out how to make mac and win versions
 
 current dependencies:
-python
-python-qt4
+python 2.6
+python-qt4 4.4
 hurry.filesize (bundled)
 
-optipng
-jpgegoptim
+optipng 0.6.2.1
+jpgegoptim 1.2.2
+
+===========================================
+1.5:
+later versions:
+pnypng api? http://www.gracepointafterfive.com/punypng/api
+imagemagick/graphicmagick?
 
