@@ -24,7 +24,6 @@ optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dep
 ==========================================
 todo app wise
 - implement drag and drop on table
-- clean up code, make it PEP-8
 - implement threading (and include advpng then)
 - errors need to go to standarderror
 - test with filenames in spaces (probably works already)
