@@ -40,16 +40,18 @@ class StartQT4(QMainWindow):
             self.recompress_files)
         QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
             qApp, SLOT('quit()'))
+        QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
+            self.file_drop)
 
     def commandline_options(self):
         """Set up the command line options."""
         parser = OptionParser(version="%prog 1.0",
             description="GUI front-end to compress png and jpg images via "
-                "optipng and jpegoptim")
+                "optipng, advpng and jpegoptim")
         parser.add_option("-f", "--file", action="store", type="string",
             dest="filename", help="image to compress")
         parser.add_option("-d", "--directory", action="store", type="string",
-            dest="directory", help="directory of images to compress")
+            dest="directory", help="directory of images to compress", )
 
         options, args = parser.parse_args()
 
@@ -76,9 +78,12 @@ class StartQT4(QMainWindow):
         if self.checkname(image):
             self.compress_file(image)
 
-    def file_drop(self, files):
-        #TODO implement file drop handling
-        print("booya")
+    def file_drop(self, image):
+        """Get a file from the drag and drop handler and send it to
+        compress_file."""
+        if self.checkname(image):
+            self.compress_file(image)
+
 
     def checkname(self, name):
         """Check if the file is a jpg or png."""
@@ -123,9 +128,9 @@ class StartQT4(QMainWindow):
 
         elif path.splitext(str(filename))[1].lower() in [".png"]:
             # don't do advpng yet
-            #runstr = ('optipng -force -o7 "' + str(filename)
-            #+ '"; advpng -z4 "' + str(filename) + '"')
-            runstr = 'optipng -force -o7 "' + str(filename) + '"'
+            runstr = ('optipng -force -o7 "' + str(filename)
+            + '"; advpng -z4 "' + str(filename) + '"')
+            #runstr = 'optipng -force -o7 "' + str(filename) + '"'
             runfile = system(runstr)
 
         if runfile == 0:
