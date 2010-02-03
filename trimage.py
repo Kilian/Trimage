@@ -2,6 +2,7 @@ import sys
 from os import system
 from os import listdir
 from os import path
+from subprocess import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from hurry.filesize import *
@@ -49,9 +50,9 @@ class StartQT4(QMainWindow):
             description="GUI front-end to compress png and jpg images via "
                 "optipng, advpng and jpegoptim")
         parser.add_option("-f", "--file", action="store", type="string",
-            dest="filename", help="image to compress")
+            dest="filename", help="compresses image and exit")
         parser.add_option("-d", "--directory", action="store", type="string",
-            dest="directory", help="directory of images to compress", )
+            dest="directory", help="compresses images in directory and exit", )
 
         options, args = parser.parse_args()
 
@@ -124,19 +125,26 @@ class StartQT4(QMainWindow):
 
         #decide with tool to use
         if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg"]:
-            runstr = 'jpegoptim --strip-all -f -q"' + str(filename) + '"'
-            runfile = system(runstr)
-
+            runstr = 'jpegoptim -f --strip-all "' + str(filename) + '"'
+            try:
+                retcode = call(runstr, shell=True, stdout=PIPE)
+                runfile = retcode
+            except OSError, e:
+                runfile = e
         elif path.splitext(str(filename))[1].lower() in [".png"]:
-            # don't do advpng yet
-            runstr = ('optipng -q -force -o7 "' + str(filename)
-            + '"; advpng -z4 -q "' + str(filename) + '"')
-            #runstr = 'optipng -force -o7 "' + str(filename) + '"'
-            runfile = system(runstr)
+            runstr = ('optipng -force -o7 "' + str(filename)
+                      + '"; advpng -z4 "' + str(filename) + '"')
+            try:
+                retcode = call(runstr, shell=True, stdout=PIPE)
+                runfile = retcode
+            except OSError, e:
+                runfile = e
 
         if runfile == 0:
             #gather new file data
             newfile = QFile(filename)
+            provider = QFileIconProvider()
+            newfileicon = provider.icon(QFileInfo(filename))
             newfilesize = newfile.size()
             newfilesizestr = size(newfilesize, system=alternative)
 
@@ -146,8 +154,14 @@ class StartQT4(QMainWindow):
 
             # append current image to list
             self.imagelist.append(
-                (name, oldfilesizestr, newfilesizestr, ratiostr, filename))
+                (newfileicon, name, oldfilesizestr, newfilesizestr, ratiostr,
+                filename))
             self.update_table()
+
+            if self.showapp != True:
+                # we work via the commandline
+                print("File:" + filename + ", Old Size:" + oldfilesizestr +
+                      ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
 
         else:
             # TODO nice error recovery
@@ -159,7 +173,7 @@ class StartQT4(QMainWindow):
 
         # set table model
         tmodel = TriTableModel(self, self.imagelist,
-            ["Filename", "Old Size", "New Size", "Compressed"])
+            ["", "Filename", "Old Size", "New Size", "Compressed"])
         tview.setModel(tmodel)
 
         # set minimum size of table
@@ -175,8 +189,9 @@ class StartQT4(QMainWindow):
         for row in range(nrows):
             tview.setRowHeight(row, 25)
 
-        # set the first column to be longest
-        tview.setColumnWidth(0, 300)
+        # set the second column to be longest
+        tview.setColumnWidth(0, 30)
+        tview.setColumnWidth(1, 280)
 
         # enable recompress button
         self.enable_recompress()

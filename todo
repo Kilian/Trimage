@@ -25,7 +25,8 @@ optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dep
 todo app wise
 - implement threading
 - errors need to go to standarderror
-- make icon
+- add file icon to table view
+- hide jpegoptim from commandline
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
