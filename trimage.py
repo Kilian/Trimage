@@ -203,7 +203,7 @@ class TriTableModel(QAbstractTableModel):
 
     def __init__(self, parent, imagelist, header, *args):
         """
-        mydata is list of tuples
+        imagelist is list of tuples
         header is list of strings
         tuple length has to match header length
         """
@@ -223,13 +223,13 @@ class TriTableModel(QAbstractTableModel):
         """Get data."""
         if not index.isValid():
             return QVariant()
-        elif role != Qt.DisplayRole:
+        elif role != Qt.DisplayRole and role != Qt.DecorationRole:
             return QVariant()
         return QVariant(self.imagelist[index.row()][index.column()])
 
     def headerData(self, col, orientation, role):
         """Get header data."""
-        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+        if orientation == Qt.Horizontal and (role == Qt.DisplayRole or role == Qt.DecorationRole):
             return QVariant(self.header[col])
         return QVariant()
 
