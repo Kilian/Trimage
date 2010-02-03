@@ -145,8 +145,6 @@ class StartQT4(QMainWindow):
         if runfile == 0:
             #gather new file data
             newfile = QFile(filename)
-            provider = QFileIconProvider()
-            newfileicon = provider.icon(QFileInfo(filename))
             newfilesize = newfile.size()
             newfilesizestr = size(newfilesize, system=alternative)
 
@@ -156,8 +154,7 @@ class StartQT4(QMainWindow):
 
             # append current image to list
             self.imagelist.append(
-                (newfileicon, name, oldfilesizestr, newfilesizestr, ratiostr,
-                filename))
+                (name, oldfilesizestr, newfilesizestr, ratiostr, filename))
             self.update_table()
 
             if self.showapp != True:
@@ -175,7 +172,7 @@ class StartQT4(QMainWindow):
 
         # set table model
         tmodel = TriTableModel(self, self.imagelist,
-            ["", "Filename", "Old Size", "New Size", "Compressed"])
+            ["Filename", "Old Size", "New Size", "Compressed"])
         tview.setModel(tmodel)
 
         # set minimum size of table
@@ -192,8 +189,7 @@ class StartQT4(QMainWindow):
             tview.setRowHeight(row, 25)
 
         # set the second column to be longest
-        tview.setColumnWidth(0, 30)
-        tview.setColumnWidth(1, 280)
+        tview.setColumnWidth(0, 300)
 
         # enable recompress button
         self.enable_recompress()
@@ -223,9 +219,15 @@ class TriTableModel(QAbstractTableModel):
         """Get data."""
         if not index.isValid():
             return QVariant()
-        elif role != Qt.DisplayRole and role != Qt.DecorationRole:
+        elif role == Qt.DisplayRole:
+            data = self.imagelist[index.row()][index.column()]
+            return QVariant(data)
+        elif index.column()==0 and role == Qt.DecorationRole:
+            # decorate column 0 with an icon of the image itself
+            f_icon = QIcon( self.imagelist[index.row()][4] )
+            return QVariant(f_icon)
+        else:
             return QVariant()
-        return QVariant(self.imagelist[index.row()][index.column()])
 
     def headerData(self, col, orientation, role):
         """Get header data."""

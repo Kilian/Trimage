@@ -1,6 +1,6 @@
 ==========================================
 todo app wise
-- implement threading
+- implement threading => http://diotavelli.net/PyQtWiki/Threading,_Signals_and_Slots
 - errors need to go to standarderror
 - add file icon to table view
 
@@ -19,6 +19,11 @@ jpgegoptim 1.2.2
 advancecomp 1.15
 ===========================================
 later versions:
+allow selection/deletion of rows from table (and subsequently the imagelist)
 pnypng api? http://www.gracepointafterfive.com/punypng/api
 imagemagick/graphicmagick?
+
+
+thanks to:
+Neil Wallace
 
