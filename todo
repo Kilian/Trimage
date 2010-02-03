@@ -1,32 +1,8 @@
-- make an index of available command line tools
-	All:
-	- imagemagick? *
-	png:
-	- optipng * (better version of pngcrush)
-	- pngnq *  (lossy, better version of pngquant)
-	- pngout http://www.jonof.id.au/kenutils
-	- pngcrush *
-	- pngquant * (lossy)
-	- advancecomp/advpng *
-	jpg:
-	- jpegoptim *
-	- libjpeg/jpegtran *
-	gif:
-	- optipng * no
-	- gifsicle * (maybe)
-* = available in ubuntu
-
-trimage: simple gui for:
-optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dependencies (our primary platform)
-^ no gif. optipng optimized gif by converting to png
-
-
 ==========================================
 todo app wise
 - implement threading
 - errors need to go to standarderror
 - add file icon to table view
-- hide jpegoptim from commandline
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
@@ -42,7 +18,6 @@ optipng 0.6.2.1
 jpgegoptim 1.2.2
 advancecomp 1.15
 ===========================================
-1.5:
 later versions:
 pnypng api? http://www.gracepointafterfive.com/punypng/api
 imagemagick/graphicmagick?

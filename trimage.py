@@ -3,10 +3,12 @@ from os import system
 from os import listdir
 from os import path
 from subprocess import *
+from optparse import OptionParser
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from hurry.filesize import *
-from optparse import OptionParser
+
 from ui import Ui_trimage
 
 
