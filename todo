@@ -26,8 +26,9 @@ todo app wise
 - implement drag and drop on table
 - implement threading (and include advpng then)
 - errors need to go to standarderror
-- test with filenames in spaces (probably works already)
-- test differnt file name cases
+- implement a case insensitive file dialog open
+    ^ we can do this, but this is only needed for linux. for now lets just add uppercase equivalents
+- make icon
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb

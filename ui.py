@@ -38,6 +38,7 @@ class Ui_trimage(object):
     def setupUi(self, trimage):
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
+        trimage.setWindowIcon(QtGui.QIcon("trimage-icon.png"))
 
         self.centralwidget = QtGui.QWidget(trimage)
         self.centralwidget.setObjectName("centralwidget")
