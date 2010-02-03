@@ -124,13 +124,13 @@ class StartQT4(QMainWindow):
 
         #decide with tool to use
         if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg"]:
-            runstr = 'jpegoptim --strip-all -f "' + str(filename) + '"'
+            runstr = 'jpegoptim --strip-all -f -q"' + str(filename) + '"'
             runfile = system(runstr)
 
         elif path.splitext(str(filename))[1].lower() in [".png"]:
             # don't do advpng yet
-            runstr = ('optipng -force -o7 "' + str(filename)
-            + '"; advpng -z4 "' + str(filename) + '"')
+            runstr = ('optipng -q -force -o7 "' + str(filename)
+            + '"; advpng -z4 -q "' + str(filename) + '"')
             #runstr = 'optipng -force -o7 "' + str(filename) + '"'
             runfile = system(runstr)
 
