@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="logo-trimage.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3207">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.51401869"
+         offset="0"
+         id="stop3209" />
+      <stop
+         style="stop-color:#76b9fb;stop-opacity:0;"
+         offset="1"
+         id="stop3211" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3189">
+      <stop
+         id="stop3191"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop3193"
+         offset="1"
+         style="stop-color:#76b9fb;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3177">
+      <stop
+         style="stop-color:#2166ce;stop-opacity:1;"
+         offset="0"
+         id="stop3179" />
+      <stop
+         style="stop-color:#76b9fb;stop-opacity:1;"
+         offset="1"
+         id="stop3181" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3177"
+       id="linearGradient3183"
+       x1="-113.18141"
+       y1="94.068687"
+       x2="87.293686"
+       y2="196.29851"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3189"
+       id="radialGradient3187"
+       cx="-65.175232"
+       cy="257.47021"
+       fx="-65.175232"
+       fy="257.47021"
+       r="147.35561"
+       gradientTransform="matrix(0.9973701,7.2477038e-2,-8.1815483e-2,1.1258782,20.893644,-31.286202)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3189"
+       id="radialGradient3199"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5134757,2.4437577e-2,-2.7551034e-2,0.5788946,65.578572,65.206227)"
+       cx="111.03341"
+       cy="166.65665"
+       fx="111.03341"
+       fy="166.65665"
+       r="147.35561" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3207"
+       id="radialGradient3205"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5552136,-0.6613875,0.7169659,0.6018699,37.072783,80.283257)"
+       cx="56.787258"
+       cy="73.974876"
+       fx="56.787258"
+       fy="73.974876"
+       r="147.35561" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="299.62219"
+     inkscape:cy="722.03051"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1180"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="star"
+       style="fill:url(#linearGradient3183);fill-opacity:1;stroke:none;stroke-width:2.20967632;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path3155"
+       sodipodi:sides="3"
+       sodipodi:cx="11.428571"
+       sodipodi:cy="175.21933"
+       sodipodi:r1="168.57143"
+       sodipodi:r2="84.285713"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:flatsided="true"
+       inkscape:rounded="0.11"
+       inkscape:randomized="0"
+       d="M 11.428575,343.79076 C -20.688595,343.79076 -150.61715,118.74791 -134.55857,90.933621 C -118.49998,63.119335 141.35712,63.119328 157.41571,90.933613 C 173.47429,118.7479 43.545746,343.79076 11.428575,343.79076 z"
+       transform="matrix(1.385337,-1.1652199,1.1652199,1.385337,160.77379,177.08667)"
+       inkscape:export-filename="/home/kilian/workspace/trimage/trimage-icon.png"
+       inkscape:export-xdpi="11.166932"
+       inkscape:export-ydpi="11.166932" />
+    <path
+       sodipodi:type="star"
+       style="fill:#ffffff;fill-opacity:0.45833333999999998;stroke:none;stroke-width:3.01696083;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path3157"
+       sodipodi:sides="3"
+       sodipodi:cx="11.428571"
+       sodipodi:cy="175.21933"
+       sodipodi:r1="168.57143"
+       sodipodi:r2="84.285713"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:flatsided="true"
+       inkscape:rounded="0.11"
+       inkscape:randomized="0"
+       d="M 11.428575,343.79076 C -20.688595,343.79076 -150.61715,118.74791 -134.55857,90.933621 C -118.49998,63.119335 141.35712,63.119328 157.41571,90.933613 C 173.47429,118.7479 43.545746,343.79076 11.428575,343.79076 z"
+       transform="matrix(1.0146457,-0.853428,0.853428,1.0146457,272.20143,300.96357)"
+       inkscape:export-filename="/home/kilian/workspace/trimage/trimage-icon.png"
+       inkscape:export-xdpi="11.166932"
+       inkscape:export-ydpi="11.166932" />
+    <path
+       sodipodi:type="star"
+       style="fill:#ffffff;fill-opacity:0.62500000000000000;stroke:none;stroke-width:4.66924454;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path3159"
+       sodipodi:sides="3"
+       sodipodi:cx="11.428571"
+       sodipodi:cy="175.21933"
+       sodipodi:r1="168.57143"
+       sodipodi:r2="84.285713"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:flatsided="true"
+       inkscape:rounded="0.11"
+       inkscape:randomized="0"
+       d="M 11.428575,343.79076 C -20.688595,343.79076 -150.61715,118.74791 -134.55857,90.933621 C -118.49998,63.119335 141.35712,63.119328 157.41571,90.933613 C 173.47429,118.7479 43.545746,343.79076 11.428575,343.79076 z"
+       transform="matrix(0.6555978,-0.5514294,0.5514294,0.6555978,380.12917,420.94953)"
+       inkscape:export-filename="/home/kilian/workspace/trimage/trimage-icon.png"
+       inkscape:export-xdpi="11.166932"
+       inkscape:export-ydpi="11.166932" />
+    <path
+       transform="matrix(1.385337,-1.1652199,1.1652199,1.385337,160.77379,177.08667)"
+       d="M 11.428575,343.79076 C -20.688595,343.79076 -150.61715,118.74791 -134.55857,90.933621 C -118.49998,63.119335 141.35712,63.119328 157.41571,90.933613 C 173.47429,118.7479 43.545746,343.79076 11.428575,343.79076 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0.11"
+       inkscape:flatsided="true"
+       sodipodi:arg2="2.6179939"
+       sodipodi:arg1="1.5707963"
+       sodipodi:r2="84.285713"
+       sodipodi:r1="168.57143"
+       sodipodi:cy="175.21933"
+       sodipodi:cx="11.428571"
+       sodipodi:sides="3"
+       id="path3185"
+       style="fill:url(#radialGradient3187);fill-opacity:1;stroke:none;stroke-width:2.20967632;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       sodipodi:type="star"
+       inkscape:export-filename="/home/kilian/workspace/trimage/trimage-icon.png"
+       inkscape:export-xdpi="11.166932"
+       inkscape:export-ydpi="11.166932" />
+    <path
+       sodipodi:type="star"
+       style="fill:url(#radialGradient3199);fill-opacity:1;stroke:#454545;stroke-width:8.28628619;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path3197"
+       sodipodi:sides="3"
+       sodipodi:cx="11.428571"
+       sodipodi:cy="175.21933"
+       sodipodi:r1="168.57143"
+       sodipodi:r2="84.285713"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:flatsided="true"
+       inkscape:rounded="0.11"
+       inkscape:randomized="0"
+       d="M 11.428575,343.79076 C -20.688595,343.79076 -150.61715,118.74791 -134.55857,90.933621 C -118.49998,63.119335 141.35712,63.119328 157.41571,90.933613 C 173.47429,118.7479 43.545746,343.79076 11.428575,343.79076 z"
+       transform="matrix(1.385337,-1.1652199,1.1652199,1.385337,160.77379,177.08667)"
+       inkscape:export-filename="/home/kilian/workspace/trimage/trimage-icon.png"
+       inkscape:export-xdpi="11.166932"
+       inkscape:export-ydpi="11.166932" />
+  </g>
+</svg>
