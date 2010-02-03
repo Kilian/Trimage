@@ -23,11 +23,8 @@ optipng for png and gif, jpegoptim for jpeg. both are available in ubuntu as dep
 
 ==========================================
 todo app wise
-- implement drag and drop on table
-- implement threading (and include advpng then)
+- implement threading
 - errors need to go to standarderror
-- implement a case insensitive file dialog open
-    ^ we can do this, but this is only needed for linux. for now lets just add uppercase equivalents
 - make icon
 
 todo else

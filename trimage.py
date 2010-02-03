@@ -96,7 +96,8 @@ class StartQT4(QMainWindow):
         images = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
             "", # directory
-            "Image files (*.png *.jpg *.jpeg)")
+            # this is a fix for file dialog differenciating between cases
+            "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
         for image in images:
             if self.checkname(image):
                 self.compress_file(image)
