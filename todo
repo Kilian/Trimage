@@ -2,7 +2,6 @@
 todo app wise
 - implement threading => http://diotavelli.net/PyQtWiki/Threading,_Signals_and_Slots
 - errors need to go to standarderror
-- add file icon to table view
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
