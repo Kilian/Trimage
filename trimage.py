@@ -14,6 +14,8 @@ from ui import Ui_trimage
 
 DEBUG = True
 
+#init imagelist
+imagelist = []
 
 class StartQT4(QMainWindow):
 
@@ -26,9 +28,6 @@ class StartQT4(QMainWindow):
 
         # disable recompress
         self.ui.recompress.setEnabled(False)
-
-        # init imagelist
-        self.imagelist = []
 
         # show application on load (or not if there are command line options)
         self.showapp = True
@@ -63,7 +62,9 @@ class StartQT4(QMainWindow):
             self.file_from_cmd(options.filename)
         if options.directory:
             self.dir_from_cmd(options.directory)
-
+    """
+    Input functions
+    """
     def dir_from_cmd(self, directory):
         """Read the files in the directory and send all files to
         compress_file."""
@@ -87,12 +88,6 @@ class StartQT4(QMainWindow):
         if self.checkname(image):
             self.compress_file(image)
 
-
-    def checkname(self, name):
-        """Check if the file is a jpg or png."""
-        if path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]:
-            return True
-
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
@@ -105,17 +100,15 @@ class StartQT4(QMainWindow):
             if self.checkname(image):
                 self.compress_file(image)
 
-    def enable_recompress(self):
-        """Enable the recompress button."""
-        self.ui.recompress.setEnabled(True)
-
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
-        imagelistcopy = self.imagelist
-        self.imagelist = []
+        imagelistcopy = imagelist
+        imagelist = []
         for image in imagelistcopy:
             self.compress_file(image[-1])
-
+    """
+    Compress functions
+    """
     def compress_file(self, filename):
         """Compress the given file, get data from it and call update_table."""
 
@@ -153,7 +146,7 @@ class StartQT4(QMainWindow):
             ratiostr = "%.1f%%" % ratio
 
             # append current image to list
-            self.imagelist.append(
+            imagelist.append(
                 (name, oldfilesizestr, newfilesizestr, ratiostr, filename, QIcon(filename)))
             self.update_table()
 
@@ -161,17 +154,18 @@ class StartQT4(QMainWindow):
                 # we work via the commandline
                 print("File:" + filename + ", Old Size:" + oldfilesizestr +
                       ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
-
         else:
             # TODO nice error recovery
             print("uh. not good")
-
+    """
+    UI Functions
+    """
     def update_table(self):
         """Update the table view with the latest file data."""
         tview = self.ui.processedfiles
 
         # set table model
-        tmodel = TriTableModel(self, self.imagelist,
+        tmodel = TriTableModel(self, imagelist,
             ["Filename", "Old Size", "New Size", "Compressed"])
         tview.setModel(tmodel)
 
@@ -184,7 +178,7 @@ class StartQT4(QMainWindow):
         hh.setStretchLastSection(True)
 
         # set all row heights
-        nrows = len(self.imagelist)
+        nrows = len(imagelist)
         for row in range(nrows):
             tview.setRowHeight(row, 25)
 
@@ -193,7 +187,17 @@ class StartQT4(QMainWindow):
 
         # enable recompress button
         self.enable_recompress()
+    """
+    Helper functions
+    """
+    def checkname(self, name):
+        """Check if the file is a jpg or png."""
+        if path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]:
+            return True
 
+    def enable_recompress(self):
+        """Enable the recompress button."""
+        self.ui.recompress.setEnabled(True)
 
 class TriTableModel(QAbstractTableModel):
 
@@ -204,12 +208,12 @@ class TriTableModel(QAbstractTableModel):
         tuple length has to match header length
         """
         QAbstractTableModel.__init__(self, parent, *args)
-        self.imagelist = imagelist
+        imagelist = imagelist
         self.header = header
 
     def rowCount(self, parent):
         """Count the number of rows."""
-        return len(self.imagelist)
+        return len(imagelist)
 
     def columnCount(self, parent):
         """Count the number of columns."""
@@ -220,11 +224,11 @@ class TriTableModel(QAbstractTableModel):
         if not index.isValid():
             return QVariant()
         elif role == Qt.DisplayRole:
-            data = self.imagelist[index.row()][index.column()]
+            data = imagelist[index.row()][index.column()]
             return QVariant(data)
         elif index.column()==0 and role == Qt.DecorationRole:
             # decorate column 0 with an icon of the image itself
-            f_icon = self.imagelist[index.row()][5]
+            f_icon = imagelist[index.row()][5]
             return QVariant(f_icon)
         else:
             return QVariant()
