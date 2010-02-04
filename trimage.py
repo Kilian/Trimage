@@ -154,7 +154,7 @@ class StartQT4(QMainWindow):
 
             # append current image to list
             self.imagelist.append(
-                (name, oldfilesizestr, newfilesizestr, ratiostr, filename))
+                (name, oldfilesizestr, newfilesizestr, ratiostr, filename, QIcon(filename)))
             self.update_table()
 
             if self.showapp != True:
@@ -224,7 +224,7 @@ class TriTableModel(QAbstractTableModel):
             return QVariant(data)
         elif index.column()==0 and role == Qt.DecorationRole:
             # decorate column 0 with an icon of the image itself
-            f_icon = QIcon( self.imagelist[index.row()][4] )
+            f_icon = self.imagelist[index.row()][5]
             return QVariant(f_icon)
         else:
             return QVariant()
