@@ -17,6 +17,9 @@ DEBUG = True
 #init imagelist
 imagelist = []
 
+# show application on load (or not if there are command line options)
+showapp = True
+
 class StartQT4(QMainWindow):
 
     def __init__(self, parent=None):
@@ -29,11 +32,13 @@ class StartQT4(QMainWindow):
         # disable recompress
         self.ui.recompress.setEnabled(False)
 
-        # show application on load (or not if there are command line options)
-        self.showapp = True
+
 
         # activate command line options
         self.commandline_options()
+
+        # make a worker thread
+        self.thread = Worker()
 
         # connect signals with slots
         QObject.connect(self.ui.addfiles, SIGNAL("clicked()"),
@@ -44,6 +49,9 @@ class StartQT4(QMainWindow):
             qApp, SLOT('quit()'))
         QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
             self.file_drop)
+        QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
+        QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
+        QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
 
     def commandline_options(self):
         """Set up the command line options."""
@@ -68,25 +76,24 @@ class StartQT4(QMainWindow):
     def dir_from_cmd(self, directory):
         """Read the files in the directory and send all files to
         compress_file."""
-        self.showapp = False
+        showapp = False
         imagedir = listdir(directory)
         for image in imagedir:
             image = path.join(directory, image)
-            name = QFileInfo(image).fileName()
-            if self.checkname(name):
-                self.compress_file(image)
+        self.delegator(imagedir)
 
     def file_from_cmd(self, image):
         """Get the file and send it to compress_file"""
-        self.showapp = False
-        if self.checkname(image):
-            self.compress_file(image)
+        showapp = False
+        filecmdlist = []
+        filecmdlist.append(image)
+        self.delegator(filecmdlist)
 
     def file_drop(self, image):
         """Get a file from the drag and drop handler and send it to
         compress_file."""
         if self.checkname(image):
-            self.compress_file(image)
+            self.delegator(image)
 
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
@@ -96,74 +103,29 @@ class StartQT4(QMainWindow):
             "", # directory
             # this is a fix for file dialog differenciating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
-        for image in images:
-            if self.checkname(image):
-                self.compress_file(image)
+        self.delegator(images)
+
 
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
-        imagelistcopy = imagelist
-        imagelist = []
-        for image in imagelistcopy:
-            self.compress_file(image[-1])
+        self.delegator(imagelist)
+
     """
     Compress functions
     """
-    def compress_file(self, filename):
-        """Compress the given file, get data from it and call update_table."""
+    def delegator(self, images):
+        delegatorlist = []
+        for image in images:
+            if self.checkname(image):
+                delegatorlist.append((image, QIcon(image)))
+        self.thread.compress_file(delegatorlist)
 
-        #gather old file data
-        oldfile = QFileInfo(filename)
-        name = oldfile.fileName()
-        oldfilesize = oldfile.size()
-        oldfilesizestr = size(oldfilesize, system=alternative)
-
-        #decide with tool to use
-        if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg"]:
-            runstr = 'jpegoptim -f --strip-all "' + str(filename) + '"'
-            try:
-                retcode = call(runstr, shell=True, stdout=PIPE)
-                runfile = retcode
-            except OSError, e:
-                runfile = e
-        elif path.splitext(str(filename))[1].lower() in [".png"]:
-            runstr = ('optipng -force -o7 "' + str(filename)
-                      + '"; advpng -z4 "' + str(filename) + '"')
-            try:
-                retcode = call(runstr, shell=True, stdout=PIPE)
-                runfile = retcode
-            except OSError, e:
-                runfile = e
-
-        if runfile == 0:
-            #gather new file data
-            newfile = QFile(filename)
-            newfilesize = newfile.size()
-            newfilesizestr = size(newfilesize, system=alternative)
-
-            #calculate ratio and make a nice string
-            ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
-            ratiostr = "%.1f%%" % ratio
-
-            # append current image to list
-            imagelist.append(
-                (name, oldfilesizestr, newfilesizestr, ratiostr, filename, QIcon(filename)))
-            self.update_table()
-
-            if self.showapp != True:
-                # we work via the commandline
-                print("File:" + filename + ", Old Size:" + oldfilesizestr +
-                      ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
-        else:
-            # TODO nice error recovery
-            print("uh. not good")
     """
     UI Functions
     """
     def update_table(self):
         """Update the table view with the latest file data."""
         tview = self.ui.processedfiles
-
         # set table model
         tmodel = TriTableModel(self, imagelist,
             ["Filename", "Old Size", "New Size", "Compressed"])
@@ -187,6 +149,7 @@ class StartQT4(QMainWindow):
 
         # enable recompress button
         self.enable_recompress()
+
     """
     Helper functions
     """
@@ -235,16 +198,84 @@ class TriTableModel(QAbstractTableModel):
 
     def headerData(self, col, orientation, role):
         """Get header data."""
-        if orientation == Qt.Horizontal and (role == Qt.DisplayRole or role == Qt.DecorationRole):
+        if orientation == Qt.Horizontal and (role == Qt.DisplayRole or
+        role == Qt.DecorationRole):
             return QVariant(self.header[col])
         return QVariant()
+
+
+class Worker(QThread):
+
+    def __init__(self, parent = None):
+
+        QThread.__init__(self, parent)
+        self.exiting = False
+
+    def __del__(self):
+
+        self.exiting = True
+        self.wait()
+
+    def compress_file(self, images):
+        self.images = images
+        self.start()
+
+    def run(self):
+        """Compress the given file, get data from it and call update_table."""
+        for image in self.images:
+            #gather old file data
+            filename = image[0]
+            icon = image[1]
+            oldfile = QFileInfo(filename)
+            name = oldfile.fileName()
+            oldfilesize = oldfile.size()
+            oldfilesizestr = size(oldfilesize, system=alternative)
+            #decide with tool to use
+            if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg"]:
+                runstr = 'jpegoptim -f --strip-all "' + str(filename) + '"'
+                try:
+                    retcode = call(runstr, shell=True, stdout=PIPE)
+                    runfile = retcode
+                except OSError, e:
+                    runfile = e
+            elif path.splitext(str(filename))[1].lower() in [".png"]:
+                runstr = ('optipng -force -o7 "' + str(filename)
+                          + '"; advpng -z4 "' + str(filename) + '"')
+                try:
+                    retcode = call(runstr, shell=True, stdout=PIPE)
+                    runfile = retcode
+                except OSError, e:
+                    runfile = e
+
+            if runfile == 0:
+                #gather new file data
+                newfile = QFile(filename)
+                newfilesize = newfile.size()
+                newfilesizestr = size(newfilesize, system=alternative)
+
+                #calculate ratio and make a nice string
+                ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
+                ratiostr = "%.1f%%" % ratio
+
+                # append current image to list
+                imagelist.append((name, oldfilesizestr, newfilesizestr, ratiostr,
+                                  filename, icon))
+                self.emit(SIGNAL("updateUi"))
+
+                if showapp != True:
+                    # we work via the commandline
+                    print("File:" + filename + ", Old Size:" + oldfilesizestr +
+                          ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
+            else:
+                # TODO nice error recovery
+                print("uh. not good")
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     myapp = StartQT4()
 
-    if myapp.showapp:
+    if showapp:
         # no command line options called
         myapp.show()
     else:
