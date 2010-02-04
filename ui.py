@@ -28,8 +28,7 @@ class TrimageTableView(QTableView):
         files = str(event.mimeData().data("text/uri-list")).strip().split()
         for i, file in enumerate(files):
             files[i] = QUrl(QString(file)).toLocalFile()
-        for file in files:
-            self.emit(SIGNAL("fileDropEvent"), (file))
+        self.emit(SIGNAL("fileDropEvent"), (files))
 
 class Ui_trimage(object):
 

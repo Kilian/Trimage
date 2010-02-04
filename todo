@@ -1,7 +1,8 @@
 ==========================================
 todo app wise
-- implement threading => http://diotavelli.net/PyQtWiki/Threading,_Signals_and_Slots
 - errors need to go to standarderror
+- fix command line options
+- give a visual when thread is working
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
@@ -19,6 +20,7 @@ advancecomp 1.15
 ===========================================
 later versions:
 allow selection/deletion of rows from table (and subsequently the imagelist)
+check for double files
 pnypng api? http://www.gracepointafterfive.com/punypng/api
 imagemagick/graphicmagick?
 
