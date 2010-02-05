@@ -231,6 +231,7 @@ class TriTableModel(QAbstractTableModel):
 
 
 class Worker(QThread):
+
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
         self.exiting = False
@@ -264,13 +265,14 @@ class Worker(QThread):
             if extention in ['.jpg', '.jpeg']:
                 runString = 'jpegoptim -f --strip-all "%(file)s"'
             elif extention in ['.png']:
-                runString = 'optipng -force -o7 "%(file)s"; advpng -z4 "%(file)s"'
+                runString = '''optipng -force -o7 "%(file)s";
+                            advpng -z4 "%(file)s"'''
             else:
                 raise Exception('File %s does not have the appropriate'
                                 'extention' % filename)
 
             try:
-                retcode = call(runString % {'file' : filename}, shell=True,
+                retcode = call(runString % {'file': filename}, shell=True,
                                stdout=PIPE)
                 runfile = retcode
             except OSError, e:
@@ -291,7 +293,8 @@ class Worker(QThread):
                     if image[4] == filename:
                         imagelist.remove(image)
                         imagelist.insert(i, (name, oldfilesizestr,
-                                      newfilesizestr,ratiostr, filename, icon))
+                                             newfilesizestr, ratiostr,
+                                             filename, icon))
 
                 self.emit(SIGNAL("updateUi"))
 
@@ -302,7 +305,7 @@ class Worker(QThread):
                           ratiostr)
             else:
                 # TODO nice error recovery
-                raise Exception('Some error occurred!')
+                raise Exception('[error] %s' % runfile)
 
         if not showapp:
             quit()
