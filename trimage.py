@@ -20,14 +20,18 @@ imagelist = []
 # show application on load (or not if there are command line options)
 showapp = True
 
+
 class StartQT4(QMainWindow):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
+
+        #add quit shortcut
         if hasattr(QKeySequence, 'Quit'):
-            self.quit_shortcut = QShortcut(QKeySequence(QKeySequence.Quit), self)
+            self.quit_shortcut = QShortcut(QKeySequence(QKeySequence.Quit),
+                                           self)
         else:
             self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"), self)
 
@@ -65,14 +69,16 @@ class StartQT4(QMainWindow):
 
         options, args = parser.parse_args()
 
-        # do something with the file or directory
+        # send to correct function
         if options.filename:
             self.file_from_cmd(options.filename)
         if options.directory:
             self.dir_from_cmd(options.directory)
+
     """
     Input functions
     """
+
     def dir_from_cmd(self, directory):
         """Read the files in the directory and send all files to
         compress_file."""
@@ -120,21 +126,28 @@ class StartQT4(QMainWindow):
             newimagelist.append(image[4])
         imagelist = []
         self.delegator(newimagelist)
+
     """
     Compress functions
     """
+
     def delegator(self, images):
+        """Recieve all images, check them and send them to the worker
+           thread."""
         delegatorlist = []
         for image in images:
             if self.checkname(image):
                 delegatorlist.append((image, QIcon(image)))
-                #TODO figure out how to animate
-                imagelist.append(("Compressing...", "", "", "", image, QIcon(QPixmap("compressing.gif"))))
+                imagelist.append(("Compressing...", "", "", "", image,
+                                  QIcon(QPixmap("compressing.gif"))))
+            else:
+                print("[error] " + image + " not an image file")
         self.thread.compress_file(delegatorlist)
 
     """
     UI Functions
     """
+
     def update_table(self):
         """Update the table view with the latest file data."""
         tview = self.ui.processedfiles
@@ -165,6 +178,7 @@ class StartQT4(QMainWindow):
     """
     Helper functions
     """
+
     def checkname(self, name):
         """Check if the file is a jpg or png."""
         if path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]:
@@ -173,6 +187,7 @@ class StartQT4(QMainWindow):
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
+
 
 class TriTableModel(QAbstractTableModel):
 
@@ -195,13 +210,13 @@ class TriTableModel(QAbstractTableModel):
         return len(self.header)
 
     def data(self, index, role):
-        """Get data."""
+        """fill the table with data"""
         if not index.isValid():
             return QVariant()
         elif role == Qt.DisplayRole:
             data = imagelist[index.row()][index.column()]
             return QVariant(data)
-        elif index.column()==0 and role == Qt.DecorationRole:
+        elif index.column() == 0 and role == Qt.DecorationRole:
             # decorate column 0 with an icon of the image itself
             f_icon = imagelist[index.row()][5]
             return QVariant(f_icon)
@@ -209,7 +224,7 @@ class TriTableModel(QAbstractTableModel):
             return QVariant()
 
     def headerData(self, col, orientation, role):
-        """Get header data."""
+        """Fill the table headers."""
         if orientation == Qt.Horizontal and (role == Qt.DisplayRole or
         role == Qt.DecorationRole):
             return QVariant(self.header[col])
@@ -218,17 +233,16 @@ class TriTableModel(QAbstractTableModel):
 
 class Worker(QThread):
 
-    def __init__(self, parent = None):
-
+    def __init__(self, parent=None):
         QThread.__init__(self, parent)
         self.exiting = False
 
     def __del__(self):
-
         self.exiting = True
         self.wait()
 
     def compress_file(self, images):
+        """Start the worker thread."""
         self.images = images
         self.start()
 
@@ -274,18 +288,18 @@ class Worker(QThread):
                 for i, image in enumerate(imagelist):
                     if image[4] == filename:
                         imagelist.remove(image)
-                        imagelist.insert(i, (name, oldfilesizestr, newfilesizestr, ratiostr,
-                                  filename, icon))
+                        imagelist.insert(i, (name, oldfilesizestr,
+                                    newfilesizestr, ratiostr, filename, icon))
                 self.emit(SIGNAL("updateUi"))
 
                 global showapp
                 if showapp != True:
                     # we work via the commandline
                     print("File:" + filename + ", Old Size:" + oldfilesizestr +
-                          ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
+                          ", New Size:" + newfilesizestr +
+                          ", Ratio:" + ratiostr)
             else:
-                # TODO nice error recovery
-                print("uh. not good")
+                print("[error]" + runfile)
 
 
 if __name__ == "__main__":
