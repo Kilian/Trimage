@@ -32,9 +32,6 @@ class StartQT4(QMainWindow):
         # disable recompress
         self.ui.recompress.setEnabled(False)
 
-        # activate command line options
-        self.commandline_options()
-
         # make a worker thread
         self.thread = Worker()
 
@@ -50,6 +47,9 @@ class StartQT4(QMainWindow):
         QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
         QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
         QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
+
+        # activate command line options
+        self.commandline_options()
 
     def commandline_options(self):
         """Set up the command line options."""
@@ -76,10 +76,11 @@ class StartQT4(QMainWindow):
         compress_file."""
         global showapp
         showapp = False
+        dirpath = path.abspath(path.dirname(directory))
         imagedir = listdir(directory)
         filelist = QStringList()
         for image in imagedir:
-            image = path.join(directory, image)
+            image = QString(path.join(dirpath, image))
             filelist.append(image)
         self.delegator(filelist)
 
@@ -87,6 +88,7 @@ class StartQT4(QMainWindow):
         """Get the file and send it to compress_file"""
         global showapp
         showapp = False
+        image = path.abspath(image)
         filecmdlist = QStringList()
         filecmdlist.append(image)
         self.delegator(filecmdlist)
@@ -94,6 +96,7 @@ class StartQT4(QMainWindow):
     def file_drop(self, images):
         """Get a file from the drag and drop handler and send it to
         compress_file."""
+        print images[0]
         self.delegator(images)
 
     def file_dialog(self):
@@ -110,12 +113,10 @@ class StartQT4(QMainWindow):
         """Send each file in the current file list to compress_file again."""
         newimagelist = []
 
+        global imagelist
         for image in imagelist:
             newimagelist.append(image[4])
-
-        for i, image in enumerate(imagelist):
-            imagelist.remove(image)
-
+        imagelist = []
         self.delegator(newimagelist)
     """
     Compress functions
@@ -125,7 +126,8 @@ class StartQT4(QMainWindow):
         for image in images:
             if self.checkname(image):
                 delegatorlist.append((image, QIcon(image)))
-                imagelist.append(("Compressing...", "", "", "", image, QIcon(QPixmap("view-refresh.png"))))
+                #TODO figure out how to animate
+                imagelist.append(("Compressing...", "", "", "", image, QIcon(QPixmap("compressing.gif"))))
         self.thread.compress_file(delegatorlist)
 
     """
@@ -233,6 +235,7 @@ class Worker(QThread):
         for image in self.images:
             #gather old file data
             filename = image[0]
+            print(filename)
             icon = image[1]
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
@@ -267,7 +270,6 @@ class Worker(QThread):
 
                 # append current image to list
                 for i, image in enumerate(imagelist):
-                    print(image[4], filename)
                     if image[4] == filename:
                         imagelist.remove(image)
                         imagelist.insert(i, (name, oldfilesizestr, newfilesizestr, ratiostr,
@@ -288,7 +290,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     myapp = StartQT4()
 
-    global showapp
     if showapp:
         # no command line options called
         myapp.show()

@@ -2,8 +2,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-DEBUG = True
-
+DEBUG = False
 
 class TrimageTableView(QTableView):
 
