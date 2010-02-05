@@ -74,6 +74,7 @@ class StartQT4(QMainWindow):
     def dir_from_cmd(self, directory):
         """Read the files in the directory and send all files to
         compress_file."""
+        global showapp
         showapp = False
         imagedir = listdir(directory)
         filelist = QStringList()
@@ -84,6 +85,7 @@ class StartQT4(QMainWindow):
 
     def file_from_cmd(self, image):
         """Get the file and send it to compress_file"""
+        global showapp
         showapp = False
         filecmdlist = QStringList()
         filecmdlist.append(image)
@@ -272,6 +274,7 @@ class Worker(QThread):
                                   filename, icon))
                 self.emit(SIGNAL("updateUi"))
 
+                global showapp
                 if showapp != True:
                     # we work via the commandline
                     print("File:" + filename + ", Old Size:" + oldfilesizestr +
@@ -285,6 +288,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     myapp = StartQT4()
 
+    global showapp
     if showapp:
         # no command line options called
         myapp.show()
