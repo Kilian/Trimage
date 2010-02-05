@@ -1,7 +1,6 @@
 ==========================================
 todo app wise
 - errors need to go to standarderror
-- fix command line options
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
@@ -27,4 +26,5 @@ later versions:
 
 thanks to:
 Neil Wallace
+Jeroen Goudsmit
 
