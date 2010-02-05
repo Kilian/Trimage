@@ -1,7 +1,7 @@
 import sys
 from os import system
 from os import listdir
-from os import path
+import os.path
 from subprocess import *
 from optparse import OptionParser
 
@@ -84,11 +84,11 @@ class StartQT4(QMainWindow):
         compress_file."""
         global showapp
         showapp = False
-        dirpath = path.abspath(path.dirname(directory))
+        dirpath = os.path.abspath(os.path.dirname(directory))
         imagedir = listdir(directory)
         filelist = QStringList()
         for image in imagedir:
-            image = QString(path.join(dirpath, image))
+            image = QString(os.path.join(dirpath, image))
             filelist.append(image)
         self.delegator(filelist)
 
@@ -96,7 +96,7 @@ class StartQT4(QMainWindow):
         """Get the file and send it to compress_file"""
         global showapp
         showapp = False
-        image = path.abspath(image)
+        image = os.path.abspath(image)
         filecmdlist = QStringList()
         filecmdlist.append(image)
         self.delegator(filecmdlist)
@@ -181,7 +181,7 @@ class StartQT4(QMainWindow):
 
     def checkname(self, name):
         """Check if the file is a jpg or png."""
-        return path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]
+        return os.path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]
 
     def enable_recompress(self):
         """Enable the recompress button."""
@@ -231,7 +231,6 @@ class TriTableModel(QAbstractTableModel):
 
 
 class Worker(QThread):
-
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
         self.exiting = False
@@ -250,56 +249,59 @@ class Worker(QThread):
         for image in self.images:
             #gather old file data
             filename = image[0]
-            print filename, type(filename), str(filename), type(path)
             icon = image[1]
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
             oldfilesize = oldfile.size()
             oldfilesizestr = size(oldfilesize, system=alternative)
+
+            # get extention
+            print os.path, type(filename), type(os.path), str(filename)
+            baseName, extention = os.path.splitext(filename)
+
             #decide with tool to use
-            if path.splitext(str(filename))[1].lower() in [".jpg", ".jpeg"]:
-                runstr = 'jpegoptim -f --strip-all "' + str(filename) + '"'
-                try:
-                    retcode = call(runstr, shell=True, stdout=PIPE)
-                    runfile = retcode
-                except OSError, e:
-                    runfile = e
-            elif path.splitext(str(filename))[1].lower() in [".png"]:
-                runstr = ('optipng -force -o7 "' + str(filename)
-                          + '"; advpng -z4 "' + str(filename) + '"')
-                try:
-                    retcode = call(runstr, shell=True, stdout=PIPE)
-                    runfile = retcode
-                except OSError, e:
-                    runfile = e
-
-            if runfile == 0:
-                #gather new file data
-                newfile = QFile(filename)
-                newfilesize = newfile.size()
-                newfilesizestr = size(newfilesize, system=alternative)
-
-                #calculate ratio and make a nice string
-                ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
-                ratiostr = "%.1f%%" % ratio
-
-                # append current image to list
-                for i, image in enumerate(imagelist):
-                    if image[4] == filename:
-                        imagelist.remove(image)
-                        imagelist.insert(i, (name, oldfilesizestr,
-                                    newfilesizestr, ratiostr, filename, icon))
-                self.emit(SIGNAL("updateUi"))
-
-                global showapp
-                if showapp != True:
-                    # we work via the commandline
-                    print("File:" + filename + ", Old Size:" + oldfilesizestr +
-                          ", New Size:" + newfilesizestr +
-                          ", Ratio:" + ratiostr)
+            if extention in ['.jpg', '.jpeg']:
+                runString = 'jpegoptim -f --strip-all "%(file)s"'
+            elif extention in ['.png']:
+                runString = 'optipng -force -o7 "%(file)s"; advpng -z4 "%(file)s"'
             else:
-                print("[error]" + runfile)
+                # This probably should never happen...
+                raise Exception('File %s does not have the appropriate extention' % filename)
 
+            try:
+                retcode = call(runString % {'file' : filename}, shell=True, stdout=PIPE)
+                runfile = retcode
+            except OSError, e:
+                runfile = e
+
+            if runfile != 0:
+                # TODO nice error recovery
+                raise Exception('Some error occurred!')
+
+
+            #gather new file data
+            newfile = QFile(filename)
+            newfilesize = newfile.size()
+            newfilesizestr = size(newfilesize, system=alternative)
+
+            #calculate ratio and make a nice string
+            ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
+            ratiostr = "%.1f%%" % ratio
+
+            # append current image to list
+            global imagelist
+            for i, image in enumerate(imagelist):
+                if image[4] == filename:
+                    imagelist.remove(image)
+                    imagelist.insert(i, (name, oldfilesizestr, newfilesizestr, ratiostr,
+                              filename, icon))
+            self.emit(SIGNAL("updateUi"))
+
+            global showapp
+            if not showapp:
+                # we work via the commandline
+                print("File:" + filename + ", Old Size:" + oldfilesizestr +
+                      ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
