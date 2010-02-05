@@ -1,7 +1,7 @@
 import sys
 from os import system
 from os import listdir
-import os.path
+from os import path
 from subprocess import *
 from optparse import OptionParser
 
@@ -84,11 +84,11 @@ class StartQT4(QMainWindow):
         compress_file."""
         global showapp
         showapp = False
-        dirpath = os.path.abspath(os.path.dirname(directory))
+        dirpath = path.abspath(path.dirname(directory))
         imagedir = listdir(directory)
         filelist = QStringList()
         for image in imagedir:
-            image = QString(os.path.join(dirpath, image))
+            image = QString(path.join(dirpath, image))
             filelist.append(image)
         self.delegator(filelist)
 
@@ -96,7 +96,7 @@ class StartQT4(QMainWindow):
         """Get the file and send it to compress_file"""
         global showapp
         showapp = False
-        image = os.path.abspath(image)
+        image = path.abspath(image)
         filecmdlist = QStringList()
         filecmdlist.append(image)
         self.delegator(filecmdlist)
@@ -181,7 +181,7 @@ class StartQT4(QMainWindow):
 
     def checkname(self, name):
         """Check if the file is a jpg or png."""
-        return os.path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]
+        return path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]
 
     def enable_recompress(self):
         """Enable the recompress button."""
@@ -246,17 +246,19 @@ class Worker(QThread):
 
     def run(self):
         """Compress the given file, get data from it and call update_table."""
+        global showapp
+        global imagelist
         for image in self.images:
             #gather old file data
-            filename = image[0]
+            filename = str(image[0])
             icon = image[1]
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
             oldfilesize = oldfile.size()
             oldfilesizestr = size(oldfilesize, system=alternative)
+
             # get extention
-            print os.path, type(filename), type(os.path), str(filename)
-            baseName, extention = os.path.splitext(filename)
+            baseName, extention = path.splitext(filename)
 
             #decide with tool to use
             if extention in ['.jpg', '.jpeg']:
@@ -264,52 +266,51 @@ class Worker(QThread):
             elif extention in ['.png']:
                 runString = 'optipng -force -o7 "%(file)s"; advpng -z4 "%(file)s"'
             else:
-                # This probably should never happen...
-                raise Exception('File %s does not have the appropriate extention' % filename)
+                raise Exception('File %s does not have the appropriate'
+                                'extention' % filename)
 
             try:
-                retcode = call(runString % {'file' : filename}, shell = True, stdout = PIPE)
-
+                retcode = call(runString % {'file' : filename}, shell=True,
+                               stdout=PIPE)
                 runfile = retcode
             except OSError, e:
                 runfile = e
 
-            if runfile != 0:
+            if runfile == 0:
+                #gather new file data
+                newfile = QFile(filename)
+                newfilesize = newfile.size()
+                newfilesizestr = size(newfilesize, system=alternative)
+
+                #calculate ratio and make a nice string
+                ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
+                ratiostr = "%.1f%%" % ratio
+
+                # append current image to list
+                for i, image in enumerate(imagelist):
+                    if image[4] == filename:
+                        imagelist.remove(image)
+                        imagelist.insert(i, (name, oldfilesizestr,
+                                      newfilesizestr,ratiostr, filename, icon))
+
+                self.emit(SIGNAL("updateUi"))
+
+                if not showapp:
+                    # we work via the commandline
+                    print("File:" + filename + ", Old Size:" + oldfilesizestr +
+                          ", New Size:" + newfilesizestr + ", Ratio:" +
+                          ratiostr)
+            else:
                 # TODO nice error recovery
                 raise Exception('Some error occurred!')
 
-
-            #gather new file data
-            newfile = QFile(filename)
-            newfilesize = newfile.size()
-            newfilesizestr = size(newfilesize, system=alternative)
-
-            #calculate ratio and make a nice string
-            ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
-            ratiostr = "%.1f%%" % ratio
-
-            # append current image to list
-            global imagelist
-            for i, image in enumerate(imagelist):
-                if image[4] == filename:
-                    imagelist.remove(image)
-                    imagelist.insert(i, (name, oldfilesizestr, newfilesizestr, ratiostr,
-                              filename, icon))
-            self.emit(SIGNAL("updateUi"))
-
-            global showapp
-            if not showapp:
-                # we work via the commandline
-                print("File:" + filename + ", Old Size:" + oldfilesizestr +
-                      ", New Size:" + newfilesizestr + ", Ratio:" + ratiostr)
+        if not showapp:
+            quit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     myapp = StartQT4()
 
     if showapp:
-        # no command line options called
         myapp.show()
-    else:
-        quit()
     sys.exit(app.exec_())
