@@ -254,7 +254,6 @@ class Worker(QThread):
             name = oldfile.fileName()
             oldfilesize = oldfile.size()
             oldfilesizestr = size(oldfilesize, system=alternative)
-
             # get extention
             print os.path, type(filename), type(os.path), str(filename)
             baseName, extention = os.path.splitext(filename)
@@ -269,7 +268,8 @@ class Worker(QThread):
                 raise Exception('File %s does not have the appropriate extention' % filename)
 
             try:
-                retcode = call(runString % {'file' : filename}, shell=True, stdout=PIPE)
+                retcode = call(runString % {'file' : filename}, shell = True, stdout = PIPE)
+
                 runfile = retcode
             except OSError, e:
                 runfile = e
