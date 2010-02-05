@@ -240,7 +240,7 @@ class Worker(QThread):
             name = oldfile.fileName()
             oldfilesize = oldfile.size()
             oldfilesizestr = size(oldfilesize, system=alternative)
-           
+            print type(filename)
             # get extention
             baseName, extention = os.path.splitext(filename)
             
@@ -248,13 +248,13 @@ class Worker(QThread):
             if extention in ['.jpg', '.jpeg']:
                 runString = 'jpegoptim -f --strip-all "%(file)s"' 
             elif extention in ['.png']:
-                runString = 'optipng -force -o7 "%(file)s"; advpng -z4 "%(file)"'
+                runString = 'optipng -force -o7 "%(file)s"; advpng -z4 "%(file)s"'
             else:
                 # This probably should never happen...
                 raise Exception('File %s does not have the appropriate extention' % filename)
                           
             try:
-                retcode = call(runString % {'file' : filename, shell = True, stdout = PIPE)
+                retcode = call(runString % {'file' : filename}, shell = True, stdout = PIPE)
                 runfile = retcode
             except OSError, e:
                 runfile = e
