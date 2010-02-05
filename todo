@@ -18,13 +18,11 @@ jpgegoptim 1.2.2
 advancecomp 1.15
 ===========================================
 later versions:
-animate compressing.gif
-figure out why QKeySequence.quit doesnt work
-
-allow selection/deletion of rows from table (and subsequently the imagelist)
-check for double files
-pnypng api? http://www.gracepointafterfive.com/punypng/api
-imagemagick/graphicmagick?
+    animate compressing.gif
+    allow selection/deletion of rows from table (and subsequently the imagelist)
+    check for double files when adding
+    pnypng api? http://www.gracepointafterfive.com/punypng/api
+    imagemagick/graphicmagick?
 
 
 thanks to:

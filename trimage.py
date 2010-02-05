@@ -26,8 +26,10 @@ class StartQT4(QMainWindow):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
-        #TODO use standardKey Quit.
-        self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"), self)
+        if hasattr(QKeySequence, 'Quit'):
+            self.quit_shortcut = QShortcut(QKeySequence(QKeySequence.Quit), self)
+        else:
+            self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"), self)
 
         # disable recompress
         self.ui.recompress.setEnabled(False)
