@@ -181,8 +181,7 @@ class StartQT4(QMainWindow):
 
     def checkname(self, name):
         """Check if the file is a jpg or png."""
-        if path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]:
-            return True
+        return path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]
 
     def enable_recompress(self):
         """Enable the recompress button."""
@@ -198,12 +197,12 @@ class TriTableModel(QAbstractTableModel):
         tuple length has to match header length
         """
         QAbstractTableModel.__init__(self, parent, *args)
-        imagelist = imagelist
+        self.imagelist = imagelist
         self.header = header
 
     def rowCount(self, parent):
         """Count the number of rows."""
-        return len(imagelist)
+        return len(self.imagelist)
 
     def columnCount(self, parent):
         """Count the number of columns."""
@@ -214,11 +213,11 @@ class TriTableModel(QAbstractTableModel):
         if not index.isValid():
             return QVariant()
         elif role == Qt.DisplayRole:
-            data = imagelist[index.row()][index.column()]
+            data = self.imagelist[index.row()][index.column()]
             return QVariant(data)
         elif index.column() == 0 and role == Qt.DecorationRole:
             # decorate column 0 with an icon of the image itself
-            f_icon = imagelist[index.row()][5]
+            f_icon = self.imagelist[index.row()][5]
             return QVariant(f_icon)
         else:
             return QVariant()
@@ -251,7 +250,7 @@ class Worker(QThread):
         for image in self.images:
             #gather old file data
             filename = image[0]
-            print(filename)
+            print filename, type(filename), str(filename), type(path)
             icon = image[1]
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
