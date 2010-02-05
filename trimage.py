@@ -17,8 +17,9 @@ DEBUG = True
 #init imagelist
 imagelist = []
 
-# show application on load (or not if there are command line options)
+# defaults
 showapp = True
+verbose = True
 
 
 class StartQT4(QMainWindow):
@@ -62,10 +63,18 @@ class StartQT4(QMainWindow):
         parser = OptionParser(version="%prog " + VERSION,
             description="GUI front-end to compress png and jpg images via "
                 "optipng, advpng and jpegoptim")
+
+        parser.set_defaults(verbose=True)
+        parser.add_option("-v", "--verbose", action="store_true",
+            dest="verbose", help="Verbose mode (default)")
+        parser.add_option("-q", "--quiet", action="store_false",
+            dest="verbose", help="Quiet mode")
+
         parser.add_option("-f", "--file", action="store", type="string",
             dest="filename", help="compresses image and exit")
         parser.add_option("-d", "--directory", action="store", type="string",
             dest="directory", help="compresses images in directory and exit", )
+
 
         options, args = parser.parse_args()
 
@@ -74,6 +83,9 @@ class StartQT4(QMainWindow):
             self.file_from_cmd(options.filename)
         if options.directory:
             self.dir_from_cmd(options.directory)
+
+        global verbose
+        verbose = options.verbose
 
     """
     Input functions
@@ -141,7 +153,7 @@ class StartQT4(QMainWindow):
                 imagelist.append(("Compressing...", "", "", "", image,
                                   QIcon(QPixmap("compressing.gif"))))
             else:
-                print("[error] " + image + " not an image file")
+                print('[error] %s not an image file' % filename)
         self.thread.compress_file(delegatorlist)
 
     """
@@ -249,6 +261,7 @@ class Worker(QThread):
         """Compress the given file, get data from it and call update_table."""
         global showapp
         global imagelist
+        global verbose
         for image in self.images:
             #gather old file data
             filename = str(image[0])
@@ -268,8 +281,7 @@ class Worker(QThread):
                 runString = '''optipng -force -o7 "%(file)s";
                             advpng -z4 "%(file)s"'''
             else:
-                raise Exception('File %s does not have the appropriate'
-                                'extention' % filename)
+                print('[error] %s not an image file' % filename)
 
             try:
                 retcode = call(runString % {'file': filename}, shell=True,
@@ -298,16 +310,16 @@ class Worker(QThread):
 
                 self.emit(SIGNAL("updateUi"))
 
-                if not showapp:
+                if not showapp and verbose:
                     # we work via the commandline
                     print("File:" + filename + ", Old Size:" + oldfilesizestr +
                           ", New Size:" + newfilesizestr + ", Ratio:" +
                           ratiostr)
             else:
-                # TODO nice error recovery
-                raise Exception('[error] %s' % runfile)
+                print('[error] %s' % runfile)
 
         if not showapp:
+            #make sure the app quits after all images are done
             quit()
 
 if __name__ == "__main__":
