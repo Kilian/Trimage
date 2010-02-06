@@ -12,7 +12,6 @@ from hurry.filesize import *
 from ui import Ui_trimage
 
 VERSION = "1.0"
-DEBUG = True
 
 #init imagelist
 imagelist = []
@@ -75,7 +74,6 @@ class StartQT4(QMainWindow):
         parser.add_option("-d", "--directory", action="store", type="string",
             dest="directory", help="compresses images in directory and exit", )
 
-
         options, args = parser.parse_args()
 
         # send to correct function
@@ -116,7 +114,6 @@ class StartQT4(QMainWindow):
     def file_drop(self, images):
         """Get a file from the drag and drop handler and send it to
         compress_file."""
-        print images[0]
         self.delegator(images)
 
     def file_dialog(self):
@@ -131,9 +128,8 @@ class StartQT4(QMainWindow):
 
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
-        newimagelist = []
-
         global imagelist
+        newimagelist = []
         for image in imagelist:
             newimagelist.append(image[4])
         imagelist = []
@@ -153,7 +149,7 @@ class StartQT4(QMainWindow):
                 imagelist.append(("Compressing...", "", "", "", image,
                                   QIcon(QPixmap("compressing.gif"))))
             else:
-                print('[error] %s not an image file' % filename)
+                print('[error] %s not an image file' % image)
         self.thread.compress_file(delegatorlist)
 
     """
@@ -272,7 +268,7 @@ class Worker(QThread):
             oldfilesizestr = size(oldfilesize, system=alternative)
 
             # get extention
-            baseName, extention = path.splitext(filename)
+            extention = path.splitext(filename)[1]
 
             #decide with tool to use
             if extention in ['.jpg', '.jpeg']:
