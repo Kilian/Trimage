@@ -3,9 +3,8 @@ todo app wise
 - errors need to go to standarderror
 
 todo else
-- figure out dependencies for a .deb/how to make a .deb
-- figure out launchpad repo or something
-- figure out how to make mac and win versions
+- figure out dependencies for a .deb/how to make a .deb <- via launchpad
+- figure out how to make mac and win versions (someone else :)
 
 current dependencies:
 python 2.6
@@ -20,7 +19,7 @@ later versions:
     animate compressing.gif
     allow selection/deletion of rows from table (and subsequently the imagelist)
     check for double files when adding
-    pnypng api? http://www.gracepointafterfive.com/punypng/api
+    punypng api? http://www.gracepointafterfive.com/punypng/api
     imagemagick/graphicmagick?
     always on top option
 
