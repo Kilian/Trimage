@@ -28,6 +28,10 @@ class StartQT4(QMainWindow):
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
 
+        # check if apps are installed
+        if self.checkapps():
+            quit()
+
         #add quit shortcut
         if hasattr(QKeySequence, 'Quit'):
             self.quit_shortcut = QShortcut(QKeySequence(QKeySequence.Quit),
@@ -194,6 +198,25 @@ class StartQT4(QMainWindow):
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
+
+    def checkapps(self):
+        #check if apps exist
+        status = False
+        retcode = call("jpegoptim --version", shell=True, stdout=PIPE)
+        if retcode != 0:
+            status = True
+            print("[error] please install jpegoptim")
+
+        retcode = call("optipng -v", shell=True, stdout=PIPE)
+        if retcode != 0:
+            status = True
+            print("[error] please install optipng")
+
+        retcode = call("advpng --version", shell=True, stdout=PIPE)
+        if retcode != 0:
+            status = True
+            print("[error] please install advancecomp")
+        return status
 
 
 class TriTableModel(QAbstractTableModel):
