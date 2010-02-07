@@ -1,7 +1,6 @@
 ==========================================
 todo app wise
 - errors need to go to standarderror
-- check for optipng, advpng en jpegoptim on load
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb
