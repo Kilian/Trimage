@@ -200,7 +200,7 @@ class StartQT4(QMainWindow):
         self.ui.recompress.setEnabled(True)
 
     def checkapps(self):
-        #check if apps exist
+        """Check if the required command line apps exist."""
         status = False
         retcode = call("jpegoptim --version", shell=True, stdout=PIPE)
         if retcode != 0:
