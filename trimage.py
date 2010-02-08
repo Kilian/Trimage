@@ -1,8 +1,7 @@
 import sys
-from os import system
 from os import listdir
 from os import path
-from subprocess import *
+from subprocess import call, PIPE
 from optparse import OptionParser
 
 from PyQt4.QtCore import *
@@ -11,7 +10,7 @@ from hurry.filesize import *
 
 from ui import Ui_trimage
 
-VERSION = "1.0"
+VERSION = "1.0.0"
 
 #init imagelist
 imagelist = []
@@ -33,9 +32,9 @@ class StartQT4(QMainWindow):
             quit()
 
         #add quit shortcut
-        if hasattr(QKeySequence, 'Quit'):
+        if hasattr(QKeySequence, "Quit"):
             self.quit_shortcut = QShortcut(QKeySequence(QKeySequence.Quit),
-                                           self)
+                self)
         else:
             self.quit_shortcut = QShortcut(QKeySequence("Ctrl+Q"), self)
 
@@ -76,7 +75,7 @@ class StartQT4(QMainWindow):
         parser.add_option("-f", "--file", action="store", type="string",
             dest="filename", help="compresses image and exit")
         parser.add_option("-d", "--directory", action="store", type="string",
-            dest="directory", help="compresses images in directory and exit", )
+            dest="directory", help="compresses images in directory and exit")
 
         options, args = parser.parse_args()
 
@@ -94,8 +93,9 @@ class StartQT4(QMainWindow):
     """
 
     def dir_from_cmd(self, directory):
-        """Read the files in the directory and send all files to
-        compress_file."""
+        """
+        Read the files in the directory and send all files to compress_file.
+        """
         global showapp
         showapp = False
         dirpath = path.abspath(path.dirname(directory))
@@ -116,8 +116,9 @@ class StartQT4(QMainWindow):
         self.delegator(filecmdlist)
 
     def file_drop(self, images):
-        """Get a file from the drag and drop handler and send it to
-        compress_file."""
+        """
+        Get a file from the drag and drop handler and send it to compress_file.
+        """
         self.delegator(images)
 
     def file_dialog(self):
@@ -126,7 +127,7 @@ class StartQT4(QMainWindow):
         images = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
             "", # directory
-            # this is a fix for file dialog differenciating between cases
+            # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
         self.delegator(images)
 
@@ -144,16 +145,17 @@ class StartQT4(QMainWindow):
     """
 
     def delegator(self, images):
-        """Recieve all images, check them and send them to the worker
-           thread."""
+        """
+        Recieve all images, check them and send them to the worker thread.
+        """
         delegatorlist = []
         for image in images:
             if self.checkname(image):
                 delegatorlist.append((image, QIcon(image)))
                 imagelist.append(("Compressing...", "", "", "", image,
-                                  QIcon(QPixmap("compressing.gif"))))
+                    QIcon(QPixmap("compressing.gif"))))
             else:
-                print('[error] %s not an image file' % image)
+                sys.stderr.write("[error] %s not an image file" % image)
         self.thread.compress_file(delegatorlist)
 
     """
@@ -205,17 +207,17 @@ class StartQT4(QMainWindow):
         retcode = call("jpegoptim --version", shell=True, stdout=PIPE)
         if retcode != 0:
             status = True
-            print("[error] please install jpegoptim")
+            sys.stderr.write("[error] please install jpegoptim")
 
         retcode = call("optipng -v", shell=True, stdout=PIPE)
         if retcode != 0:
             status = True
-            print("[error] please install optipng")
+            sys.stderr.write("[error] please install optipng")
 
         retcode = call("advpng --version", shell=True, stdout=PIPE)
         if retcode != 0:
             status = True
-            print("[error] please install advancecomp")
+            sys.stderr.write("[error] please install advancecomp")
         return status
 
 
@@ -223,9 +225,9 @@ class TriTableModel(QAbstractTableModel):
 
     def __init__(self, parent, imagelist, header, *args):
         """
-        imagelist is list of tuples
-        header is list of strings
-        tuple length has to match header length
+        @param parent Qt parent object.
+        @param imagelist A list of tuples.
+        @param header A list of strings.
         """
         QAbstractTableModel.__init__(self, parent, *args)
         self.imagelist = imagelist
@@ -240,7 +242,7 @@ class TriTableModel(QAbstractTableModel):
         return len(self.header)
 
     def data(self, index, role):
-        """fill the table with data"""
+        """Fill the table with data."""
         if not index.isValid():
             return QVariant()
         elif role == Qt.DisplayRole:
@@ -278,9 +280,7 @@ class Worker(QThread):
 
     def run(self):
         """Compress the given file, get data from it and call update_table."""
-        global showapp
         global imagelist
-        global verbose
         for image in self.images:
             #gather old file data
             filename = str(image[0])
@@ -292,21 +292,20 @@ class Worker(QThread):
 
             # get extention
             extention = path.splitext(filename)[1]
-
             #decide with tool to use
-            if extention in ['.jpg', '.jpeg']:
-                runString = 'jpegoptim -f --strip-all "%(file)s"'
-            elif extention in ['.png']:
-                runString = '''optipng -force -o7 "%(file)s";
-                            advpng -z4 "%(file)s"'''
+            if extention in [".jpg", ".jpeg"]:
+                runString = "jpegoptim -f --strip-all '%(file)s'"
+            elif extention in [".png"]:
+                runString = ("optipng -force -o7 '%(file)s';"
+                    "advpng -z4 '%(file)s'")
             else:
-                print('[error] %s not an image file' % filename)
+                sys.stderr.write("[error] %s not an image file" % filename)
 
             try:
-                retcode = call(runString % {'file': filename}, shell=True,
+                retcode = call(runString % {"file": filename}, shell=True,
                                stdout=PIPE)
                 runfile = retcode
-            except OSError, e:
+            except OSError as e:
                 runfile = e
 
             if runfile == 0:
@@ -324,18 +323,17 @@ class Worker(QThread):
                     if image[4] == filename:
                         imagelist.remove(image)
                         imagelist.insert(i, (name, oldfilesizestr,
-                                             newfilesizestr, ratiostr,
-                                             filename, icon))
+                            newfilesizestr, ratiostr, filename, icon))
 
                 self.emit(SIGNAL("updateUi"))
 
                 if not showapp and verbose:
                     # we work via the commandline
-                    print("File:" + filename + ", Old Size:" + oldfilesizestr +
-                          ", New Size:" + newfilesizestr + ", Ratio:" +
-                          ratiostr)
+                    print("File: " + filename + ", Old Size: "
+                        + oldfilesizestr + ", New Size: " + newfilesizestr
+                        + ", Ratio: " + ratiostr)
             else:
-                print('[error] %s' % runfile)
+                sys.stderr.write("[error] %s" % runfile)
 
         if not showapp:
             #make sure the app quits after all images are done
