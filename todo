@@ -1,6 +1,9 @@
 ==========================================
 todo app wise
 - get rid of globals
+- general refactoring
+- use multiprocessing lib to take advantage of multicore/multi-CPU to compress
+    multiple files simultaneously (threads have issues in Python; see "GIL")
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb <- via launchpad
@@ -20,10 +23,9 @@ later versions:
     allow selection/deletion of rows from table (and subsequently the imagelist)
     check for double files when adding
     punypng api? http://www.gracepointafterfive.com/punypng/api
-    imagemagick/graphicmagick?
+    imagemagick/graphicsmagick?
     always on top option
 
 thanks to:
 Neil Wallace
 Jeroen Goudsmit
-
