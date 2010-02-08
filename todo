@@ -1,6 +1,6 @@
 ==========================================
 todo app wise
-- errors need to go to standarderror
+- get rid of globals
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb <- via launchpad
