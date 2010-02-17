@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>Trimage image compressor</title>
+    <link href="http://github.com/Kilian/sencss/raw/master/sen.css" rel="stylesheet" type="text/css">
+    <style>
+      body {
+        background:url(bg.png) repeat-x 0 80px;
+        font-size:13px;
+      }
+      #wrap {
+        position:relative;
+        width:614px;
+        margin:50px auto 0;
+        padding-left:40px;
+      }
+      .block {
+        width:33%;
+        float:right;
+        clear:right;
+      }
+      .block2 {
+        width:63%;
+        float:left;
+        margin-right:3%
+      }
+      h1 img {
+        position:absolute;
+        top:-40px;
+        left:-80px;
+      }
+      .subtitle {
+        font-style:italic;
+        display:block;
+        margin-bottom:1.5em;
+        font-size:1.6em;
+      }
+      .tri {
+        -moz-column-count:3;
+        -webkit-column-count:3;
+      }
+      img {
+        margin-bottom:1.5em;
+      }
+      h2 {
+        background:#e0e0f0;
+        padding:5px;
+        -moz-border-radius:5px;
+        -webkit-border-radius:5px;
+      }
+      .footer {
+        background:url(bg.png) repeat-x 0 0;
+        clear:both;
+        padding-top:10px;
+        text-align:center;
+        padding-bottom:40px;
+      }
+    </style>
+  </head>
+
+<body>
+  <div id="wrap">
+    <h1><img src="trimage-icon.png" alt=""> Trimage image compressor</h1>
+    <span class="subtitle">A cross-platform tool for optimizing PNG and JPG files.</span>
+
+    <p class="tri">Trimage is a cross-platform GUI and command line interface to <a href="">optipng</a>,
+    <a href="">advpng</a> and <a href="">jpegoptim</a>. Trimage is made to do <strong>one thing well</strong>
+    and make it as easy as possible for you to compress images. Trimage offers a number of ways to feed it your
+    images, such as a standard file dialog, drag and drop and command line options.</p>
+
+    <h2>Screenshot</h2>
+    <img src="image.png" alt="">
+
+    <div class="block2">
+      <h2>Download</h2>
+      <h3>Ubuntu</h3>
+      <ol>
+        <li><code>sudo add-apt-repository bla</code></li>
+        <li><code>sudo apt-get install trimage</code></li>
+      </ol>
+
+      <h3>Other *nix</h3>
+      <p>Download the source via Github, [do something]</p>
+
+      <h3>Mac</h3>
+      <p>Trimage should be able to run on Mac. <a href="mailto:help@trimage.org">Help us with this</a></p>
+      <h3>Windows</h3>
+      <p>Trimage should be able to run on Windows. <a href="mailto:help@trimage.org">Help us with this</a></p>
+    </div>
+    <div class="block">
+      <h2>Source</h2>
+      <p>Trimage is an MIT licenced open source project, and lives on <a href="">GitHub</a>. We encourage contributions!</p>
+      <p>Trimage is also available on <a href="">Launchpad</a>.</p>
+    </div>
+    <div class="block">
+      <h2>Thanks</h2>
+      <p>The following people helped develop Trimage:</p>
+      <ul>
+        <li>Neil Wallace</li>
+        <li>Jeroen Goudsmit</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h2>Donate</h2>
+      <p>If you enjoy using Trimage, please buy us a coffee or a beer :)</p>
+      <a href="http://www.pledgie.com/campaigns/8737"><img border="0" src="http://www.pledgie.com/campaigns/8737.png?skin_name=chrome" alt="Click here to lend your support to: grafico and make a donation at www.pledgie.com !"/></a>
+    </div>
+    <div class="block">
+      <h2>Requirements</h2>
+      <ul>
+        <li>python <em>2.6</em></li>
+        <li>python-qt4 <em>4.4</em></li>
+        <li>optipng <em>0.6.2.1</em></li>
+        <li>advancecomp <em>1.15</em></li>
+        <li>jpegoptim <em>1.2.2</em></li>
+      </ul>
+    </div>
+
+    <div class="block2">
+      <h2>Command line options</h2>
+      <dl>
+        <dt>--version</dt>
+        <dd>show program's version number and exit</dd>
+        <dt>-h, --help</dt>
+        <dd>show this help message and exit</dd>
+        <dt>-v, --verbose</dt>
+        <dd>Verbose mode (default)</dd>
+        <dt>-q, --quiet</dt>
+        <dd>Quiet mode</dd>
+        <dt>-f FILENAME, --file=FILENAME</dt>
+        <dd>compresses image and exit</dd>
+        <dt>-d DIRECTORY, --directory=DIRECTORY</dt>
+        <dd>compresses images in directory and exit</dd>
+       </dl>
+    </div>
+<p class="footer">Trimage is &copy; 2010 <a href="http://kilianvalkhof.com">Kilian Valkhof</a>, <a href="http://paulchaplin.com">Paul Chaplin</a>
+  </div>
+  </body>
+</html>
+
