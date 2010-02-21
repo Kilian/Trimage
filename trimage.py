@@ -12,17 +12,17 @@ from ui import Ui_trimage
 
 VERSION = "1.0.0"
 
-#init imagelist
-imagelist = []
-
 class StartQT4(QMainWindow):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
+
         self.showapp = True
         self.verbose = True
+        self.imagelist = []
+
         # check if apps are installed
         if self.checkapps():
             quit()
@@ -126,11 +126,10 @@ class StartQT4(QMainWindow):
 
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
-        global imagelist
         newimagelist = []
-        for image in imagelist:
+        for image in self.imagelist:
             newimagelist.append(image[4])
-        imagelist = []
+        self.imagelist = []
         self.delegator(newimagelist)
 
     """
@@ -145,21 +144,23 @@ class StartQT4(QMainWindow):
         for image in images:
             if self.checkname(image):
                 delegatorlist.append((image, QIcon(image)))
-                imagelist.append(("Compressing...", "", "", "", image,
+                self.imagelist.append(("Compressing...", "", "", "", image,
                     QIcon(QPixmap("compressing.gif"))))
             else:
                 sys.stderr.write("[error] %s not an image file" % image)
-        self.thread.compress_file(delegatorlist, self.showapp, self.verbose)
+        self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
+            self.imagelist)
 
     """
     UI Functions
     """
 
-    def update_table(self):
+    def update_table(self, imagelist):
         """Update the table view with the latest file data."""
         tview = self.ui.processedfiles
+        self.imagelist = imagelist
         # set table model
-        tmodel = TriTableModel(self, imagelist,
+        tmodel = TriTableModel(self, self.imagelist,
             ["Filename", "Old Size", "New Size", "Compressed"])
         tview.setModel(tmodel)
 
@@ -172,7 +173,7 @@ class StartQT4(QMainWindow):
         hh.setStretchLastSection(True)
 
         # set all row heights
-        nrows = len(imagelist)
+        nrows = len(self.imagelist)
         for row in range(nrows):
             tview.setRowHeight(row, 25)
 
@@ -266,16 +267,16 @@ class Worker(QThread):
         self.exiting = True
         self.wait()
 
-    def compress_file(self, images, showapp, verbose):
+    def compress_file(self, images, showapp, verbose, imagelist):
         """Start the worker thread."""
         self.images = images
         self.showapp = showapp
         self.verbose = verbose
+        self.imagelist = imagelist
         self.start()
 
     def run(self):
         """Compress the given file, get data from it and call update_table."""
-        global imagelist
         for image in self.images:
             #gather old file data
             filename = str(image[0])
@@ -314,13 +315,13 @@ class Worker(QThread):
                 ratiostr = "%.1f%%" % ratio
 
                 # append current image to list
-                for i, image in enumerate(imagelist):
+                for i, image in enumerate(self.imagelist):
                     if image[4] == filename:
-                        imagelist.remove(image)
-                        imagelist.insert(i, (name, oldfilesizestr,
+                        self.imagelist.remove(image)
+                        self.imagelist.insert(i, (name, oldfilesizestr,
                             newfilesizestr, ratiostr, filename, icon))
 
-                self.emit(SIGNAL("updateUi"))
+                self.emit(SIGNAL("updateUi"), self.imagelist)
 
                 if not self.showapp and self.verbose:
                     # we work via the commandline
