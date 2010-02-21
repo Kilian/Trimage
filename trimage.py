@@ -15,18 +15,14 @@ VERSION = "1.0.0"
 #init imagelist
 imagelist = []
 
-# defaults
-showapp = True
-verbose = True
-
-
 class StartQT4(QMainWindow):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
-
+        self.showapp = True
+        self.verbose = True
         # check if apps are installed
         if self.checkapps():
             quit()
@@ -85,8 +81,7 @@ class StartQT4(QMainWindow):
         if options.directory:
             self.dir_from_cmd(options.directory)
 
-        global verbose
-        verbose = options.verbose
+        self.verbose = options.verbose
 
     """
     Input functions
@@ -96,8 +91,7 @@ class StartQT4(QMainWindow):
         """
         Read the files in the directory and send all files to compress_file.
         """
-        global showapp
-        showapp = False
+        self.showapp = False
         dirpath = path.abspath(path.dirname(directory))
         imagedir = listdir(directory)
         filelist = QStringList()
@@ -108,8 +102,7 @@ class StartQT4(QMainWindow):
 
     def file_from_cmd(self, image):
         """Get the file and send it to compress_file"""
-        global showapp
-        showapp = False
+        self.showapp = False
         image = path.abspath(image)
         filecmdlist = QStringList()
         filecmdlist.append(image)
@@ -156,7 +149,7 @@ class StartQT4(QMainWindow):
                     QIcon(QPixmap("compressing.gif"))))
             else:
                 sys.stderr.write("[error] %s not an image file" % image)
-        self.thread.compress_file(delegatorlist)
+        self.thread.compress_file(delegatorlist, self.showapp, self.verbose)
 
     """
     UI Functions
@@ -273,9 +266,11 @@ class Worker(QThread):
         self.exiting = True
         self.wait()
 
-    def compress_file(self, images):
+    def compress_file(self, images, showapp, verbose):
         """Start the worker thread."""
         self.images = images
+        self.showapp = showapp
+        self.verbose = verbose
         self.start()
 
     def run(self):
@@ -327,7 +322,7 @@ class Worker(QThread):
 
                 self.emit(SIGNAL("updateUi"))
 
-                if not showapp and verbose:
+                if not self.showapp and self.verbose:
                     # we work via the commandline
                     print("File: " + filename + ", Old Size: "
                         + oldfilesizestr + ", New Size: " + newfilesizestr
@@ -335,7 +330,7 @@ class Worker(QThread):
             else:
                 sys.stderr.write("[error] %s" % runfile)
 
-        if not showapp:
+        if not self.showapp:
             #make sure the app quits after all images are done
             quit()
 
@@ -343,6 +338,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     myapp = StartQT4()
 
-    if showapp:
+    if myapp.showapp:
         myapp.show()
     sys.exit(app.exec_())
