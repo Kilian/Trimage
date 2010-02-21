@@ -155,10 +155,9 @@ class StartQT4(QMainWindow):
     UI Functions
     """
 
-    def update_table(self, imagelist):
+    def update_table(self):
         """Update the table view with the latest file data."""
         tview = self.ui.processedfiles
-        self.imagelist = imagelist
         # set table model
         tmodel = TriTableModel(self, self.imagelist,
             ["Filename", "Old Size", "New Size", "Compressed"])
@@ -321,7 +320,7 @@ class Worker(QThread):
                         self.imagelist.insert(i, (name, oldfilesizestr,
                             newfilesizestr, ratiostr, filename, icon))
 
-                self.emit(SIGNAL("updateUi"), self.imagelist)
+                self.emit(SIGNAL("updateUi"))
 
                 if not self.showapp and self.verbose:
                     # we work via the commandline
