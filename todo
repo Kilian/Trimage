@@ -1,6 +1,5 @@
 ==========================================
 todo app wise
-- get rid of globals (done?)
 - general refactoring
 - use multiprocessing lib to take advantage of multicore/multi-CPU to compress
     multiple files simultaneously (threads have issues in Python; see "GIL")
@@ -9,21 +8,13 @@ todo app wise
 - consider context managers for handling compression, so as to keep operations
     atomic and/or rollback-able.
 - add a recursive option on the command-line for use with -d
-- recursive drag'n'drop? Maybe not...
 - make -f accept a list of files
+- make the current verbose be "normal", and make -verbose print the commandline app prints as well.
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb <- via launchpad
-- figure out how to make mac and win versions (someone else :)
+- figure out how to make mac and win versions (someone else :) <- via gui2exe
 
-current dependencies:
-python 2.6
-python-qt4 4.4
-hurry.filesize (bundled)
-
-optipng 0.6.2.1
-jpgegoptim 1.2.2
-advancecomp 1.15
 ===========================================
 later versions:
     animate compressing.gif
@@ -32,7 +23,5 @@ later versions:
     punypng api? http://www.gracepointafterfive.com/punypng/api
     imagemagick/graphicsmagick?
     always on top option
+    notification area widget
 
-thanks to:
-Neil Wallace
-Jeroen Goudsmit
