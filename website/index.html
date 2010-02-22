@@ -28,13 +28,14 @@
       h1 img {
         position:absolute;
         top:-40px;
-        left:-80px;
+        left:10px;
       }
       .subtitle {
         font-style:italic;
         display:block;
         margin-bottom:1em;
         font-size:1.5em;
+        margin-top:-0.75em;
       }
       .tri {
         -moz-column-count:3;
@@ -44,15 +45,18 @@
       img {
         margin-bottom:1.5em;
       }
+      h3 img {margin:0;}
       h2, h1 {
-        background:#e0e0f0;
-        padding:5px;
+        color:#fff;
+        background:#76b9fb;
+        padding:10px;
         -moz-border-radius:5px;
         -webkit-border-radius:5px;
       }
+      h1, .subtitle {padding-left:80px;}
       .footer {
-        background:#e0e0f0;
-        padding:5px;
+        background:#76b9fb;
+        padding:10px;
         -moz-border-radius:5px;
         -webkit-border-radius:5px;
         clear:both;
@@ -65,36 +69,36 @@
   <div id="wrap">
     <h1><img src="trimage-icon.png" alt=""> Trimage image compressor</h1>
     <span class="subtitle">A cross-platform tool for optimizing PNG and JPG files.</span>
+    <p class="tri">Trimage is a cross-platform GUI and command-line interface to optimize image files via <a href="">optipng</a>,
+    <a href="">advpng</a> and <a href="">jpegoptim</a>, depending on the filetype (currently, PNG and JPG files are supported). It
+    was inspired by <a href="http://imageoptim.pornel.net/">imageoptim</a>. All image files are losslessy compressed on the highest
+    available compression levels. Trimage gives you various input functions to fit your own workflow: A regular file dialog, dragging
+    and dropping and various command line options.</p>
 
-    <p class="tri">Trimage is a cross-platform GUI and command line interface to <a href="">optipng</a>,
-    <a href="">advpng</a> and <a href="">jpegoptim</a>. Trimage is made to do <strong>one thing well</strong>
-    and make it as easy as possible for you to compress images. Trimage offers a number of ways to feed it your
-    images, such as a standard file dialog, drag and drop and command line options. Trimage was born out of a desire
-    to have an application such as <a href="http://imageoptim.pornel.net/">imageoptim</a> available on Ubuntu.</p>
-
-    <h2>Screenshot</h2>
-    <img src="image.png" alt="">
+    <h2>Trimage in action</h2>
+    <img src="image.png" alt="a screenshot of Trimage">
 
     <div class="block2">
       <h2>Download</h2>
-      <h3>Ubuntu</h3>
+      <h3><img src="ubuntu.png" alt=""> Ubuntu</h3>
       <ol>
         <li><code>sudo add-apt-repository bla</code></li>
         <li><code>sudo apt-get install trimage</code></li>
       </ol>
 
-      <h3>Other *nix</h3>
+      <h3><img src="linux.png" alt=""> Other *nix</h3>
       <p>Download the source via Github, [do something]</p>
 
-      <h3>Mac</h3>
+      <h3><img src="mac.png" alt=""> Mac</h3>
       <p>Trimage should be able to run on Mac. <a href="mailto:help@trimage.org">Help us with this</a></p>
-      <h3>Windows</h3>
+      <h3><img src="windows.png" alt=""> Windows</h3>
       <p>Trimage should be able to run on Windows. <a href="mailto:help@trimage.org">Help us with this</a></p>
     </div>
     <div class="block">
-      <h2>Source</h2>
-      <p>Trimage is an MIT licenced open source project, and lives on <a href="">GitHub</a>. We encourage contributions!</p>
-      <p>Trimage is also available on <a href="">Launchpad</a>.</p>
+      <h2>Repositories</h2>
+      <p><strong>Git:</strong> Trimage is primarily developed on <a href="">GitHub</a>.</p>
+      <p><strong>Bzr:</strong> Trimage is also available on <a href="">Launchpad</a>.</p>
+      <p>Trimage is MIT licenced. We encourage contributions via GitHub.</p>
     </div>
     <div class="block">
       <h2>Thanks</h2>
