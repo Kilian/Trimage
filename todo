@@ -1,9 +1,16 @@
 ==========================================
 todo app wise
-- get rid of globals
+- get rid of globals (done?)
 - general refactoring
 - use multiprocessing lib to take advantage of multicore/multi-CPU to compress
     multiple files simultaneously (threads have issues in Python; see "GIL")
+- sys.exit(1) for errors -- how to handle? Not good to simply sys.exit() from
+    any random part of code (can leave things in a mess)...
+- consider context managers for handling compression, so as to keep operations
+    atomic and/or rollback-able.
+- add a recursive option on the command-line for use with -d
+- recursive drag'n'drop? Maybe not...
+- make -f accept a list of files
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb <- via launchpad
