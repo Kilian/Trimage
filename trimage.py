@@ -148,8 +148,11 @@ class StartQT4(QMainWindow):
                     QIcon(QPixmap("compressing.gif"))))
             else:
                 sys.stderr.write("[error] %s not an image file" % image)
+
+        self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
             self.imagelist)
+
 
     """
     UI Functions
@@ -341,3 +344,4 @@ if __name__ == "__main__":
     if myapp.showapp:
         myapp.show()
     sys.exit(app.exec_())
+
