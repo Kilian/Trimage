@@ -9,7 +9,8 @@ todo app wise
     atomic and/or rollback-able.
 - add a recursive option on the command-line for use with -d
 - make -f accept a list of files
-- make the current verbose be "normal", and make -verbose print the commandline app prints as well.
+- make the current verbose be "normal", and make -verbose print the commandline
+    app prints as well.
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb <- via launchpad
