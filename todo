@@ -1,20 +1,23 @@
 ==========================================
 todo app wise
 - general refactoring
-- use multiprocessing lib to take advantage of multicore/multi-CPU to compress
-    multiple files simultaneously (threads have issues in Python; see "GIL")
 - sys.exit(1) for errors -- how to handle? Not good to simply sys.exit() from
-    any random part of code (can leave things in a mess)...
+    any random part of code (can leave things in a mess)
 - consider context managers for handling compression, so as to keep operations
-    atomic and/or rollback-able.
+    atomic and/or rollback-able
 - add a recursive option on the command-line for use with -d
 - make -f accept a list of files
 - make the current verbose be "normal", and make -verbose print the commandline
-    app prints as well.
+    app prints as well
+- verify that a *recompressed* file is smaller than the compressed one
 
 todo else
 - figure out dependencies for a .deb/how to make a .deb <- via launchpad
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
+
+todo later
+- use multiprocessing lib to take advantage of multicore/multi-CPU to compress
+    multiple files simultaneously (threads have issues in Python; see "GIL")
 
 ===========================================
 later versions:
@@ -25,4 +28,11 @@ later versions:
     imagemagick/graphicsmagick?
     always on top option
     notification area widget
-
+    intelligently recompress, i.e. go through the list of files, recompress
+        each until no more gains are seen (and a sensible number-of-tries limit
+        isn't exceeded), and flag that file as fully-optimised. Repeat for each
+        file in the list, until all are done. Saves pointlessly trying to
+        optimise files. Consider the case of a directory of 100 files, already
+        optimised once. Recompressing maximally compresses 90. Recompressing
+        again would currently try to recompress all 100, when only 10 would be
+        worthy of trying to compress further.
