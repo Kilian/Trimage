@@ -36,6 +36,7 @@ class StartQT4(QMainWindow):
 
         # disable recompress
         self.ui.recompress.setEnabled(False)
+        #self.ui.recompress.hide()
 
         # make a worker thread
         self.thread = Worker()
@@ -344,4 +345,3 @@ if __name__ == "__main__":
     if myapp.showapp:
         myapp.show()
     sys.exit(app.exec_())
-
