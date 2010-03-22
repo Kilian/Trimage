@@ -52,6 +52,7 @@
         padding:10px;
         -moz-border-radius:5px;
         -webkit-border-radius:5px;
+        clear:both;
       }
       h1, .subtitle {padding-left:80px;}
       .footer {
@@ -67,13 +68,16 @@
 
 <body>
   <div id="wrap">
-    <h1><img src="trimage-icon.png" alt=""> Trimage image compressor</h1>
+    <h1><img src="trimage-icon.png" alt=""> Trimage image compressor &ndash; 1.0.0b (beta)</h1>
     <span class="subtitle">A cross-platform tool for optimizing PNG and JPG files.</span>
-    <p class="tri">Trimage is a cross-platform GUI and command-line interface to optimize image files via <a href="">optipng</a>,
-    <a href="">advpng</a> and <a href="">jpegoptim</a>, depending on the filetype (currently, PNG and JPG files are supported). It
-    was inspired by <a href="http://imageoptim.pornel.net/">imageoptim</a>. All image files are losslessy compressed on the highest
-    available compression levels. Trimage gives you various input functions to fit your own workflow: A regular file dialog, dragging
-    and dropping and various command line options.</p>
+    <p class="tri">Trimage is a cross-platform GUI and command-line interface to optimize image
+    files via <a href="http://optipng.sourceforge.net/">optipng</a>,
+     <a href="http://advancemame.sourceforge.net/comp-readme.html">advpng</a> and
+     <a href="http://www.kokkonen.net/tjko/projects.html">jpegoptim</a>, depending on the filetype
+     (currently, PNG and JPG files are supported). It was inspired by
+     <a href="http://imageoptim.pornel.net/">imageoptim</a>. All image files are losslessy compressed
+     on the highest available compression levels. Trimage gives you various input functions to fit your
+     own workflow: A regular file dialog, dragging and dropping and various command line options.</p>
 
     <h2>Trimage in action</h2>
     <img src="image.png" alt="a screenshot of Trimage">
@@ -82,13 +86,18 @@
       <h2>Download</h2>
       <h3><img src="ubuntu.png" alt=""> Ubuntu</h3>
       <ol>
-        <li><code>sudo add-apt-repository bla</code></li>
+        <li><code>sudo add-apt-repository lp:trimage</code></li>
         <li><code>sudo apt-get install trimage</code></li>
       </ol>
 
       <h3><img src="linux.png" alt=""> Other *nix</h3>
-      <p>Download the source via Github, [do something]</p>
-
+      <ol>
+        <li>Download the source via git or bzr (see repositories)</li>
+        <li>Make sure you have all the requirements installed (see requirements)</li>
+        <li>make trimage.py executable (<code>chmod +x trimage.py</code>)</li>
+        <li>Start by clicking on trimage.py or launching it with <code>./trimage.py</code></li>
+      </ol>
+      <p>Help us make .deb's, rpms's etc: <a href="mailto:help@trimage.org">contact us</a></p>
       <h3><img src="mac.png" alt=""> Mac</h3>
       <p>Trimage should be able to run on Mac. <a href="mailto:help@trimage.org">Help us with this</a></p>
       <h3><img src="windows.png" alt=""> Windows</h3>
@@ -96,8 +105,8 @@
     </div>
     <div class="block">
       <h2>Repositories</h2>
-      <p><strong>Git:</strong> Trimage is primarily developed on <a href="">GitHub</a>.</p>
-      <p><strong>Bzr:</strong> Trimage is also available on <a href="">Launchpad</a>.</p>
+      <p><strong>Git:</strong> Trimage is primarily developed on <a href="http://github.com/Kilian/Trimage">GitHub</a>.</p>
+      <p><strong>Bzr:</strong> Trimage is also available on <a href="https://launchpad.net/trimage">Launchpad</a>.</p>
       <p>Trimage is MIT licenced. We encourage contributions via GitHub.</p>
     </div>
     <div class="block">
@@ -111,7 +120,7 @@
     <div class="block">
       <h2>Donate</h2>
       <p>If you enjoy using Trimage, please buy us a coffee or a beer :)</p>
-      <a href="http://www.pledgie.com/campaigns/8737"><img border="0" src="http://www.pledgie.com/campaigns/8737.png?skin_name=chrome" alt="Click here to lend your support to: grafico and make a donation at www.pledgie.com !"/></a>
+      <a href='http://www.pledgie.com/campaigns/9607'><img alt='Click here to lend your support to: Trimage and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/9607.png?skin_name=chrome' border='0' /></a>
     </div>
     <div class="block">
       <h2>Requirements</h2>
@@ -143,8 +152,27 @@
     </div>
     <div class="block">
       <h2>Help</h2>
-      <p>Please use <a href="">GitHub</a> for reporting bugs and email <a href="mailto:help@trimage.org">help@trimage.org</a> for general questions (though we are not a helpdesk!)</p>
+      <p>Please use <a href="http://github.com/Kilian/Trimage">GitHub</a> for reporting bugs and email <a href="mailto:help@trimage.org">help@trimage.org</a> for general questions (though we are not a helpdesk!)</p>
     </div>
+
+    <h2>Planned features</h2>
+    <p>Version 1.0.0 final:</p>
+    <ul>
+      <li>Expand command line options</li>
+      <li>Make sure a compressed file is always smaller than the original one, or don't compress</li>
+      <li>General refactoring</li>
+    </ul>
+    <p>Version 1.1.0</p>
+    <ul>
+      <li>Use multiprocessing instead of threading</li>
+    </ul>
+    <p>Beyond that</p>
+    <ul>
+      <li>Deletion of rows in the table view</li>
+      <li>Notification area widget</li>
+      <li>Integration with online services such as punypng</li>
+      <li><a href="mailto:help@trimage.org">Suggest something</a></li>
+    </ul>
 <p class="footer">Trimage is &copy; 2010 <a href="http://kilianvalkhof.com">Kilian Valkhof</a>, <a href="http://paulchaplin.com">Paul Chaplin</a>
   </div>
   </body>
