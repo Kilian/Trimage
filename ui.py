@@ -1,5 +1,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from os import path
 
 class TrimageTableView(QTableView):
     """Init the table drop event."""
@@ -24,10 +25,14 @@ class TrimageTableView(QTableView):
 
 
 class Ui_trimage(object):
+    def get_image(self, image):
+        imagelink = path.join(path.dirname(path.dirname(path.realpath(__file__))), "trimage/" + image)
+        return imagelink
+
     def setupUi(self, trimage):
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
-        trimage.setWindowIcon(QIcon("pixmaps/trimage-icon.png"))
+        trimage.setWindowIcon(QIcon(self.get_image("pixmaps/trimage-icon.png")))
 
         self.centralwidget = QWidget(trimage)
         self.centralwidget.setObjectName("centralwidget")
@@ -71,7 +76,7 @@ class Ui_trimage(object):
         self.addfiles.setFont(font)
         self.addfiles.setCursor(Qt.PointingHandCursor)
         icon = QIcon()
-        icon.addPixmap(QPixmap("pixmaps/list-add.png"), QIcon.Normal, QIcon.Off)
+        icon.addPixmap(QPixmap(self.get_image("pixmaps/list-add.png")), QIcon.Normal, QIcon.Off)
         self.addfiles.setIcon(icon)
         self.addfiles.setObjectName("addfiles")
         self.addfiles.setAcceptDrops(True)
@@ -97,7 +102,7 @@ class Ui_trimage(object):
         self.recompress.setCursor(Qt.PointingHandCursor)
 
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap("pixmaps/view-refresh.png"), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(QPixmap(self.get_image("pixmaps/view-refresh.png")), QIcon.Normal, QIcon.Off)
 
         self.recompress.setIcon(icon1)
         self.recompress.setCheckable(False)
