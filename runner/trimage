@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+import trimage
 import subprocess
 import os, sys
 
 if __name__ == "__main__":
-    path = "/usr/local/share/trimage/trimage.py" #yeah so this isn't the nices tway...
+    path = os.path.join(os.path.dirname(trimage.__file__), "trimage.py")
     subprocess.call([sys.executable, path] + sys.argv[1:])
