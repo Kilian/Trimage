@@ -10,6 +10,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from hurry.filesize import *
 
+from ui import Ui_trimage
+
 VERSION = "1.0.0b"
 
 class StartQT4(QMainWindow):
