@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Trimage image compressor
+Comment=A cross-platform tool for optimizing PNG and JPG files.
+Terminal=false
+Icon=pixmaps/trimage-icon.png
+Type=Application
+Exec=trimage
+Categories=GNOME;GTK;Graphics;
+StartupNotify=true
+
