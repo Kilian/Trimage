@@ -1,0 +1,6 @@
+trimage (1.0.0b-0ubuntu1) jaunty; urgency=low
+
+  * Trimage image compressor
+
+ -- Kilian Valkhof <help@trimage.org>  Tue, 23 Mar 2010 20:18:17 +0100
+

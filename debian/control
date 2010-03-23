@@ -1,0 +1,16 @@
+Source: trimage
+Section: graphics
+Priority: optional
+Maintainer: Kilian Valkhof <kilian@kilianvalkhof.com>
+Build-Depends: cdbs (>=0.4.49), debhelper (>= 5), python-central (>=0.5.6), python
+XS-Python-Version: >=2.6
+Standards-Version: 3.8.0
+Homepage: https://launchpad.net/pyAppTemplate
+
+Package: trimage
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-qt4 (>= 4.4), optipng (>= 0.6.2.1), advancecomp (>=1.15), jpegoptim (>=1.2.2)
+XB-Python-Version: ${python:Versions}
+Description: A cross-platform tool for optimizing PNG and JPG files.
+ Trimage is a cross-platform GUI and command-line interface to optimize image files via optipng, advpng and jpegoptim, depending on the filetype (currently, PNG and JPG files are supported). It was inspired by imageoptim. All image files are losslessy compressed on the highest available compression levels. Trimage gives you various input functions to fit your own workflow: A regular file dialog, dragging and dropping and various command line options.
+

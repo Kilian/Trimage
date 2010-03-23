@@ -10,9 +10,9 @@ todo app wise
 - make the current verbose be "normal", and make -verbose print the commandline
     app prints as well
 - verify that a *recompressed* file is smaller than the compressed one
+- find a way to specify the version once for everywhere
 
 todo else
-- figure out dependencies for a .deb/how to make a .deb <- via launchpad
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
 
 todo later
@@ -36,3 +36,4 @@ later versions:
         optimised once. Recompressing maximally compresses 90. Recompressing
         again would currently try to recompress all 100, when only 10 would be
         worthy of trying to compress further.
+
