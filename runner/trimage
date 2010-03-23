@@ -3,5 +3,5 @@ import subprocess
 import os, sys
 
 if __name__ == "__main__":
-    path = "/usr/local/share/trimage/trimage.py"
+    path = "/usr/share/trimage/trimage.py"
     subprocess.call([sys.executable, path] + sys.argv[1:])

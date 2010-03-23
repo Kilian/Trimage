@@ -1,6 +1,7 @@
 include trimage.py
 include ui.py
 include trimage.desktop
+include MIT-LICENSE
 recursive-include pixmaps *
 recursive-include hurry *
 
