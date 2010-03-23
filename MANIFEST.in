@@ -1,4 +1,5 @@
 include trimage.py
 include ui.py
 recursive-include pixmaps *
+recursive-include hurry *
 

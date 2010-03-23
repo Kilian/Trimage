@@ -3,7 +3,7 @@
 from distutils.core import setup
 from trimage import VERSION
 
-setup(name = "Trimage",
+setup(name = "trimage",
       version = VERSION,
       description = "Trimage image compressor - A cross-platform tool for optimizing PNG and JPG files",
       author = "Kilian Valkhof, Paul Chaplin",
