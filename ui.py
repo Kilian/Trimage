@@ -28,7 +28,7 @@ class Ui_trimage(object):
     def setupUi(self, trimage):
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
-        trimage.setWindowIcon(QIcon("trimage-icon.png"))
+        trimage.setWindowIcon(QIcon("pixmaps/trimage-icon.png"))
 
         self.centralwidget = QWidget(trimage)
         self.centralwidget.setObjectName("centralwidget")
@@ -72,7 +72,7 @@ class Ui_trimage(object):
         self.addfiles.setFont(font)
         self.addfiles.setCursor(Qt.PointingHandCursor)
         icon = QIcon()
-        icon.addPixmap(QPixmap("list-add.png"), QIcon.Normal, QIcon.Off)
+        icon.addPixmap(QPixmap("pixmaps/list-add.png"), QIcon.Normal, QIcon.Off)
         self.addfiles.setIcon(icon)
         self.addfiles.setObjectName("addfiles")
         self.addfiles.setAcceptDrops(True)
@@ -98,7 +98,7 @@ class Ui_trimage(object):
         self.recompress.setCursor(Qt.PointingHandCursor)
 
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap("view-refresh.png"), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(QPixmap("pixmaps/view-refresh.png"), QIcon.Normal, QIcon.Off)
 
         self.recompress.setIcon(icon1)
         self.recompress.setCheckable(False)
