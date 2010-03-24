@@ -214,7 +214,7 @@ class StartQT4(QMainWindow):
             status = True
             sys.stderr.write("[error] please install optipng")
 
-        retcode = self.save_call("advpng --version")
+        retcode = self.safe_call("advpng --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install advancecomp")
