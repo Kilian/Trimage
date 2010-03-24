@@ -40,6 +40,8 @@
       .tri {
         -moz-column-count:3;
         -webkit-column-count:3;
+        -moz-column-gap:2em;
+        -webkit-column-gap:2em;
         text-align:justify;
       }
       img {
@@ -85,11 +87,13 @@
     <div class="block2">
       <h2>Download</h2>
       <h3><img src="ubuntu.png" alt=""> Ubuntu</h3>
+      <p>If you're on karmic or lucid, type the following commands into your console:</p>
       <ol>
-        <li><code>sudo add-apt-repository lp:trimage</code></li>
+        <li><code>sudo add-apt-repository ppa:kilian/trimage</code></li>
+        <li><code>sudo apt-get update</code></li>
         <li><code>sudo apt-get install trimage</code></li>
       </ol>
-
+      <p>If you are still on Jaunty, read <a href="https://launchpad.net/+help/soyuz/ppa-sources-list.html">this guide</a> on installing PPA's.</p>
       <h3><img src="linux.png" alt=""> Other *nix</h3>
       <ol>
         <li>Download the source via git or bzr (see repositories)</li>
