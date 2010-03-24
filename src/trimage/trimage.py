@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import errno
 from os import listdir
 from os import path
 from subprocess import call, PIPE
@@ -203,22 +204,31 @@ class StartQT4(QMainWindow):
     def checkapps(self):
         """Check if the required command line apps exist."""
         status = False
-        retcode = call("jpegoptim --version", shell=True, stdout=PIPE)
+        retcode = self.safe_call("jpegoptim --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install jpegoptim")
 
-        retcode = call("optipng -v", shell=True, stdout=PIPE)
+        retcode = self.safe_call("optipng -v")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install optipng")
 
-        retcode = call("advpng --version", shell=True, stdout=PIPE)
+        retcode = self.save_call("advpng --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install advancecomp")
         return status
 
+    def safe_call(self, command):
+        while True:
+            try:
+                return call(command, shell=True, stdout=PIPE)
+            except OSError, e:
+                if e.errno == errno.EINTR:
+                    continue
+                else:
+                    raise
 
 class TriTableModel(QAbstractTableModel):
 
