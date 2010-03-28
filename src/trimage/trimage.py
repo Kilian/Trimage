@@ -13,7 +13,8 @@ from hurry.filesize import *
 
 from ui import Ui_trimage
 
-VERSION = "1.0.0b"
+VERSION = "1.0.0b2"
+
 
 class StartQT4(QMainWindow):
 
@@ -100,8 +101,9 @@ class StartQT4(QMainWindow):
         imagedir = listdir(directory)
         filelist = QStringList()
         for image in imagedir:
-            image = QString(path.join(dirpath, image))
-            filelist.append(image)
+            image = self.unicodize(path.join(dirpath, image))
+            if self.checkname(image):
+                filelist.append(image)
         self.delegator(filelist)
 
     def file_from_cmd(self, image):
@@ -109,13 +111,16 @@ class StartQT4(QMainWindow):
         self.showapp = False
         image = path.abspath(image)
         filecmdlist = QStringList()
-        filecmdlist.append(image)
+        if self.checkname(image):
+            filecmdlist.append(self.unicodize(image))
         self.delegator(filecmdlist)
 
     def file_drop(self, images):
         """
         Get a file from the drag and drop handler and send it to compress_file.
         """
+        for image in images:
+            image = self.unicodize(unicode(image).encode('utf-8'))
         self.delegator(images)
 
     def file_dialog(self):
@@ -126,6 +131,10 @@ class StartQT4(QMainWindow):
             "", # directory
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
+
+        for image in images:
+            image = self.unicodize(unicode(image))
+
         self.delegator(images)
 
     def recompress_files(self):
@@ -151,7 +160,7 @@ class StartQT4(QMainWindow):
                 self.imagelist.append(("Compressing...", "", "", "", image,
                     QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))))
             else:
-                sys.stderr.write("[error] %s not an image file" % image)
+                sys.stderr.write("[error] %s not an image file\n" % image)
 
         self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
@@ -195,7 +204,7 @@ class StartQT4(QMainWindow):
 
     def checkname(self, name):
         """Check if the file is a jpg or png."""
-        return path.splitext(str(name))[1].lower() in [".jpg", ".jpeg", ".png"]
+        return path.splitext(unicode(name))[1].lower() in [".jpg", ".jpeg", ".png"]
 
     def enable_recompress(self):
         """Enable the recompress button."""
@@ -229,6 +238,13 @@ class StartQT4(QMainWindow):
                     continue
                 else:
                     raise
+
+    def unicodize(self, obj, encoding='utf-8'):
+        if isinstance(obj, basestring):
+            if not isinstance(obj, unicode):
+                obj = unicode(obj, encoding)
+        return obj
+
 
 class TriTableModel(QAbstractTableModel):
 
@@ -294,7 +310,7 @@ class Worker(QThread):
         """Compress the given file, get data from it and call update_table."""
         for image in self.images:
             #gather old file data
-            filename = str(image[0])
+            filename = unicode(image[0])
             icon = image[1]
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
@@ -305,10 +321,9 @@ class Worker(QThread):
             extention = path.splitext(filename)[1]
             #decide with tool to use
             if extention in [".jpg", ".jpeg"]:
-                runString = "jpegoptim -f --strip-all '%(file)s'"
+                runString = u"jpegoptim -f --strip-all '%(file)s'"
             elif extention in [".png"]:
-                runString = ("optipng -force -o7 '%(file)s';"
-                    "advpng -z4 '%(file)s'")
+                runString = (u"optipng -force -o7 '%(file)s'; advpng -z4 '%(file)s'")
             else:
                 sys.stderr.write("[error] %s not an image file" % filename)
 

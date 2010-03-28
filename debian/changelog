@@ -1,6 +1,6 @@
-trimage (1.0.0b-0ubuntu1) jaunty; urgency=low
+trimage (1.0.0b2-0ubuntu1) jaunty; urgency=low
 
-  * Trimage image compressor
+  * correct parsing of unicode characters in filenames
+  * changelog
 
- -- Kilian Valkhof <help@trimage.org>  Tue, 23 Mar 2010 20:18:17 +0100
-
+ -- Kilian Valkhof <kilian@kdesktop>  Sun, 28 Mar 2010 16:09:45 +0200

@@ -9,7 +9,7 @@ class TrimageTableView(QTableView):
         self.setAcceptDrops(True)
 
     def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat("text/uri-list"):
+        if event.mimeData().hasUrls:
             event.accept()
         else:
             event.ignore()
@@ -18,10 +18,12 @@ class TrimageTableView(QTableView):
         event.accept()
 
     def dropEvent(self, event):
-        files = str(event.mimeData().data("text/uri-list")).strip().split()
-        for i, file in enumerate(files):
-            files[i] = QUrl(QString(file)).toLocalFile()
-        self.emit(SIGNAL("fileDropEvent"), (files))
+        event.accept()
+        filelist = []
+        for url in event.mimeData().urls():
+            filelist.append(unicode(url.toLocalFile()))
+
+        self.emit(SIGNAL("fileDropEvent"), (filelist))
 
 
 class Ui_trimage(object):
