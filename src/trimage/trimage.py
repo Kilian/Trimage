@@ -14,7 +14,7 @@ from imghdr import what as determinetype
 
 from ui import Ui_trimage
 
-VERSION = "1.0.0b2"
+VERSION = "1.0.0b3"
 
 
 class StartQT4(QMainWindow):
@@ -131,7 +131,11 @@ class StartQT4(QMainWindow):
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
-        self.delegator(images)
+        imagelist = []
+        for i, image in enumerate(images):
+            imagelist.append(unicode(image))
+
+        self.delegator(imagelist)
 
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
@@ -356,7 +360,7 @@ class Worker(QThread):
             if len(self.images)==0:
                 import time
                 time.sleep(0.1)
-                
+
             #make sure the app quits after all images are done
             quit()
 

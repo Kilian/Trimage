@@ -1,6 +1,9 @@
-trimage (1.0.0b2-0ubuntu1) jaunty; urgency=low
+trimage (1.0.0b3-0ubuntu1) jaunty; urgency=low
 
-  * correct parsing of unicode characters in filenames
-  * changelog
+  * better image filetype determination
+  * use unicode strings everywhere
+  * fix bug where Trimage would crash if a directory didn't end in a slash
+  * avoid a segfault when parsing empty directories
+  * ../../debian/changelog
 
- -- Kilian Valkhof <kilian@kdesktop>  Sun, 28 Mar 2010 16:09:45 +0200
+ -- Kilian Valkhof <kilian@kdesktop>  Mon, 29 Mar 2010 13:08:18 +0200
