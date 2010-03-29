@@ -106,21 +106,14 @@ class StartQT4(QMainWindow):
         self.showapp = False
         dirpath = path.abspath(directory)
         imagedir = listdir(directory)
-        filelist = []
-        for image in imagedir:
-            image = path.join(dirpath, image)
-            if path.isfile(image) and self.checkname(image):
-                filelist.append(image)
+        filelist = [path.join(dirpath, image) for image in imagedir]
         self.delegator(filelist)
 
     def file_from_cmd(self, image):
         """Get the file and send it to compress_file"""
         self.showapp = False
-        image = path.abspath(image)
-        filecmdlist = []
-        if self.checkname(image):
-            filecmdlist.append(image)
-        self.delegator(filecmdlist)
+        filelist = [path.abspath(image)]
+        self.delegator(filelist)
 
     def file_drop(self, images):
         """
@@ -161,12 +154,13 @@ class StartQT4(QMainWindow):
         """
         delegatorlist = []
         for image in images:
-            if self.checkname(image):
-                delegatorlist.append((image, QIcon(image)))
+            image=Image(image)
+            if image.valid:
+                delegatorlist.append(image)
                 self.imagelist.append(("Compressing...", "", "", "", image,
                     QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))))
             else:
-                sys.stderr.write("[error] %s not an image file\n" % image)
+                print >>sys.stderr, u"[error] %s not a supported image file" % image.fullpath
 
         self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
@@ -207,10 +201,6 @@ class StartQT4(QMainWindow):
     """
     Helper functions
     """
-
-    def checkname(self, name):
-        """Check if the file is a jpg or png."""
-        return determinetype(name) in ["jpeg", "png"]
 
     def enable_recompress(self):
         """Enable the recompress button."""
@@ -287,6 +277,38 @@ class TriTableModel(QAbstractTableModel):
             return QVariant(self.header[col])
         return QVariant()
 
+class Image:
+    def __init__(self, fullpath):
+        self.valid = False
+        self.fullpath = fullpath
+        if path.isfile(self.fullpath):            
+            self.filetype = determinetype(self.fullpath)
+            if self.filetype in ["jpeg", "png"]:
+                oldfile = QFileInfo(self.fullpath)
+                self.shortname = oldfile.fileName()
+                self.oldfilesize = oldfile.size()   
+                self.icon = QIcon(self.fullpath)             
+                self.valid = True
+
+    def _determinetype(self):
+        filetype=determinetype(self.fullpath)
+        if filetype in ["jpeg", "png"]:
+            self.filetype=filetype
+        else:
+            self.filetype=None
+        return self.filetype
+
+    def compress(self):
+        if not self.valid:
+            raise "Tried to compress invalid image (unsupported format or not file)"
+        runString = {
+            "jpeg": u"jpegoptim -f --strip-all '%(file)s'",
+            "png" : u"optipng -force -o7 '%(file)s'; advpng -z4 '%(file)s'"}
+        retcode = call(runString[self.filetype] % {"file": self.fullpath},
+            shell = True, stdout=PIPE)
+        if retcode == 0:
+            self.newfilesize = QFile(self.fullpath).size()
+        return not retcode
 
 class Worker(QThread):
 
@@ -311,55 +333,31 @@ class Worker(QThread):
     def run(self):
         """Compress the given file, get data from it and call update_table."""
         while self.showapp or not self.toProcess.empty():
-            #gather old file data
-            filename, icon = self.toProcess.get()            
-            oldfile = QFileInfo(filename)
-            name = oldfile.fileName()
-            oldfilesize = oldfile.size()
-            oldfilesizestr = size(oldfilesize, system=alternative)
-
-            filetype = determinetype(filename)
-            #decide which tool to use
-            if filetype is "jpeg":
-                runString = u"jpegoptim -f --strip-all '%(file)s'"
-            elif filetype is "png":
-                runString = (u"optipng -force -o7 '%(file)s'; advpng -z4 '%(file)s'")
-            else:
-                sys.stderr.write("[error] %s not an image file" % filename)
-
-            try:
-                retcode = call(runString % {"file": filename}, shell=True,
-                               stdout=PIPE)
-                runfile = retcode
-            except OSError as e:
-                runfile = e
-
-            if runfile == 0:
-                #gather new file data
-                newfile = QFile(filename)
-                newfilesize = newfile.size()
-                newfilesizestr = size(newfilesize, system=alternative)
-
+            image = self.toProcess.get()            
+            success=image.compress()
+            if success:                
                 #calculate ratio and make a nice string
-                ratio = 100 - (float(newfilesize) / float(oldfilesize) * 100)
+                oldfilesizestr = size(image.oldfilesize, system=alternative)
+                newfilesizestr = size(image.newfilesize, system=alternative)
+                ratio = 100 - (float(image.newfilesize) / float(image.oldfilesize) * 100)
                 ratiostr = "%.1f%%" % ratio
 
                 # append current image to list
-                for i, image in enumerate(self.imagelist):
-                    if image[4] == filename:
-                        self.imagelist.remove(image)
-                        self.imagelist.insert(i, (name, oldfilesizestr,
-                            newfilesizestr, ratiostr, filename, icon))
+                for i, listitem in enumerate(self.imagelist):
+                    if listitem[4] == image:                        
+                        self.imagelist.remove(listitem)
+                        self.imagelist.insert(i, (image.shortname, oldfilesizestr,
+                            newfilesizestr, ratiostr, image.fullpath, image.icon))
 
                 self.emit(SIGNAL("updateUi"))
 
                 if not self.showapp and self.verbose:
                     # we work via the commandline
-                    print("File: " + filename + ", Old Size: "
+                    print("File: " + image.fullpath + ", Old Size: "
                         + oldfilesizestr + ", New Size: " + newfilesizestr
                         + ", Ratio: " + ratiostr)
             else:
-                sys.stderr.write("[error] %s" % runfile)
+                print >>sys.stderr, u"[error] %s could not be compressed" % image.fullpath
 
 
 class TrimageTableView(QTableView):
