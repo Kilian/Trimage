@@ -303,7 +303,7 @@ class Image:
             raise "Tried to compress invalid image (unsupported format or not file)"
         runString = {
             "jpeg": u"jpegoptim -f --strip-all '%(file)s'",
-            "png" : u"optipng -force -o7 '%(file)s'; advpng -z4 '%(file)s'"}
+            "png" : u"optipng -force -o7 '%(file)s'&&advpng -z4 '%(file)s'"}
         retcode = call(runString[self.filetype] % {"file": self.fullpath},
             shell = True, stdout=PIPE)
         if retcode == 0:
