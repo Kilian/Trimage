@@ -10,6 +10,7 @@ from optparse import OptionParser
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from hurry.filesize import *
+from imghdr import what as determinetype
 
 from ui import Ui_trimage
 
@@ -82,9 +83,9 @@ class StartQT4(QMainWindow):
 
         # send to correct function
         if options.filename:
-            self.file_from_cmd(options.filename)
+            self.file_from_cmd(options.filename.decode("utf-8"))
         if options.directory:
-            self.dir_from_cmd(options.directory)
+            self.dir_from_cmd(options.directory.decode("utf-8"))
 
         self.verbose = options.verbose
 
@@ -97,12 +98,12 @@ class StartQT4(QMainWindow):
         Read the files in the directory and send all files to compress_file.
         """
         self.showapp = False
-        dirpath = path.abspath(path.dirname(directory))
+        dirpath = path.abspath(directory)
         imagedir = listdir(directory)
-        filelist = QStringList()
+        filelist = []
         for image in imagedir:
-            image = self.unicodize(path.join(dirpath, image))
-            if self.checkname(image):
+            image = path.join(dirpath, image)
+            if path.isfile(image) and self.checkname(image):
                 filelist.append(image)
         self.delegator(filelist)
 
@@ -110,17 +111,15 @@ class StartQT4(QMainWindow):
         """Get the file and send it to compress_file"""
         self.showapp = False
         image = path.abspath(image)
-        filecmdlist = QStringList()
+        filecmdlist = []
         if self.checkname(image):
-            filecmdlist.append(self.unicodize(image))
+            filecmdlist.append(image)
         self.delegator(filecmdlist)
 
     def file_drop(self, images):
         """
         Get a file from the drag and drop handler and send it to compress_file.
         """
-        for image in images:
-            image = self.unicodize(unicode(image).encode('utf-8'))
         self.delegator(images)
 
     def file_dialog(self):
@@ -131,9 +130,6 @@ class StartQT4(QMainWindow):
             "", # directory
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
-
-        for image in images:
-            image = self.unicodize(unicode(image))
 
         self.delegator(images)
 
@@ -204,7 +200,7 @@ class StartQT4(QMainWindow):
 
     def checkname(self, name):
         """Check if the file is a jpg or png."""
-        return path.splitext(unicode(name))[1].lower() in [".jpg", ".jpeg", ".png"]
+        return determinetype(name) in ["jpeg", "png"]
 
     def enable_recompress(self):
         """Enable the recompress button."""
@@ -238,13 +234,6 @@ class StartQT4(QMainWindow):
                     continue
                 else:
                     raise
-
-    def unicodize(self, obj, encoding='utf-8'):
-        if isinstance(obj, basestring):
-            if not isinstance(obj, unicode):
-                obj = unicode(obj, encoding)
-        return obj
-
 
 class TriTableModel(QAbstractTableModel):
 
@@ -310,19 +299,18 @@ class Worker(QThread):
         """Compress the given file, get data from it and call update_table."""
         for image in self.images:
             #gather old file data
-            filename = unicode(image[0])
+            filename = image[0]
             icon = image[1]
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
             oldfilesize = oldfile.size()
             oldfilesizestr = size(oldfilesize, system=alternative)
 
-            # get extention
-            extention = path.splitext(filename)[1]
-            #decide with tool to use
-            if extention in [".jpg", ".jpeg"]:
+            filetype = determinetype(filename)
+            #decide which tool to use
+            if filetype is "jpeg":
                 runString = u"jpegoptim -f --strip-all '%(file)s'"
-            elif extention in [".png"]:
+            elif filetype is "png":
                 runString = (u"optipng -force -o7 '%(file)s'; advpng -z4 '%(file)s'")
             else:
                 sys.stderr.write("[error] %s not an image file" % filename)
@@ -362,6 +350,13 @@ class Worker(QThread):
                 sys.stderr.write("[error] %s" % runfile)
 
         if not self.showapp:
+            # A little sleep to avoid segfault...
+            # If you pass an empty directory(-d) to trimage,
+            # python segfaults when you call quit here.
+            if len(self.images)==0:
+                import time
+                time.sleep(0.1)
+                
             #make sure the app quits after all images are done
             quit()
 
@@ -384,6 +379,7 @@ class TrimageTableView(QTableView):
         files = str(event.mimeData().data("text/uri-list")).strip().split()
         for i, file in enumerate(files):
             files[i] = QUrl(QString(file)).toLocalFile()
+        files=[i.toUtf8().decode("utf-8") for i in files]
         self.emit(SIGNAL("fileDropEvent"), (files))
 
 if __name__ == "__main__":
