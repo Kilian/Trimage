@@ -230,6 +230,7 @@ class StartQT4(QMainWindow):
         return status
 
     def safe_call(self, command):
+        """ cross-platform command-line check """
         while True:
             try:
                 return call(command, shell=True, stdout=PIPE)

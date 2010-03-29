@@ -28,10 +28,12 @@ class TrimageTableView(QTableView):
 
 class Ui_trimage(object):
     def get_image(self, image):
+        """ Get the correct link to the images used in the UI """
         imagelink = path.join(path.dirname(path.dirname(path.realpath(__file__))), "trimage/" + image)
         return imagelink
 
     def setupUi(self, trimage):
+        """ Setup the entire UI """
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
         trimage.setWindowIcon(QIcon(self.get_image("pixmaps/trimage-icon.png")))
@@ -137,6 +139,7 @@ class Ui_trimage(object):
         QMetaObject.connectSlotsByName(trimage)
 
     def retranslateUi(self, trimage):
+        """ Fill in the texts for all UI elements """
         trimage.setWindowTitle(QApplication.translate("trimage",
             "Trimage image compressor", None, QApplication.UnicodeUTF8))
         self.addfiles.setToolTip(QApplication.translate("trimage",
