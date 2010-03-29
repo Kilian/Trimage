@@ -12,6 +12,8 @@ from PyQt4.QtGui import *
 from hurry.filesize import *
 from imghdr import what as determinetype
 
+from Queue import Queue
+
 from ui import Ui_trimage
 
 VERSION = "1.0.0b3"
@@ -80,6 +82,10 @@ class StartQT4(QMainWindow):
             dest="directory", help="compresses images in directory and exit")
 
         options, args = parser.parse_args()
+
+        # make sure we quit after processing finished if using cli
+        if options.filename or options.directory:
+            QObject.connect(self.thread, SIGNAL("finished()"), quit)
 
         # send to correct function
         if options.filename:
@@ -287,6 +293,7 @@ class Worker(QThread):
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
         self.exiting = False
+        self.toProcess=Queue()
 
     def __del__(self):
         self.exiting = True
@@ -294,7 +301,8 @@ class Worker(QThread):
 
     def compress_file(self, images, showapp, verbose, imagelist):
         """Start the worker thread."""
-        self.images = images
+        for image in images:
+            self.toProcess.put(image)
         self.showapp = showapp
         self.verbose = verbose
         self.imagelist = imagelist
@@ -302,10 +310,9 @@ class Worker(QThread):
 
     def run(self):
         """Compress the given file, get data from it and call update_table."""
-        for image in self.images:
+        while self.showapp or not self.toProcess.empty():
             #gather old file data
-            filename = image[0]
-            icon = image[1]
+            filename, icon = self.toProcess.get()            
             oldfile = QFileInfo(filename)
             name = oldfile.fileName()
             oldfilesize = oldfile.size()
@@ -354,16 +361,6 @@ class Worker(QThread):
             else:
                 sys.stderr.write("[error] %s" % runfile)
 
-        if not self.showapp:
-            # A little sleep to avoid segfault...
-            # If you pass an empty directory(-d) to trimage,
-            # python segfaults when you call quit here.
-            if len(self.images)==0:
-                import time
-                time.sleep(0.1)
-
-            #make sure the app quits after all images are done
-            quit()
 
 class TrimageTableView(QTableView):
     """Init the table drop event."""
