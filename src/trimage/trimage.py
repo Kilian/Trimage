@@ -13,6 +13,8 @@ from hurry.filesize import *
 from imghdr import what as determinetype
 
 from Queue import Queue
+from ThreadPool import ThreadPool
+from multiprocessing import cpu_count
 
 from ui import Ui_trimage
 
@@ -308,23 +310,23 @@ class Image:
             shell = True, stdout=PIPE)
         if retcode == 0:
             self.newfilesize = QFile(self.fullpath).size()
-        return not retcode
+        self.retcode=retcode
+        return self
 
 class Worker(QThread):
 
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
-        self.exiting = False
-        self.toProcess=Queue()
+        self.toDisplay=Queue()
+        self.threadpool = ThreadPool(max_workers=cpu_count())
 
     def __del__(self):
-        self.exiting = True
-        self.wait()
+        self.threadpool.shutdown()
 
     def compress_file(self, images, showapp, verbose, imagelist):
         """Start the worker thread."""
         for image in images:
-            self.toProcess.put(image)
+            self.threadpool.add_job(image.compress, None, return_callback=self.toDisplay.put)
         self.showapp = showapp
         self.verbose = verbose
         self.imagelist = imagelist
@@ -332,10 +334,10 @@ class Worker(QThread):
 
     def run(self):
         """Compress the given file, get data from it and call update_table."""
-        while self.showapp or not self.toProcess.empty():
-            image = self.toProcess.get()            
-            success=image.compress()
-            if success:                
+        tp = self.threadpool
+        while self.showapp or not (tp.__active_workers==0 and tp.__jobs.empty()):
+            image = self.toDisplay.get()
+            if image.retcode==0:
                 #calculate ratio and make a nice string
                 oldfilesizestr = size(image.oldfilesize, system=alternative)
                 newfilesizestr = size(image.newfilesize, system=alternative)
