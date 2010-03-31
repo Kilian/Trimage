@@ -281,18 +281,20 @@ class TriTableModel(QAbstractTableModel):
 
 class Image:
     def __init__(self, fullpath):
+        """ gather image information. """
         self.valid = False
         self.fullpath = fullpath
-        if path.isfile(self.fullpath):            
+        if path.isfile(self.fullpath):
             self.filetype = determinetype(self.fullpath)
             if self.filetype in ["jpeg", "png"]:
                 oldfile = QFileInfo(self.fullpath)
                 self.shortname = oldfile.fileName()
-                self.oldfilesize = oldfile.size()   
-                self.icon = QIcon(self.fullpath)             
+                self.oldfilesize = oldfile.size()
+                self.icon = QIcon(self.fullpath)
                 self.valid = True
 
     def _determinetype(self):
+        """ Determine the filetype of the file using imghdr. """
         filetype=determinetype(self.fullpath)
         if filetype in ["jpeg", "png"]:
             self.filetype=filetype
@@ -301,6 +303,7 @@ class Image:
         return self.filetype
 
     def compress(self):
+        """ Compress the image and return it to the thread. """
         if not self.valid:
             raise "Tried to compress invalid image (unsupported format or not file)"
         runString = {
@@ -346,7 +349,7 @@ class Worker(QThread):
 
                 # append current image to list
                 for i, listitem in enumerate(self.imagelist):
-                    if listitem[4] == image:                        
+                    if listitem[4] == image:
                         self.imagelist.remove(listitem)
                         self.imagelist.insert(i, (image.shortname, oldfilesizestr,
                             newfilesizestr, ratiostr, image.fullpath, image.icon))
@@ -360,29 +363,6 @@ class Worker(QThread):
                         + ", Ratio: " + ratiostr)
             else:
                 print >>sys.stderr, u"[error] %s could not be compressed" % image.fullpath
-
-
-class TrimageTableView(QTableView):
-    """Init the table drop event."""
-    def __init__(self, parent=None):
-        super(TrimageTableView, self).__init__(parent)
-        self.setAcceptDrops(True)
-
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat("text/uri-list"):
-            event.accept()
-        else:
-            event.ignore()
-
-    def dragMoveEvent(self, event):
-        event.accept()
-
-    def dropEvent(self, event):
-        files = str(event.mimeData().data("text/uri-list")).strip().split()
-        for i, file in enumerate(files):
-            files[i] = QUrl(QString(file)).toLocalFile()
-        files=[i.toUtf8().decode("utf-8") for i in files]
-        self.emit(SIGNAL("fileDropEvent"), (files))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
