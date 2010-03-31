@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import time
 import sys
 import errno
 from os import listdir
@@ -326,6 +326,7 @@ class Worker(QThread):
     def compress_file(self, images, showapp, verbose, imagelist):
         """Start the worker thread."""
         for image in images:
+            time.sleep(0.05) #FIXME: Workaround http://code.google.com/p/pythonthreadpool/issues/detail?id=5
             self.threadpool.add_job(image.compress, None, return_callback=self.toDisplay.put)
         self.showapp = showapp
         self.verbose = verbose
