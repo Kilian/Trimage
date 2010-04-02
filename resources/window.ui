@@ -127,7 +127,7 @@
                <cursorShape>PointingHandCursor</cursorShape>
               </property>
               <property name="toolTip">
-               <string>Recompress selected images</string>
+               <string>Recompress all images</string>
               </property>
               <property name="text">
                <string>&amp;Recompress</string>

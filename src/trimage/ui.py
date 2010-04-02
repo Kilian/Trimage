@@ -153,7 +153,7 @@ class Ui_trimage(object):
             "Drag and drop images onto the table", None,
             QApplication.UnicodeUTF8))
         self.recompress.setToolTip(QApplication.translate("trimage",
-            "Recompress selected images", None, QApplication.UnicodeUTF8))
+            "Recompress all images", None, QApplication.UnicodeUTF8))
         self.recompress.setText(QApplication.translate("trimage",
             "&Recompress", None, QApplication.UnicodeUTF8))
         self.recompress.setShortcut(QApplication.translate("trimage",
