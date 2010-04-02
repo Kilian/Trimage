@@ -1,9 +1,10 @@
-trimage (1.0.0b3-0ubuntu1) jaunty; urgency=low
+trimage (1.1.0b-0ubuntu1) jaunty; urgency=low
 
-  * better image filetype determination
-  * use unicode strings everywhere
-  * fix bug where Trimage would crash if a directory didn't end in a slash
-  * avoid a segfault when parsing empty directories
-  * ../../debian/changelog
+  * use multiprocessing for images
+  * more robust file handling
+  * re-adding images now results in recompressing them
+  * compressing message now shows filename
+  * wider array of status messages in the table
 
  -- Kilian Valkhof <kilian@kdesktop>  Mon, 29 Mar 2010 13:08:18 +0200
+
