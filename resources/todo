@@ -15,10 +15,6 @@ todo app wise
 todo else
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
 
-todo later
-- use multiprocessing lib to take advantage of multicore/multi-CPU to compress
-    multiple files simultaneously (threads have issues in Python; see "GIL")
-
 ===========================================
 later versions:
     animate compressing.gif
