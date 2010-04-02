@@ -15,10 +15,6 @@ todo app wise
 todo else
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
 
-todo later
-- use multiprocessing lib to take advantage of multicore/multi-CPU to compress
-    multiple files simultaneously (threads have issues in Python; see "GIL")
-
 ===========================================
 later versions:
     animate compressing.gif
@@ -36,4 +32,12 @@ later versions:
         optimised once. Recompressing maximally compresses 90. Recompressing
         again would currently try to recompress all 100, when only 10 would be
         worthy of trying to compress further.
+
+
+1.1.0 changes:
+- use multiprocessing for images
+- more robust file handling
+- re-adding images now results in recompressing them
+- compressing message now shows filename
+- wider array of status messages in the table
 
