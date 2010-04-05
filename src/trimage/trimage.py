@@ -18,7 +18,7 @@ from multiprocessing import cpu_count
 
 from ui import Ui_trimage
 
-VERSION = "1.1.0b"
+VERSION = "1.0.1b"
 
 
 class StartQT4(QMainWindow):
