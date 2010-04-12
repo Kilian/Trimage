@@ -19,7 +19,6 @@ todo else
 later versions:
     animate compressing.gif
     allow selection/deletion of rows from table (and subsequently the imagelist)
-    check for double files when adding
     punypng api? http://www.gracepointafterfive.com/punypng/api
     imagemagick/graphicsmagick?
     always on top option
