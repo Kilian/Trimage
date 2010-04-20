@@ -1,0 +1,1 @@
+http://pypi.python.org/pypi/hurry.filesize

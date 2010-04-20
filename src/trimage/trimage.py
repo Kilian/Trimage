@@ -9,7 +9,7 @@ from optparse import OptionParser
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from hurry.filesize import *
+from filesize import *
 from imghdr import what as determinetype
 
 from Queue import Queue
@@ -209,18 +209,19 @@ class StartQT4(QMainWindow):
 
     def checkapps(self):
         """Check if the required command line apps exist."""
+        exe=".exe" if (sys.platform=="win32") else ""
         status = False
-        retcode = self.safe_call("jpegoptim --version")
+        retcode = self.safe_call("jpegoptim"+exe+" --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install jpegoptim")
 
-        retcode = self.safe_call("optipng -v")
+        retcode = self.safe_call("optipng"+exe+" -v")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install optipng")
 
-        retcode = self.safe_call("advpng --version")
+        retcode = self.safe_call("advpng"+exe+" --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install advancecomp")
@@ -343,9 +344,10 @@ class Image:
             raise "Tried to compress invalid image (unsupported format or not file)"
         self.reset()
         self.compressing=True
+        exe=".exe" if (sys.platform=="win32") else ""
         runString = {
-            "jpeg": u"jpegoptim -f --strip-all '%(file)s'",
-            "png" : u"optipng -force -o7 '%(file)s'&&advpng -z4 '%(file)s'"}
+            "jpeg": u"jpegoptim"+exe+" -f --strip-all '%(file)s'",
+            "png" : u"optipng"+exe+" -force -o7 '%(file)s'&&advpng"+exe+" -z4 '%(file)s'"}
         try:
             retcode = call(runString[self.filetype] % {"file": self.fullpath},
                 shell = True, stdout=PIPE)
