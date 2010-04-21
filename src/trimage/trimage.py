@@ -128,9 +128,11 @@ class StartQT4(QMainWindow):
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
+        directory = ""
+
         images = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
-            "", # directory
+            directory,
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
