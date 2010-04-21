@@ -209,6 +209,7 @@ class StartQT4(QMainWindow):
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
+        self.systemtray.recompress.setEnabled(True)
 
     def checkapps(self):
         """Check if the required command line apps exist."""
@@ -424,6 +425,7 @@ class Worker(QThread):
 
 
 class Systray(QWidget):
+
     def __init__(self, parent):
         QWidget.__init__(self)
         self.parent = parent
@@ -438,14 +440,17 @@ class Systray(QWidget):
 
         self.addFiles = QAction(self.tr("&Add and compress"), self)
         icon = QIcon()
-        icon.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/list-add.png"))), QIcon.Normal, QIcon.Off)
+        icon.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/list-add.png"))),
+            QIcon.Normal, QIcon.Off)
         self.addFiles.setIcon(icon)
         QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.file_dialog)
 
         self.recompress = QAction(self.tr("&Recompress"), self)
         icon2 = QIcon()
-        icon2.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/view-refresh.png"))), QIcon.Normal, QIcon.Off)
+        icon2.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/view-refresh.png"))),
+            QIcon.Normal, QIcon.Off)
         self.recompress.setIcon(icon2)
+        self.recompress.setDisabled(True)
         QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.recompress_files)
 
     def createTrayIcon(self):
@@ -454,9 +459,10 @@ class Systray(QWidget):
         self.trayIconMenu.addAction(self.recompress)
         self.trayIconMenu.addAction(self.quitAction)
 
-        self.trayIcon = QSystemTrayIcon(self)
-        self.trayIcon.setContextMenu(self.trayIconMenu)
-        self.trayIcon.setIcon(QIcon(self.parent.ui.get_image("pixmaps/trimage-icon.png")))
+        if QSystemTrayIcon.isSystemTrayAvailable():
+            self.trayIcon = QSystemTrayIcon(self)
+            self.trayIcon.setContextMenu(self.trayIconMenu)
+            self.trayIcon.setIcon(QIcon(self.parent.ui.get_image("pixmaps/trimage-icon.png")))
 
 
 if __name__ == "__main__":
