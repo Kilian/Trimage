@@ -473,6 +473,7 @@ class Systray(QWidget):
         if QSystemTrayIcon.isSystemTrayAvailable():
             self.trayIcon = QSystemTrayIcon(self)
             self.trayIcon.setContextMenu(self.trayIconMenu)
+            self.trayIcon.setToolTip("Trimage image compressor")
             self.trayIcon.setIcon(QIcon(self.parent.ui.get_image("pixmaps/trimage-icon.png")))
 
 
