@@ -28,6 +28,8 @@ class StartQT4(QMainWindow):
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
 
+        self.systemtray = Systray(self)
+
         self.showapp = True
         self.verbose = True
         self.imagelist = []
@@ -419,6 +421,43 @@ class Worker(QThread):
                         + ir['newfilesizestr'] + ", Ratio: " + ir['ratiostr'])
                 else:
                     print >> sys.stderr, u"[error] %s could not be compressed" % image.fullpath
+
+
+class Systray(QWidget):
+    def __init__(self, parent):
+        QWidget.__init__(self)
+        self.parent = parent
+        self.createActions()
+        self.createTrayIcon()
+        self.trayIcon.show()
+
+    def createActions(self):
+        self.quitAction = QAction(self.tr("&Quit"), self)
+        QObject.connect(self.quitAction, SIGNAL("triggered()"),
+            qApp, SLOT("quit()"))
+
+        self.addFiles = QAction(self.tr("&Add and compress"), self)
+        icon = QIcon()
+        icon.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/list-add.png"))), QIcon.Normal, QIcon.Off)
+        self.addFiles.setIcon(icon)
+        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.file_dialog)
+
+        self.recompress = QAction(self.tr("&Recompress"), self)
+        icon2 = QIcon()
+        icon2.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/view-refresh.png"))), QIcon.Normal, QIcon.Off)
+        self.recompress.setIcon(icon2)
+        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.recompress_files)
+
+    def createTrayIcon(self):
+        self.trayIconMenu = QMenu(self)
+        self.trayIconMenu.addAction(self.addFiles)
+        self.trayIconMenu.addAction(self.recompress)
+        self.trayIconMenu.addAction(self.quitAction)
+
+        self.trayIcon = QSystemTrayIcon(self)
+        self.trayIcon.setContextMenu(self.trayIconMenu)
+        self.trayIcon.setIcon(QIcon(self.parent.ui.get_image("pixmaps/trimage-icon.png")))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
