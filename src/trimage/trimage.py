@@ -242,6 +242,13 @@ class StartQT4(QMainWindow):
                 else:
                     raise
 
+    def hide_main_window(self):
+        if self.isVisible():
+            self.hide()
+            self.systemtray.hideMain.setText("&Show window")
+        else:
+            self.show()
+            self.systemtray.hideMain.setText("&Hide window")
 
 class TriTableModel(QAbstractTableModel):
 
@@ -453,10 +460,14 @@ class Systray(QWidget):
         self.recompress.setDisabled(True)
         QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.recompress_files)
 
+        self.hideMain = QAction(self.tr("&Hide window"), self)
+        QObject.connect(self.hideMain, SIGNAL("triggered()"), self.parent.hide_main_window)
+
     def createTrayIcon(self):
         self.trayIconMenu = QMenu(self)
         self.trayIconMenu.addAction(self.addFiles)
         self.trayIconMenu.addAction(self.recompress)
+        self.trayIconMenu.addAction(self.hideMain)
         self.trayIconMenu.addAction(self.quitAction)
 
         if QSystemTrayIcon.isSystemTrayAvailable():
