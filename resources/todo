@@ -5,12 +5,17 @@ todo app wise
     any random part of code (can leave things in a mess)
 - consider context managers for handling compression, so as to keep operations
     atomic and/or rollback-able
+
 - add a recursive option on the command-line for use with -d
 - make -f accept a list of files
 - make the current verbose be "normal", and make -verbose print the commandline
     app prints as well
+
 - verify that a *recompressed* file is smaller than the compressed one
 - find a way to specify the version once for everywhere
+- notification area drag/drop widget
+- save chosen directory and geometry/screen position using QSettings
+
 
 todo else
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
@@ -22,7 +27,6 @@ later versions:
     punypng api? http://www.gracepointafterfive.com/punypng/api
     imagemagick/graphicsmagick?
     always on top option
-    notification area widget
     intelligently recompress, i.e. go through the list of files, recompress
         each until no more gains are seen (and a sensible number-of-tries limit
         isn't exceeded), and flag that file as fully-optimised. Repeat for each

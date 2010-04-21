@@ -215,19 +215,19 @@ class StartQT4(QMainWindow):
 
     def checkapps(self):
         """Check if the required command line apps exist."""
-        exe=".exe" if (sys.platform=="win32") else ""
+        exe = ".exe" if (sys.platform == "win32") else ""
         status = False
-        retcode = self.safe_call("jpegoptim"+exe+" --version")
+        retcode = self.safe_call("jpegoptim" + exe + " --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install jpegoptim")
 
-        retcode = self.safe_call("optipng"+exe+" -v")
+        retcode = self.safe_call("optipng" + exe + " -v")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install optipng")
 
-        retcode = self.safe_call("advpng"+exe+" --version")
+        retcode = self.safe_call("advpng" + exe + " --version")
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install advancecomp")
@@ -251,6 +251,7 @@ class StartQT4(QMainWindow):
         else:
             self.show()
             self.systemtray.hideMain.setText("&Hide window")
+
 
 class TriTableModel(QAbstractTableModel):
 
@@ -372,11 +373,11 @@ class Image:
             raise "Tried to compress invalid image (unsupported format or not \
             file)"
         self.reset()
-        self.compressing=True
-        exe=".exe" if (sys.platform=="win32") else ""
+        self.compressing = True
+        exe = ".exe" if (sys.platform == "win32") else ""
         runString = {
-            "jpeg": u"jpegoptim"+exe+" -f --strip-all '%(file)s'",
-            "png" : u"optipng"+exe+" -force -o7 '%(file)s'&&advpng"+exe+" -z4 '%(file)s'"}
+            "jpeg": u"jpegoptim" + exe + " -f --strip-all '%(file)s'",
+             "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s'"}
         try:
             retcode = call(runString[self.filetype] % {"file": self.fullpath},
                 shell=True, stdout=PIPE)
