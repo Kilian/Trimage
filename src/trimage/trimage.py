@@ -169,6 +169,8 @@ class StartQT4(QMainWindow):
                     print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
 
         self.update_table()
+        self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
+        self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
             self.imagelist)
 
