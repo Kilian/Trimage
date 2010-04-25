@@ -18,7 +18,7 @@ from multiprocessing import cpu_count
 
 from ui import Ui_trimage
 
-VERSION = "1.0.0b3"
+VERSION = "1.0.1b"
 
 
 class StartQT4(QMainWindow):
@@ -27,6 +27,8 @@ class StartQT4(QMainWindow):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
+
+        self.systemtray = Systray(self)
 
         self.showapp = True
         self.verbose = True
@@ -150,20 +152,21 @@ class StartQT4(QMainWindow):
         """
         delegatorlist = []
         for fullpath in images:
-            try: # do not add already existing images again, recompress them instead
-                image=(i.image for i in self.imagelist
+            try: # recompress images already in the list
+                image = (i.image for i in self.imagelist
                     if i.image.fullpath == fullpath).next()
                 if image.compressed:
-                  image.reset()
-                  image.recompression=True
-                  delegatorlist.append(image)
+                    image.reset()
+                    image.recompression = True
+                    delegatorlist.append(image)
             except StopIteration:
-                image=Image(fullpath)
+                image = Image(fullpath)
                 if image.valid:
                     delegatorlist.append(image)
-                    self.imagelist.append(ImageRow(image,QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))))
+                    icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
+                    self.imagelist.append(ImageRow(image, icon))
                 else:
-                    print >>sys.stderr, u"[error] %s not a supported image file" % image.fullpath
+                    print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
 
         self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
@@ -208,6 +211,7 @@ class StartQT4(QMainWindow):
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
+        self.systemtray.recompress.setEnabled(True)
 
     def checkapps(self):
         """Check if the required command line apps exist."""
@@ -239,6 +243,14 @@ class StartQT4(QMainWindow):
                     continue
                 else:
                     raise
+
+    def hide_main_window(self):
+        if self.isVisible():
+            self.hide()
+            self.systemtray.hideMain.setText("&Show window")
+        else:
+            self.show()
+            self.systemtray.hideMain.setText("&Hide window")
 
 class TriTableModel(QAbstractTableModel):
 
@@ -280,30 +292,39 @@ class TriTableModel(QAbstractTableModel):
         role == Qt.DecorationRole):
             return QVariant(self.header[col])
         return QVariant()
-        
-class ImageRow:
-    def __init__(self, image, waitingIcon=None):
-        self.image=image
-        d={
-            'shortname':      lambda i: self.statusStr() % i.shortname,
-            'oldfilesizestr': lambda i: size(i.oldfilesize, system=alternative) if i.compressed else "",
-            'newfilesizestr': lambda i: size(i.newfilesize, system=alternative) if i.compressed else "",
-            'ratiostr':       lambda i:
-                "%.1f%%" % (100 - (float(i.newfilesize) / i.oldfilesize * 100)) if i.compressed else "",
-            'icon':           lambda i: i.icon if i.compressed else waitingIcon,
 
-            'fullpath':       lambda i: i.fullpath, #only used by cli
+
+class ImageRow:
+
+    def __init__(self, image, waitingIcon=None):
+        """ Build the information visible in the table image row. """
+        self.image = image
+        d = {
+            'shortname': lambda i: self.statusStr() % i.shortname,
+            'oldfilesizestr': lambda i: size(i.oldfilesize, system=alternative)
+                if i.compressed else "",
+            'newfilesizestr': lambda i: size(i.newfilesize, system=alternative)
+                if i.compressed else "",
+            'ratiostr': lambda i:
+                "%.1f%%" % (100 - (float(i.newfilesize) / i.oldfilesize * 100))
+                if i.compressed else "",
+            'icon': lambda i: i.icon if i.compressed else waitingIcon,
+            'fullpath': lambda i: i.fullpath, #only used by cli
         }
-        for i,n in enumerate(['shortname','oldfilesizestr','newfilesizestr','ratiostr','icon']):
-            d[i]=d[n]
-        
+        names = ['shortname', 'oldfilesizestr', 'newfilesizestr',
+                      'ratiostr', 'icon']
+        for i, n in enumerate(names):
+            d[i] = d[n]
+
         self.d = d
 
     def statusStr(self):
+        """ Set the status message. """
         if self.image.failed:
             return "ERROR: %s"
         if self.image.compressing:
-            return "In Progress..."
+            message = "Compressing %s..."
+            return message
         if not self.image.compressed and self.image.recompression:
             return "Queued for recompression..."
         if not self.image.compressed:
@@ -313,12 +334,15 @@ class ImageRow:
     def __getitem__(self, key):
         return self.d[key](self.image)
 
+
 class Image:
+
     def __init__(self, fullpath):
+        """ gather image information. """
         self.valid = False
         self.reset()
         self.fullpath = fullpath
-        if path.isfile(self.fullpath):            
+        if path.isfile(self.fullpath):
             self.filetype = determinetype(self.fullpath)
             if self.filetype in ["jpeg", "png"]:
                 oldfile = QFileInfo(self.fullpath)
@@ -328,22 +352,25 @@ class Image:
                 self.valid = True
 
     def _determinetype(self):
-        filetype=determinetype(self.fullpath)
+        """ Determine the filetype of the file using imghdr. """
+        filetype = determinetype(self.fullpath)
         if filetype in ["jpeg", "png"]:
-            self.filetype=filetype
+            self.filetype = filetype
         else:
-            self.filetype=None
+            self.filetype = None
         return self.filetype
 
     def reset(self):
         self.failed = False
         self.compressed = False
         self.compressing = False
-        self.recompression= False
+        self.recompression = False
 
     def compress(self):
+        """ Compress the image and return it to the thread. """
         if not self.valid:
-            raise "Tried to compress invalid image (unsupported format or not file)"
+            raise "Tried to compress invalid image (unsupported format or not \
+            file)"
         self.reset()
         self.compressing=True
         exe=".exe" if (sys.platform=="win32") else ""
@@ -352,16 +379,16 @@ class Image:
             "png" : u"optipng"+exe+" -force -o7 '%(file)s'&&advpng"+exe+" -z4 '%(file)s'"}
         try:
             retcode = call(runString[self.filetype] % {"file": self.fullpath},
-                shell = True, stdout=PIPE)
+                shell=True, stdout=PIPE)
         except:
-          retcode = -1
+            retcode = -1
         if retcode == 0:
             self.newfilesize = QFile(self.fullpath).size()
-            self.compressed=True
+            self.compressed = True
         else:
-            self.failed=True
-        self.compressing=False
-        self.retcode=retcode
+            self.failed = True
+        self.compressing = False
+        self.retcode = retcode
         return self
 
 
@@ -369,7 +396,7 @@ class Worker(QThread):
 
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
-        self.toDisplay=Queue()
+        self.toDisplay = Queue()
         self.threadpool = ThreadPool(max_workers=cpu_count())
 
     def __del__(self):
@@ -378,8 +405,10 @@ class Worker(QThread):
     def compress_file(self, images, showapp, verbose, imagelist):
         """Start the worker thread."""
         for image in images:
-            time.sleep(0.05) #FIXME: Workaround http://code.google.com/p/pythonthreadpool/issues/detail?id=5
-            self.threadpool.add_job(image.compress, None, return_callback=self.toDisplay.put)
+            #FIXME:http://code.google.com/p/pythonthreadpool/issues/detail?id=5
+            time.sleep(0.05)
+            self.threadpool.add_job(image.compress, None,
+                                    return_callback=self.toDisplay.put)
         self.showapp = showapp
         self.verbose = verbose
         self.imagelist = imagelist
@@ -388,41 +417,67 @@ class Worker(QThread):
     def run(self):
         """Compress the given file, get data from it and call update_table."""
         tp = self.threadpool
-        while self.showapp or not (tp._ThreadPool__active_worker_count==0 and tp._ThreadPool__jobs.empty()):
+        while self.showapp or not (tp._ThreadPool__active_worker_count == 0 and
+                                   tp._ThreadPool__jobs.empty()):
             image = self.toDisplay.get()
+
             self.emit(SIGNAL("updateUi"))
 
             if not self.showapp and self.verbose: # we work via the commandline
-                if image.retcode==0:                                    
-                    ir=ImageRow(image)
+                if image.retcode == 0:
+                    ir = ImageRow(image)
                     print("File: " + ir['fullpath'] + ", Old Size: "
-                        + ir['oldfilesizestr'] + ", New Size: " + ir['newfilesizestr']
-                        + ", Ratio: " + ir['ratiostr'])
+                        + ir['oldfilesizestr'] + ", New Size: "
+                        + ir['newfilesizestr'] + ", Ratio: " + ir['ratiostr'])
                 else:
-                    print >>sys.stderr, u"[error] %s could not be compressed" % image.fullpath
+                    print >> sys.stderr, u"[error] %s could not be compressed" % image.fullpath
 
 
-class TrimageTableView(QTableView):
-    """Init the table drop event."""
-    def __init__(self, parent=None):
-        super(TrimageTableView, self).__init__(parent)
-        self.setAcceptDrops(True)
+class Systray(QWidget):
 
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat("text/uri-list"):
-            event.accept()
-        else:
-            event.ignore()
+    def __init__(self, parent):
+        QWidget.__init__(self)
+        self.parent = parent
+        self.createActions()
+        self.createTrayIcon()
+        self.trayIcon.show()
 
-    def dragMoveEvent(self, event):
-        event.accept()
+    def createActions(self):
+        self.quitAction = QAction(self.tr("&Quit"), self)
+        QObject.connect(self.quitAction, SIGNAL("triggered()"),
+            qApp, SLOT("quit()"))
 
-    def dropEvent(self, event):
-        files = str(event.mimeData().data("text/uri-list")).strip().split()
-        for i, file in enumerate(files):
-            files[i] = QUrl(QString(file)).toLocalFile()
-        files=[i.toUtf8().decode("utf-8") for i in files]
-        self.emit(SIGNAL("fileDropEvent"), (files))
+        self.addFiles = QAction(self.tr("&Add and compress"), self)
+        icon = QIcon()
+        icon.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/list-add.png"))),
+            QIcon.Normal, QIcon.Off)
+        self.addFiles.setIcon(icon)
+        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.file_dialog)
+
+        self.recompress = QAction(self.tr("&Recompress"), self)
+        icon2 = QIcon()
+        icon2.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/view-refresh.png"))),
+            QIcon.Normal, QIcon.Off)
+        self.recompress.setIcon(icon2)
+        self.recompress.setDisabled(True)
+        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.recompress_files)
+
+        self.hideMain = QAction(self.tr("&Hide window"), self)
+        QObject.connect(self.hideMain, SIGNAL("triggered()"), self.parent.hide_main_window)
+
+    def createTrayIcon(self):
+        self.trayIconMenu = QMenu(self)
+        self.trayIconMenu.addAction(self.addFiles)
+        self.trayIconMenu.addAction(self.recompress)
+        self.trayIconMenu.addAction(self.hideMain)
+        self.trayIconMenu.addAction(self.quitAction)
+
+        if QSystemTrayIcon.isSystemTrayAvailable():
+            self.trayIcon = QSystemTrayIcon(self)
+            self.trayIcon.setContextMenu(self.trayIconMenu)
+            self.trayIcon.setToolTip("Trimage image compressor")
+            self.trayIcon.setIcon(QIcon(self.parent.ui.get_image("pixmaps/trimage-icon.png")))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

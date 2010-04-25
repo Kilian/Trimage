@@ -32,3 +32,11 @@ later versions:
         again would currently try to recompress all 100, when only 10 would be
         worthy of trying to compress further.
 
+
+1.1.0 changes:
+- use multiprocessing for images
+- more robust file handling
+- re-adding images now results in recompressing them
+- compressing message now shows filename
+- wider array of status messages in the table
+
