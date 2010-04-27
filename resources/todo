@@ -15,10 +15,11 @@ todo app wise
 - find a way to specify the version once for everywhere
 - notification area drag/drop widget
 - save chosen directory and geometry/screen position using QSettings
-
+- recompress stopped working
 
 todo else
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
+
 
 ===========================================
 later versions:
