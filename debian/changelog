@@ -1,4 +1,4 @@
-trimage (1.0.1b-0ubuntu1) jaunty; urgency=low
+trimage (1.0.1b2-0ubuntu1) jaunty; urgency=low
 
   * use a threadpool for images
   * more robust file handling
@@ -6,6 +6,7 @@ trimage (1.0.1b-0ubuntu1) jaunty; urgency=low
   * compressing message now shows filename
   * wider array of status messages in the table
   * add a notification area icon
+  * remove BOM
 
  -- Kilian Valkhof <kilian@kdesktop>  Mon, 29 Mar 2010 13:08:18 +0200
 
