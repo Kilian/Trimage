@@ -14,8 +14,9 @@ todo app wise
 - verify that a *recompressed* file is smaller than the compressed one
 - find a way to specify the version once for everywhere
 - notification area drag/drop widget
+  -> probably need gtk for gnome
 - save chosen directory and geometry/screen position using QSettings
-- recompress stopped working
+  -> for 1.0.2
 
 todo else
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
@@ -36,12 +37,4 @@ later versions:
         optimised once. Recompressing maximally compresses 90. Recompressing
         again would currently try to recompress all 100, when only 10 would be
         worthy of trying to compress further.
-
-
-1.1.0 changes:
-- use multiprocessing for images
-- more robust file handling
-- re-adding images now results in recompressing them
-- compressing message now shows filename
-- wider array of status messages in the table
 
