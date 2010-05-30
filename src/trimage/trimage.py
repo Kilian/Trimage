@@ -472,7 +472,9 @@ class Systray(QWidget):
         self.trayIconMenu = QMenu(self)
         self.trayIconMenu.addAction(self.addFiles)
         self.trayIconMenu.addAction(self.recompress)
+        self.trayIconMenu.addSeparator()
         self.trayIconMenu.addAction(self.hideMain)
+        self.trayIconMenu.addSeparator()
         self.trayIconMenu.addAction(self.quitAction)
 
         if QSystemTrayIcon.isSystemTrayAvailable():
@@ -489,3 +491,4 @@ if __name__ == "__main__":
     if myapp.showapp:
         myapp.show()
     sys.exit(app.exec_())
+
