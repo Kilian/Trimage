@@ -34,6 +34,9 @@ class StartQT4(QMainWindow):
         self.verbose = True
         self.imagelist = []
 
+        self.settings = QSettings("Kilian Valkhof", "Trimage");
+        self.restoreGeometry(self.settings.value("geometry").toByteArray());
+
         # check if apps are installed
         if self.checkapps():
             quit()
@@ -253,6 +256,10 @@ class StartQT4(QMainWindow):
         else:
             self.show()
             self.systemtray.hideMain.setText("&Hide window")
+
+    def closeEvent(self, event):
+      self.settings.setValue("geometry", self.saveGeometry())
+      event.accept()
 
 
 class TriTableModel(QAbstractTableModel):
