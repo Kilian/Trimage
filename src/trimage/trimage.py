@@ -34,8 +34,11 @@ class StartQT4(QMainWindow):
         self.verbose = True
         self.imagelist = []
 
-        self.settings = QSettings("Kilian Valkhof", "Trimage");
-        self.restoreGeometry(self.settings.value("geometry").toByteArray());
+        QCoreApplication.setOrganizationName("Kilian Valkhof")
+        QCoreApplication.setOrganizationDomain("trimage.org")
+        QCoreApplication.setApplicationName("Trimage")
+        self.settings = QSettings()
+        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         # check if apps are installed
         if self.checkapps():
@@ -131,7 +134,9 @@ class StartQT4(QMainWindow):
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
-        directory = ""
+        fd.restoreState(self.settings.value("fdstate").toByteArray())
+        directory = self.settings.value("directory", "").toString()
+        fd.setDirectory(directory)
 
         images = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
@@ -139,6 +144,9 @@ class StartQT4(QMainWindow):
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
+        self.settings.setValue("fdstate", fd.saveState())
+        if images:
+          self.settings.setValue("directory", path.dirname(unicode(images[0])))
         self.delegator([unicode(fullpath) for fullpath in images])
 
     def recompress_files(self):
