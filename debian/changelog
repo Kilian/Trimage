@@ -1,7 +1,8 @@
 trimage (1.0.2-0ubuntu1) jaunty; urgency=low
 
-  * save window geomity and file directory upon closing
+  * save window geomitry and file directory upon closing
   * prettier systray menu
+  * move to quilt for debian
 
- -- Kilian Valkhof <kilian@kdesktop>  Mon, 31 May 2010 13:08:18 +0200
+ -- Kilian Valkhof <kilian@kilianvalkhof.com>  Mon, 31 May 2010 20:08:48 +0200
 
