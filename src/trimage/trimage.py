@@ -135,7 +135,7 @@ class StartQT4(QMainWindow):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
         fd.restoreState(self.settings.value("fdstate").toByteArray())
-        directory = self.settings.value("directory", "").toString()
+        directory = self.settings.value("directory", QVariant("")).toString()
         fd.setDirectory(directory)
 
         images = fd.getOpenFileNames(self,
@@ -144,9 +144,9 @@ class StartQT4(QMainWindow):
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
-        self.settings.setValue("fdstate", fd.saveState())
+        self.settings.setValue("fdstate", QVariant(fd.saveState()))
         if images:
-          self.settings.setValue("directory", path.dirname(unicode(images[0])))
+          self.settings.setValue("directory", QVariant(path.dirname(unicode(images[0]))))
         self.delegator([unicode(fullpath) for fullpath in images])
 
     def recompress_files(self):
@@ -266,7 +266,7 @@ class StartQT4(QMainWindow):
             self.systemtray.hideMain.setText("&Hide window")
 
     def closeEvent(self, event):
-      self.settings.setValue("geometry", self.saveGeometry())
+      self.settings.setValue("geometry", QVariant(self.saveGeometry()))
       event.accept()
 
 
@@ -506,4 +506,3 @@ if __name__ == "__main__":
     if myapp.showapp:
         myapp.show()
     sys.exit(app.exec_())
-
