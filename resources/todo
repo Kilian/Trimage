@@ -15,8 +15,6 @@ todo app wise
 - find a way to specify the version once for everywhere
 - notification area drag/drop widget
   -> probably need gtk for gnome
-- save chosen directory and geometry/screen position using QSettings
-  -> for 1.0.2
 
 todo else
 - figure out how to make mac and win versions (someone else :) <- via gui2exe
