@@ -1,8 +1,8 @@
 trimage (1.0.2-0ubuntu1) jaunty; urgency=low
 
-  * save window geomitry and file directory upon closing
+  * save window geometry and file directory upon closing
   * prettier systray menu
-  * move to quilt for debian
+  * Switch to dpkg-source 3.0(quilt) format
 
- -- Kilian Valkhof <kilian@kilianvalkhof.com>  Mon, 31 May 2010 20:08:48 +0200
+ -- Kilian Valkhof <kilian@kilianvalkhof.com>  Thu, 03 Jun 2010 13:01:30 +0200
 
