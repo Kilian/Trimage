@@ -6,3 +6,44 @@ trimage (1.0.2-0ubuntu1) jaunty; urgency=low
 
  -- Kilian Valkhof <kilian@kilianvalkhof.com>  Thu, 03 Jun 2010 13:01:30 +0200
 
+trimage (1.0.1b2-0ubuntu1) jaunty; urgency=low
+
+  * use a threadpool for images
+  * more robust file handling
+  * re-adding images now results in recompressing them
+  * compressing message now shows filename
+  * wider array of status messages in the table
+  * add a notification area icon
+  * remove BOM
+ -- Kilian Valkhof <kilian@kdesktop>   Mon, 29 Mar 2010 13:08:18 +0200
+
+trimage (1.0.1b-0ubuntu1) jaunty; urgency=low
+
+  * use a threadpool for images
+  * more robust file handling
+  * re-adding images now results in recompressing them
+  * compressing message now shows filename
+  * wider array of status messages in the table
+  * add a notification area icon
+ -- Kilian Valkhof <kilian@kdesktop>   Mon, 29 Mar 2010 13:08:18 +0200
+
+trimage (1.0.0b3-0ubuntu1) jaunty; urgency=low
+
+  * better image filetype determination
+  * use unicode strings everywhere
+  * fix bug where Trimage would crash if a directory didn't end in a slash
+  * avoid a segfault when parsing empty directories
+  * ../../debian/changelog
+ -- Kilian Valkhof <kilian@kdesktop>   Mon, 29 Mar 2010 13:08:18 +0200
+
+trimage (1.0.0b2-0ubuntu1) jaunty; urgency=low
+
+  * correct parsing of unicode characters in filenames
+  * changelog
+ -- Kilian Valkhof <kilian@kdesktop>   Sun, 28 Mar 2010 16:09:45 +0200
+
+trimage (1.0.0b-0ubuntu1) jaunty; urgency=low
+
+  * Trimage image compressor
+ -- Kilian Valkhof <help@trimage.org>   Tue, 23 Mar 2010 20:18:17 +0100
+
