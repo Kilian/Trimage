@@ -28,7 +28,8 @@ class StartQT4(QMainWindow):
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
 
-        self.systemtray = Systray(self)
+        if QSystemTrayIcon.isSystemTrayAvailable():
+            self.systemtray = Systray(self)
 
         self.showapp = True
         self.verbose = True
