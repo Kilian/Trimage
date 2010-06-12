@@ -5,7 +5,7 @@ Maintainer: Kilian Valkhof <kilian@kilianvalkhof.com>
 Build-Depends: cdbs (>=0.4.49), debhelper (>=7), python-support (>=0.8.7), python
 XS-Python-Version: >=2.6
 Standards-Version: 3.8.0
-Homepage: https://trimage.org
+Homepage: http://trimage.org
 
 Package: trimage
 Architecture: all
