@@ -6,7 +6,7 @@ files via "optipng":http://optipng.sourceforge.net/,
 "advpng":http://advancemame.sourceforge.net/comp-readme.html and
 "jpegoptim":http://www.kokkonen.net/tjko/projects.html, depending on the
 filetype (currently, PNG and JPG files are supported). It was inspired by
-"imageoptim":http://imageoptim.pornel.net/. All image files are losslessy
+"imageoptim":http://imageoptim.pornel.net/. All image files are losslessly
 compressed on the highest available compression levels. Trimage gives you
 various input functions to fit your own workflow: A regular file dialog,
 dragging and dropping and various command line options.

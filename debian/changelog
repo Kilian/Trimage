@@ -1,3 +1,11 @@
+trimage (1.0.3-0ubuntu1) jaunty; urgency=low
+
+  * fix for environments without supported system tray
+  * add copyright info for filesize.py
+  * update various debian configurations
+
+ -- Kilian Valkhof <kilian@kilianvalkhof.com>  Sat, 12 Jun 2010 14:04:35 +0200
+
 trimage (1.0.2-0ubuntu1) jaunty; urgency=low
 
   * save window geometry and file directory upon closing
