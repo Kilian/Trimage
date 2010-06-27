@@ -181,7 +181,8 @@ class StartQT4(QMainWindow):
                     print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
 
         self.update_table()
-        self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
+        if QSystemTrayIcon.isSystemTrayAvailable():
+            self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
             self.imagelist)
@@ -225,7 +226,8 @@ class StartQT4(QMainWindow):
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
-        self.systemtray.recompress.setEnabled(True)
+        if QSystemTrayIcon.isSystemTrayAvailable():
+            self.systemtray.recompress.setEnabled(True)
 
     def checkapps(self):
         """Check if the required command line apps exist."""
@@ -261,10 +263,12 @@ class StartQT4(QMainWindow):
     def hide_main_window(self):
         if self.isVisible():
             self.hide()
-            self.systemtray.hideMain.setText("&Show window")
+            if QSystemTrayIcon.isSystemTrayAvailable():
+                self.systemtray.hideMain.setText("&Show window")
         else:
             self.show()
-            self.systemtray.hideMain.setText("&Hide window")
+            if QSystemTrayIcon.isSystemTrayAvailable():
+                self.systemtray.hideMain.setText("&Hide window")
 
     def closeEvent(self, event):
       self.settings.setValue("geometry", QVariant(self.saveGeometry()))
