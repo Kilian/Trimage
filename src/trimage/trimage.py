@@ -18,7 +18,7 @@ from multiprocessing import cpu_count
 
 from ui import Ui_trimage
 
-VERSION = "1.0.3"
+VERSION = "1.0.4"
 
 
 class StartQT4(QMainWindow):
@@ -27,9 +27,6 @@ class StartQT4(QMainWindow):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
         self.ui.setupUi(self)
-
-        if QSystemTrayIcon.isSystemTrayAvailable():
-            self.systemtray = Systray(self)
 
         self.showapp = True
         self.verbose = True
@@ -75,7 +72,11 @@ class StartQT4(QMainWindow):
         # activate command line options
         self.commandline_options()
 
+        if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
+            self.systemtray = Systray(self)
+
     def commandline_options(self):
+        self.cli = False
         """Set up the command line options."""
         parser = OptionParser(version="%prog " + VERSION,
             description="GUI front-end to compress png and jpg images via "
@@ -97,6 +98,7 @@ class StartQT4(QMainWindow):
         # make sure we quit after processing finished if using cli
         if options.filename or options.directory:
             QObject.connect(self.thread, SIGNAL("finished()"), quit)
+            self.cli = True
 
         # send to correct function
         if options.filename:
@@ -181,7 +183,7 @@ class StartQT4(QMainWindow):
                     print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
 
         self.update_table()
-        if QSystemTrayIcon.isSystemTrayAvailable():
+        if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
             self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
@@ -226,7 +228,7 @@ class StartQT4(QMainWindow):
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
-        if QSystemTrayIcon.isSystemTrayAvailable():
+        if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
             self.systemtray.recompress.setEnabled(True)
 
     def checkapps(self):
