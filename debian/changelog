@@ -1,3 +1,10 @@
+trimage (1.0.4-0ubuntu1) jaunty; urgency=low
+
+  * prevent systemtray from starting if a CLI compression is done
+  * preliminary OSX work
+
+ -- Kilian Valkhof <kilian@kilianvalkhof.com>  Fri, 17 Sep 2010 20:45:16 +0200
+
 trimage (1.0.3-0ubuntu1) jaunty; urgency=low
 
   * fix for environments without supported system tray
