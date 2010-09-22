@@ -174,13 +174,16 @@ class StartQT4(QMainWindow):
                     image.recompression = True
                     delegatorlist.append(image)
             except StopIteration:
-                image = Image(fullpath)
-                if image.valid:
-                    delegatorlist.append(image)
-                    icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
-                    self.imagelist.append(ImageRow(image, icon))
+            	if not path.isdir(fullpath):
+                    image = Image(fullpath)
+                    if image.valid:
+                        delegatorlist.append(image)
+                        icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
+                        self.imagelist.append(ImageRow(image, icon))
+                    else:
+                        print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
                 else:
-                    print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
+                    self.walk(fullpath)
 
         self.update_table()
         if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
@@ -189,7 +192,17 @@ class StartQT4(QMainWindow):
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
             self.imagelist)
 
-
+    def walk(self,dir):
+        """
+        Walks a directory, and executes a callback on each file
+        """
+        dir = path.abspath(dir)
+        for file in [file for file in listdir(dir) if not file in [".",".."]]:
+            nfile = path.join(dir,file)
+            self.delegator([nfile])
+            if path.isdir(nfile):
+                self.walk(nfile)
+        
     """
     UI Functions
     """
