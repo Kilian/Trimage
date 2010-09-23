@@ -4,6 +4,8 @@ import sys
 import errno
 from os import listdir
 from os import path
+from os import remove
+from shutil import copy
 from subprocess import call, PIPE
 from optparse import OptionParser
 
@@ -262,6 +264,11 @@ class StartQT4(QMainWindow):
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install advancecomp")
+
+        retcode = self.safe_call("pngcrush" + exe + " -version")
+        if retcode != 0:
+            status = True
+            sys.stderr.write("[error] please install pngcrush")
         return status
 
     def safe_call(self, command):
@@ -414,7 +421,10 @@ class Image:
         exe = ".exe" if (sys.platform == "win32") else ""
         runString = {
             "jpeg": u"jpegoptim" + exe + " -f --strip-all '%(file)s'",
-             "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s'"}
+            "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s'&&pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak'&&mv '%(file)s.bak' '%(file)s'"
+        }
+        # Create a backup file
+        copy(self.fullpath, self.fullpath + '.backup')
         try:
             retcode = call(runString[self.filetype] % {"file": self.fullpath},
                 shell=True, stdout=PIPE)
@@ -423,6 +433,14 @@ class Image:
         if retcode == 0:
             self.newfilesize = QFile(self.fullpath).size()
             self.compressed = True
+            
+            # Checks the new file and copy the backup
+            if self.newfilesize >= self.oldfilesize:
+                copy(self.fullpath + '.backup', self.fullpath)
+                self.newfilesize = self.oldfilesize
+            
+            # Removes the backup file
+            remove(self.fullpath + '.backup')
         else:
             self.failed = True
         self.compressing = False
