@@ -5,6 +5,8 @@ import errno
 from os import listdir
 from os import path
 from os import remove
+from os import access
+from os import W_OK as WRITEABLE
 from shutil import copy
 from subprocess import call, PIPE
 from optparse import OptionParser
@@ -70,6 +72,8 @@ class StartQT4(QMainWindow):
         QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
         QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
         QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
+        
+        self.compressing_icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
 
         # activate command line options
         self.commandline_options()
@@ -164,7 +168,7 @@ class StartQT4(QMainWindow):
 
     def delegator(self, images):
         """
-        Recieve all images, check them and send them to the worker thread.
+        Receive all images, check them and send them to the worker thread.
         """
         delegatorlist = []
         for fullpath in images:
@@ -177,33 +181,40 @@ class StartQT4(QMainWindow):
                     delegatorlist.append(image)
             except StopIteration:
             	if not path.isdir(fullpath):
-                    image = Image(fullpath)
-                    if image.valid:
-                        delegatorlist.append(image)
-                        icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
-                        self.imagelist.append(ImageRow(image, icon))
-                    else:
-                        print >> sys.stderr, u"[error] %s not a supported image file" % image.fullpath
+                    self. add_image(fullpath, delegatorlist)
                 else:
-                    self.walk(fullpath)
-
+                    self.walk(fullpath, delegatorlist)
+        
         self.update_table()
-        if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
-            self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
-        self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
             self.imagelist)
 
-    def walk(self,dir):
+    def walk(self, dir, delegatorlist):
         """
         Walks a directory, and executes a callback on each file
         """
         dir = path.abspath(dir)
         for file in [file for file in listdir(dir) if not file in [".",".."]]:
-            nfile = path.join(dir,file)
-            self.delegator([nfile])
+            nfile = path.join(dir, file)
+            
             if path.isdir(nfile):
-                self.walk(nfile)
+                self.walk(nfile, delegatorlist)
+            else:
+                self.add_image(nfile, delegatorlist)
+    
+    def add_image(self, fullpath, delegatorlist):
+        """
+        Adds an image file to the delegator list and update the tray and the title of the window
+        """
+        image = Image(fullpath)
+        if image.valid:
+            delegatorlist.append(image)
+            self.imagelist.append(ImageRow(image, self.compressing_icon))
+        if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
+            self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
+            self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
+        else:
+            print >> sys.stderr, u"[error] %s not a supported image file and/or not writeable" % image.fullpath
         
     """
     UI Functions
@@ -387,7 +398,7 @@ class Image:
         self.valid = False
         self.reset()
         self.fullpath = fullpath
-        if path.isfile(self.fullpath):
+        if path.isfile(self.fullpath) and access(self.fullpath, WRITEABLE):
             self.filetype = determinetype(self.fullpath)
             if self.filetype in ["jpeg", "png"]:
                 oldfile = QFileInfo(self.fullpath)
@@ -396,14 +407,14 @@ class Image:
                 self.icon = QIcon(self.fullpath)
                 self.valid = True
 
-    def _determinetype(self):
-        """ Determine the filetype of the file using imghdr. """
-        filetype = determinetype(self.fullpath)
-        if filetype in ["jpeg", "png"]:
-            self.filetype = filetype
-        else:
-            self.filetype = None
-        return self.filetype
+    #def _determinetype(self):
+    #    """ Determine the filetype of the file using imghdr. """
+    #    filetype = determinetype(self.fullpath)
+    #    if filetype in ["jpeg", "png"]:
+    #        self.filetype = filetype
+    #    else:
+    #        self.filetype = None
+    #    return self.filetype
 
     def reset(self):
         self.failed = False
