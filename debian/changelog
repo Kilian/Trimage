@@ -1,3 +1,12 @@
+trimage (1.0.5-0ubuntu1) jaunty; urgency=low
+
+  * prevent images from becoming larger after recompression
+  * prevent images from being written when not writeable
+  * allow dragging of entire directories
+  * performance increases for large numbers of files
+
+ -- Kilian Valkhof <kilian@kilianvalkhof.com>  Sun, 26 Sep 2010 15:24:04 +0200
+
 trimage (1.0.4-0ubuntu1) jaunty; urgency=low
 
   * prevent systemtray from starting if a CLI compression is done

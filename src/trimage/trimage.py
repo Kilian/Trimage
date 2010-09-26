@@ -22,7 +22,7 @@ from multiprocessing import cpu_count
 
 from ui import Ui_trimage
 
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 
 
 class StartQT4(QMainWindow):
@@ -72,7 +72,7 @@ class StartQT4(QMainWindow):
         QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
         QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
         QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
-        
+
         self.compressing_icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
 
         # activate command line options
@@ -184,7 +184,7 @@ class StartQT4(QMainWindow):
                     self. add_image(fullpath, delegatorlist)
                 else:
                     self.walk(fullpath, delegatorlist)
-        
+
         self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
             self.imagelist)
@@ -196,12 +196,12 @@ class StartQT4(QMainWindow):
         dir = path.abspath(dir)
         for file in [file for file in listdir(dir) if not file in [".",".."]]:
             nfile = path.join(dir, file)
-            
+
             if path.isdir(nfile):
                 self.walk(nfile, delegatorlist)
             else:
                 self.add_image(nfile, delegatorlist)
-    
+
     def add_image(self, fullpath, delegatorlist):
         """
         Adds an image file to the delegator list and update the tray and the title of the window
@@ -215,7 +215,7 @@ class StartQT4(QMainWindow):
             self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         else:
             print >> sys.stderr, u"[error] %s not a supported image file and/or not writeable" % image.fullpath
-        
+
     """
     UI Functions
     """
@@ -432,7 +432,7 @@ class Image:
         exe = ".exe" if (sys.platform == "win32") else ""
         runString = {
             "jpeg": u"jpegoptim" + exe + " -f --strip-all '%(file)s'",
-            "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s'&&pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak'&&mv '%(file)s.bak' '%(file)s'"
+            "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
         }
         # Create a backup file
         copy(self.fullpath, self.fullpath + '~')
@@ -444,12 +444,12 @@ class Image:
         if retcode == 0:
             self.newfilesize = QFile(self.fullpath).size()
             self.compressed = True
-            
+
             # Checks the new file and copy the backup
             if self.newfilesize >= self.oldfilesize:
                 copy(self.fullpath + '~', self.fullpath)
                 self.newfilesize = self.oldfilesize
-            
+
             # Removes the backup file
             remove(self.fullpath + '~')
         else:

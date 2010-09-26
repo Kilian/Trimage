@@ -11,7 +11,6 @@ todo app wise
 - make the current verbose be "normal", and make -verbose print the commandline
     app prints as well
 
-- verify that a *recompressed* file is smaller than the compressed one
 - find a way to specify the version once for everywhere
 - notification area drag/drop widget
   -> probably need gtk for gnome

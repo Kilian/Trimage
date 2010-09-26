@@ -69,10 +69,10 @@
 
 <body>
   <div id="wrap">
-    <h1><img src="trimage-icon.png" alt=""> Trimage image compressor &ndash; 1.0.4</h1>
+    <h1><img src="trimage-icon.png" alt=""> Trimage image compressor &ndash; 1.0.5</h1>
     <span class="subtitle">A cross-platform tool for losslessly optimizing PNG and JPG files.</span>
     <p class="tri">Trimage is a cross-platform GUI and command-line interface to optimize image
-    files via <a href="http://optipng.sourceforge.net/">optipng</a>,
+    files via <a href="http://optipng.sourceforge.net/">optipng</a>, <a href="http://pmt.sourceforge.net/pngcrush/">pngcrush</a>,
      <a href="http://advancemame.sourceforge.net/comp-readme.html">advpng</a> and
      <a href="http://www.kokkonen.net/tjko/projects.html">jpegoptim</a>, depending on the filetype
      (currently, PNG and JPG files are supported). It was inspired by
@@ -124,6 +124,7 @@
         <li>Neil Wallace</li>
         <li>Jeroen Goudsmit</li>
         <li>Tarnay Kálmán</li>
+        <li>Thomas Lété</li>
       </ul>
     </div>
     <div class="block">
@@ -142,6 +143,7 @@
         <li>python <em>2.6</em></li>
         <li>python-qt4 <em>4.4</em></li>
         <li>optipng <em>0.6.2.1</em></li>
+        <li>pngcrush <em>1.6.7</em></li>
         <li>advancecomp <em>1.15</em></li>
         <li>jpegoptim <em>1.2.2</em></li>
       </ul>
@@ -173,7 +175,6 @@
     <p>Version 1.1.0 final:</p>
     <ul>
       <li>Expand command line options</li>
-      <li>Make sure a compressed file is always smaller than the original one, or don't compress</li>
       <li>General refactoring</li>
     </ul>
     <p>Version 1.1.1 final:</p>
