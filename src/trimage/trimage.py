@@ -194,7 +194,7 @@ class StartQT4(QMainWindow):
         Walks a directory, and executes a callback on each file
         """
         dir = path.abspath(dir)
-        for file in [file for file in listdir(dir) if not file in [".",".."]]:
+        for file in [file for file in listdir(dir) if not file in [".","..",".svn",".git",".hg",".bzr",".cvs"]]:
             nfile = path.join(dir, file)
 
             if path.isdir(nfile):
