@@ -5,6 +5,6 @@ Terminal=false
 Icon=trimage
 Type=Application
 Exec=trimage
-Categories=GNOME;GTK;Graphics;
+Categories=Application;Qt;Graphics;
 StartupNotify=true
 
