@@ -1,0 +1,46 @@
+.\" Copyright (C) 2011 Kyrill Detinov <lazy.kent@opensuse.org>
+.\"
+.\" This manual page is distributed under the terms
+.\" of the GNU Free Documentation License version 1.3.
+.\"
+.TH TRIMAGE "1" "2011-07-11" "trimage 1.0.5" "User Commands"
+
+.SH NAME
+trimage \- losslessly optimizing png and jpeg liles
+
+.SH SYNOPSIS
+.B trimage
+.RI [ options ]
+
+.SH DESCRIPTION
+Front\-end to compress png and jpeg images via optipng, advpng, pngcrush
+and jpegoptim.
+
+.SH OPTIONS
+.TP
+\fB\-d\fI directory\fR, \fB\-\-directory\fR=\fIdirectory\fR
+Compresses images in directory.
+.TP
+\fB\-f\fI filename\fR, \fB\-\-file\fR=\fIfilename\fR
+Compresses image.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show help message.
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Quiet mode.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Verbose mode (default).
+.TP
+\fB\-\-version\fR
+Show program version number.
+
+.SH "SEE ALSO"
+.BR advpng (1),
+.BR jpegoptim (1),
+.BR opt-png (1),
+.BR opt-jpg (1),
+.BR pngcrush (1),
+.BR pngrecolor (1),
+.BR pngstrip (1)
