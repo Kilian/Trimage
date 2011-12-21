@@ -210,9 +210,9 @@ class StartQT4(QMainWindow):
         if image.valid:
             delegatorlist.append(image)
             self.imagelist.append(ImageRow(image, self.compressing_icon))
-        if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
-            self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
-            self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
+            if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
+                self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
+                self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         else:
             print >> sys.stderr, u"[error] %s not a supported image file and/or not writeable" % image.fullpath
 
