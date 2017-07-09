@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Trimage image compressor
-Comment=A cross-platform tool for optimizing PNG and JPG files.
+Name[ru]=Программа для уменьшения веса картинок Trimage
+Comment=A cross-platform tool for optimizing PNG and JPG files
+Comment[ru]=Кросс-платформенная утилита для оптимизации файлов PNG и JPG
 Terminal=false
 Icon=trimage
 Type=Application

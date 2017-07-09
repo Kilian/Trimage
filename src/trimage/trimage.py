@@ -22,7 +22,8 @@ from multiprocessing import cpu_count
 
 from ui import Ui_trimage
 
-VERSION = "1.0.5"
+# change version to 1.1 after replacing jpegoptim with guetzli
+VERSION = "1.1"
 
 
 class StartQT4(QMainWindow):
@@ -86,7 +87,7 @@ class StartQT4(QMainWindow):
         """Set up the command line options."""
         parser = OptionParser(version="%prog " + VERSION,
             description="GUI front-end to compress png and jpg images via "
-                "optipng, advpng and jpegoptim")
+                "optipng, advpng and guetzli")
 
         parser.set_defaults(verbose=True)
         parser.add_option("-v", "--verbose", action="store_true",
@@ -261,10 +262,12 @@ class StartQT4(QMainWindow):
         """Check if the required command line apps exist."""
         exe = ".exe" if (sys.platform == "win32") else ""
         status = False
-        retcode = self.safe_call("jpegoptim" + exe + " --version")
-        if retcode != 0:
-            status = True
-            sys.stderr.write("[error] please install jpegoptim")
+        
+        # guetzli does the compression job much better than jpegoptim (and much slower)
+        #retcode = self.safe_call("jpegoptim" + exe + " --version")
+        #if retcode != 0:
+            #status = True
+            #sys.stderr.write("[error] please install jpegoptim")
 
         retcode = self.safe_call("optipng" + exe + " -v")
         if retcode != 0:
@@ -280,6 +283,13 @@ class StartQT4(QMainWindow):
         if retcode != 0:
             status = True
             sys.stderr.write("[error] please install pngcrush")
+        return status
+        
+        # guetzli currently does not have neither --version not --help flags
+        retcode = self.safe_call("guetzli" + exe)
+        if retcode != 0:
+            status = True
+            sys.stderr.write("[error] please install guetzli")
         return status
 
     def safe_call(self, command):
@@ -431,7 +441,10 @@ class Image:
         self.compressing = True
         exe = ".exe" if (sys.platform == "win32") else ""
         runString = {
-            "jpeg": u"jpegoptim" + exe + " -f --strip-all '%(file)s'",
+            # "jpeg": u"jpegoptim" + exe + " -f --strip-all '%(file)s'",
+            # I commented out jpegoptim because guetzli compresses MUCH BETTER having a similar output quality
+            # the default quality level for guetzli, if the parameter '--quality Q' is not passed, it 95.
+            "jpeg": u"guetzli" + exe + " --quality 95 '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'",
             "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
         }
         # Create a backup file
