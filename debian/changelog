@@ -1,3 +1,10 @@
+trimage (1.1) xenial; urgency=medium
+
+  * change jpegoptim to guetzli
+  * Add Russian translation in trimage.desktop
+
+ -- Mikhail Novosyolov <mikhailnov@dumalogiya.ru>  Sun, 09 Jul 2017 13:05:00 +0300
+ 
 trimage (1.0.5-0ubuntu1) jaunty; urgency=low
 
   * prevent images from becoming larger after recompression

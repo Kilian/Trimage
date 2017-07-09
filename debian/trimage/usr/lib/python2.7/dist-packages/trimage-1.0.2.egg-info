@@ -1,0 +1,11 @@
+Metadata-Version: 1.1
+Name: trimage
+Version: 1.0.2
+Summary: Trimage image compressor - A cross-platform tool for optimizing PNG and JPG files
+Home-page: http://trimage.org
+Author: Kilian Valkhof, Paul Chaplin
+Author-email: help@trimage.org
+License: MIT license
+Description: Trimage is a cross-platform GUI and command-line interface to optimize image files via optipng, advpng and guetzli, depending on the filetype (currently, PNG and JPG files are supported). It was inspired by imageoptim. All image files are losslessy compressed on the highest available compression levels. Trimage gives you various input functions to fit your own workflow: A regular file dialog, dragging and dropping and various command line options.
+Platform: UNKNOWN
+Requires: PyQt4 (>=4.4)
