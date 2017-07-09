@@ -1,16 +1,12 @@
-Source: trimage
+Package: trimage
+Version: 1.1
+Architecture: all
+Maintainer: Mikhail Novosyolov <mikhailnov@dumalogiya.ru>
+Installed-Size: 104
+Depends: python:any (<< 2.8), python:any (>= 2.7.5-5~), python-qt4 (>= 4.4), optipng (>= 0.6.2.1), advancecomp (>= 1.15), guetzli, pngcrush (>= 1.6.7)
 Section: graphics
 Priority: optional
-Maintainer: Mikhail Novosyolov <mikhailnov@dumalogiya.ru>
-Build-Depends: debhelper (>=7), dh-python, python
-XS-Python-Version: >=2.6
-Standards-Version: 3.9.1
 Homepage: http://trimage.org
-
-Package: trimage
-Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-qt4 (>=4.4), optipng (>=0.6.2.1), advancecomp (>=1.15), guetzli, pngcrush (>=1.6.7)
-XB-Python-Version: ${python:Versions}
 Description: GUI and command-line interface to optimize image files
  Trimage is a cross-platform GUI and command-line interface to optimize image
  files via optipng, advpng, pngcrush and guetzli, depending on the filetype
@@ -18,3 +14,4 @@ Description: GUI and command-line interface to optimize image files
  compressed on the highest available compression levels. Trimage gives you
  various input functions to fit your own workflow: A regular file dialog,
  dragging and dropping and various command line options.
+Python-Version: 2.7
