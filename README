@@ -4,7 +4,7 @@ A cross-platform tool for optimizing PNG and JPG files.
 Trimage is a cross-platform GUI and command-line interface to optimize image
 files via "optipng":http://optipng.sourceforge.net/,
 "advpng":http://advancemame.sourceforge.net/comp-readme.html and
-"jpegoptim":http://www.kokkonen.net/tjko/projects.html, depending on the
+"guetzli":https://github.com/google/guetzli, depending on the
 filetype (currently, PNG and JPG files are supported). It was inspired by
 "imageoptim":http://imageoptim.pornel.net/. All image files are losslessly
 compressed on the highest available compression levels. Trimage gives you
