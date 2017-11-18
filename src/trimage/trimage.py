@@ -64,8 +64,7 @@ class StartQT5(QMainWindow):
         # connect signals with slots
         self.ui.addfiles.clicked.connect(self.file_dialog)
         self.ui.recompress.clicked.connect(self.recompress_files)
-        # QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
-        #     qApp, SLOT('quit()'))
+        self.quit_shortcut.activated.connect(self.close)
         # QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
         #     self.file_drop)
         # QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
