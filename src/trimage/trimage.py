@@ -153,7 +153,7 @@ class StartQT5(QMainWindow):
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
         self.settings.setValue("fdstate", QVariant(fd.saveState()))
-        if images:
+        if images[0]:
             self.settings.setValue("directory", QVariant(path.dirname(images[0][0])))
             self.delegator([fullpath for fullpath in images])
 
