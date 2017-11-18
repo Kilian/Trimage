@@ -19,7 +19,7 @@ from filesize import *
 from imghdr import what as determinetype
 
 from queue import Queue
-from ThreadPool import ThreadPool, ThreadPoolMixIn
+from ThreadPool import ThreadPool
 from multiprocessing import cpu_count
 
 from ui import Ui_trimage
