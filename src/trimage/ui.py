@@ -22,7 +22,7 @@ class TrimageTableView(QTableView):
         event.accept()
         filelist = []
         for url in event.mimeData().urls():
-            filelist.append(unicode(url.toLocalFile()))
+            filelist.append(url.toLocalFile())
 
         self.emit(SIGNAL("fileDropEvent"), (filelist))
 
