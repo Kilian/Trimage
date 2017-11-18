@@ -30,7 +30,7 @@ class TrimageTableView(QTableView):
         self.drop_event_signal.emit(filelist)
 
 
-class Ui_trimage(object):
+class Ui_trimage():
     def get_image(self, image):
         """ Get the correct link to the images used in the UI """
         imagelink = path.join(path.dirname(path.dirname(path.realpath(__file__))), "trimage/" + image)
