@@ -11,13 +11,14 @@ from shutil import copy
 from subprocess import call, PIPE
 from optparse import OptionParser
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from filesize import *
 from imghdr import what as determinetype
 
-from Queue import Queue
-from ThreadPool import ThreadPool
+from queue import Queue
+from ThreadPool import ThreadPool, ThreadPoolMixIn
 from multiprocessing import cpu_count
 
 from ui import Ui_trimage
@@ -25,7 +26,7 @@ from ui import Ui_trimage
 VERSION = "1.0.5"
 
 
-class StartQT4(QMainWindow):
+class StartQT5(QMainWindow):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -40,7 +41,7 @@ class StartQT4(QMainWindow):
         QCoreApplication.setOrganizationDomain("trimage.org")
         QCoreApplication.setApplicationName("Trimage")
         self.settings = QSettings()
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+        self.restoreGeometry(self.settings.value("geometry"))
 
         # check if apps are installed
         if self.checkapps():
@@ -61,17 +62,15 @@ class StartQT4(QMainWindow):
         self.thread = Worker()
 
         # connect signals with slots
-        QObject.connect(self.ui.addfiles, SIGNAL("clicked()"),
-            self.file_dialog)
-        QObject.connect(self.ui.recompress, SIGNAL("clicked()"),
-            self.recompress_files)
-        QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
-            qApp, SLOT('quit()'))
-        QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
-            self.file_drop)
-        QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
-        QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
-        QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
+        self.ui.addfiles.clicked.connect(self.file_dialog)
+        self.ui.recompress.clicked.connect(self.recompress_files)
+        # QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
+        #     qApp, SLOT('quit()'))
+        # QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
+        #     self.file_drop)
+        # QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
+        # QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
+        # QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
 
         self.compressing_icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
 
@@ -143,8 +142,8 @@ class StartQT4(QMainWindow):
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
-        fd.restoreState(self.settings.value("fdstate").toByteArray())
-        directory = self.settings.value("directory", QVariant("")).toString()
+        fd.restoreState(self.settings.value("fdstate"))
+        directory = self.settings.value("directory", QVariant(""))
         fd.setDirectory(directory)
 
         images = fd.getOpenFileNames(self,
@@ -155,8 +154,8 @@ class StartQT4(QMainWindow):
 
         self.settings.setValue("fdstate", QVariant(fd.saveState()))
         if images:
-          self.settings.setValue("directory", QVariant(path.dirname(unicode(images[0]))))
-        self.delegator([unicode(fullpath) for fullpath in images])
+            self.settings.setValue("directory", QVariant(path.dirname(images[0][0])))
+            self.delegator([fullpath for fullpath in images])
 
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
@@ -174,16 +173,16 @@ class StartQT4(QMainWindow):
         for fullpath in images:
             try: # recompress images already in the list
                 image = (i.image for i in self.imagelist
-                    if i.image.fullpath == fullpath).next()
+                    if i.image.fullpath == fullpath[0]).__next__()
                 if image.compressed:
                     image.reset()
                     image.recompression = True
                     delegatorlist.append(image)
             except StopIteration:
-            	if not path.isdir(fullpath):
-                    self. add_image(fullpath, delegatorlist)
+                if not path.isdir(fullpath[0]):
+                    self.add_image(fullpath[0], delegatorlist)
                 else:
-                    self.walk(fullpath, delegatorlist)
+                    self.walk(fullpath[0], delegatorlist)
 
         self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
@@ -214,7 +213,7 @@ class StartQT4(QMainWindow):
                 self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
                 self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         else:
-            print >> sys.stderr, u"[error] %s not a supported image file and/or not writeable" % image.fullpath
+            print(str(sys.stderr) + "[error] {} not a supported image file and/or not writeable".format(image.fullpath))
 
     """
     UI Functions
@@ -287,7 +286,7 @@ class StartQT4(QMainWindow):
         while True:
             try:
                 return call(command, shell=True, stdout=PIPE)
-            except OSError, e:
+            except OSError as e:
                 if e.errno == errno.EINTR:
                     continue
                 else:
@@ -488,7 +487,7 @@ class Worker(QThread):
                                    tp._ThreadPool__jobs.empty()):
             image = self.toDisplay.get()
 
-            self.emit(SIGNAL("updateUi"))
+            ##self.emit(SIGNAL("updateUi"))
 
             if not self.showapp and self.verbose: # we work via the commandline
                 if image.retcode == 0:
@@ -497,7 +496,7 @@ class Worker(QThread):
                         + ir['oldfilesizestr'] + ", New Size: "
                         + ir['newfilesizestr'] + ", Ratio: " + ir['ratiostr'])
                 else:
-                    print >> sys.stderr, u"[error] %s could not be compressed" % image.fullpath
+                    print(str(sys.stderr) + "[error] {} could not be compressed".format(image.fullpath))
 
 
 class Systray(QWidget):
@@ -550,7 +549,7 @@ class Systray(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    myapp = StartQT4()
+    myapp = StartQT5()
 
     if myapp.showapp:
         myapp.show()
