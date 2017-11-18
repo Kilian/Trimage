@@ -9,7 +9,7 @@ if win:
 from distutils.core import setup
 
 setup(name = "trimage",
-    version = "1.0.2",
+    version = "1.0.5",
     description = "Trimage image compressor - A cross-platform tool for optimizing PNG and JPG files",
     author = "Kilian Valkhof, Paul Chaplin",
     author_email = "help@trimage.org",
