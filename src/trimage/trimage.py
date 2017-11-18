@@ -105,9 +105,9 @@ class StartQT5(QMainWindow):
 
         # send to correct function
         if options.filename:
-            self.file_from_cmd(options.filename.decode("utf-8"))
+            self.file_from_cmd(options.filename)
         if options.directory:
-            self.dir_from_cmd(options.directory.decode("utf-8"))
+            self.dir_from_cmd(options.directory)
 
         self.verbose = options.verbose
 
