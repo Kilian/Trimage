@@ -67,8 +67,7 @@ class StartQT5(QMainWindow):
         self.ui.recompress.clicked.connect(self.recompress_files)
         self.quit_shortcut.activated.connect(self.close)
         self.ui.processedfiles.drop_event_signal.connect(self.file_drop)
-        # QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
-        # QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
+        self.thread.finished.connect(self.update_table)
         self.thread.update_ui_signal.connect(self.update_table)
 
         self.compressing_icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
@@ -101,7 +100,7 @@ class StartQT5(QMainWindow):
 
         # make sure we quit after processing finished if using cli
         if options.filename or options.directory:
-            QObject.connect(self.thread, SIGNAL("finished()"), quit)
+            self.thread.finished.connect(quit)
             self.cli = True
 
         # send to correct function
@@ -512,15 +511,14 @@ class Systray(QWidget):
 
     def createActions(self):
         self.quitAction = QAction(self.tr("&Quit"), self)
-        QObject.connect(self.quitAction, SIGNAL("triggered()"),
-            qApp, SLOT("quit()"))
+        self.quitAction.triggered.connect(self.parent.close)
 
         self.addFiles = QAction(self.tr("&Add and compress"), self)
         icon = QIcon()
         icon.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/list-add.png"))),
             QIcon.Normal, QIcon.Off)
         self.addFiles.setIcon(icon)
-        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.file_dialog)
+        self.addFiles.triggered.connect(self.parent.file_dialog)
 
         self.recompress = QAction(self.tr("&Recompress"), self)
         icon2 = QIcon()
@@ -528,10 +526,11 @@ class Systray(QWidget):
             QIcon.Normal, QIcon.Off)
         self.recompress.setIcon(icon2)
         self.recompress.setDisabled(True)
-        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.recompress_files)
+
+        self.addFiles.triggered.connect(self.parent.recompress_files)
 
         self.hideMain = QAction(self.tr("&Hide window"), self)
-        QObject.connect(self.hideMain, SIGNAL("triggered()"), self.parent.hide_main_window)
+        self.hideMain.triggered.connect(self.parent.hide_main_window)
 
     def createTrayIcon(self):
         self.trayIconMenu = QMenu(self)
