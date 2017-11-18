@@ -152,8 +152,9 @@ class StartQT5(QMainWindow):
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
         self.settings.setValue("fdstate", QVariant(fd.saveState()))
-        if images[0]:
-            self.settings.setValue("directory", QVariant(path.dirname(images[0][0])))
+        images = images[0]
+        if images:
+            self.settings.setValue("directory", QVariant(path.dirname(images[0])))
             self.delegator([fullpath for fullpath in images])
 
     def recompress_files(self):
@@ -172,16 +173,16 @@ class StartQT5(QMainWindow):
         for fullpath in images:
             try: # recompress images already in the list
                 image = (i.image for i in self.imagelist
-                    if i.image.fullpath == fullpath[0]).__next__()
+                    if i.image.fullpath == fullpath).__next__()
                 if image.compressed:
                     image.reset()
                     image.recompression = True
                     delegatorlist.append(image)
             except StopIteration:
-                if not path.isdir(fullpath[0]):
-                    self.add_image(fullpath[0], delegatorlist)
+                if not path.isdir(fullpath):
+                    self.add_image(fullpath, delegatorlist)
                 else:
-                    self.walk(fullpath[0], delegatorlist)
+                    self.walk(fullpath, delegatorlist)
 
         self.update_table()
         self.thread.compress_file(delegatorlist, self.showapp, self.verbose,
