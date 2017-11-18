@@ -4,6 +4,9 @@ from PyQt5.QtWidgets import *
 from os import path
 
 class TrimageTableView(QTableView):
+
+    drop_event_signal = pyqtSignal(list)
+
     """Init the table drop event."""
     def __init__(self, parent=None):
         super(TrimageTableView, self).__init__(parent)
@@ -24,7 +27,7 @@ class TrimageTableView(QTableView):
         for url in event.mimeData().urls():
             filelist.append(url.toLocalFile())
 
-        self.emit(SIGNAL("fileDropEvent"), (filelist))
+        self.drop_event_signal.emit(filelist)
 
 
 class Ui_trimage(object):

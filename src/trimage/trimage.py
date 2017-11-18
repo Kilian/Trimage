@@ -66,11 +66,10 @@ class StartQT5(QMainWindow):
         self.ui.addfiles.clicked.connect(self.file_dialog)
         self.ui.recompress.clicked.connect(self.recompress_files)
         self.quit_shortcut.activated.connect(self.close)
-        # QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
-        #     self.file_drop)
+        self.ui.processedfiles.drop_event_signal.connect(self.file_drop)
         # QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
         # QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
-        # QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
+        self.thread.update_ui_signal.connect(self.update_table)
 
         self.compressing_icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
 
@@ -460,6 +459,8 @@ class Image:
 
 class Worker(QThread):
 
+    update_ui_signal = pyqtSignal()
+
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
         self.toDisplay = Queue()
@@ -487,7 +488,7 @@ class Worker(QThread):
                                    tp._ThreadPool__jobs.empty()):
             image = self.toDisplay.get()
 
-            ##self.emit(SIGNAL("updateUi"))
+            self.update_ui_signal.emit()
 
             if not self.showapp and self.verbose: # we work via the commandline
                 if image.retcode == 0:
