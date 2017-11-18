@@ -45,7 +45,7 @@ class Ui_trimage(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridLayout_2 = QGridLayout(self.centralwidget)
-        #self.gridLayout_2.setMargin(0)
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setObjectName("gridLayout_2")
 
@@ -61,7 +61,7 @@ class Ui_trimage(object):
 
         self.verticalLayout = QVBoxLayout(self.widget)
         self.verticalLayout.setSpacing(0)
-        #self.verticalLayout.setMargin(0)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
 
         self.frame = QFrame(self.widget)
@@ -69,12 +69,12 @@ class Ui_trimage(object):
 
         self.verticalLayout_2 = QVBoxLayout(self.frame)
         self.verticalLayout_2.setSpacing(0)
-        #self.verticalLayout_2.setMargin(0)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setSpacing(0)
-        #self.horizontalLayout.setMargin(10)
+        self.horizontalLayout.setContentsMargins(10, 10, 10, 10)
         self.horizontalLayout.setObjectName("horizontalLayout")
 
         self.addfiles = QPushButton(self.frame)
@@ -94,7 +94,7 @@ class Ui_trimage(object):
         font.setPointSize(8)
         self.label.setFont(font)
         self.label.setFrameShadow(QFrame.Plain)
-        #self.label.setMargin(1)
+        self.label.setContentsMargins(1, 1, 1, 1)
         self.label.setIndent(10)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
