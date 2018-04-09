@@ -1,1 +1,1 @@
-from ThreadPool import ThreadPool, ThreadPoolMixIn
+from .ThreadPool import ThreadPool, ThreadPoolMixIn
