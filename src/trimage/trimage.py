@@ -213,7 +213,7 @@ class StartQT5(QMainWindow):
                 self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
                 self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         else:
-            print(str(sys.stderr) + "[error] {} not a supported image file and/or not writeable".format(image.fullpath))
+            print("[error] {} not a supported image file and/or not writable".format(image.fullpath), file=sys.stderr)
 
     """
     UI Functions
@@ -263,22 +263,22 @@ class StartQT5(QMainWindow):
         retcode = self.safe_call("jpegoptim" + exe + " --version")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install jpegoptim")
+            print("[error] please install jpegoptim", file=sys.stderr)
 
         retcode = self.safe_call("optipng" + exe + " -v")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install optipng")
+            print("[error] please install optipng", file=sys.stderr)
 
         retcode = self.safe_call("advpng" + exe + " --version")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install advancecomp")
+            print("[error] please install advancecomp", file=sys.stderr)
 
         retcode = self.safe_call("pngcrush" + exe + " -version")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install pngcrush")
+            print("[error] please install pngcrush", file=sys.stderr)
         return status
 
     def safe_call(self, command):
@@ -498,7 +498,7 @@ class Worker(QThread):
                         + ir['oldfilesizestr'] + ", New Size: "
                         + ir['newfilesizestr'] + ", Ratio: " + ir['ratiostr'])
                 else:
-                    print(str(sys.stderr) + "[error] {} could not be compressed".format(image.fullpath))
+                    print("[error] {} could not be compressed".format(image.fullpath), file=sys.stderr)
 
 
 class Systray(QWidget):
