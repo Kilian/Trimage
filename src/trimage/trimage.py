@@ -15,8 +15,8 @@ from optparse import OptionParser
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from filesize import *
 
+from tools import human_readable_size
 from queue import Queue
 from ThreadPool import ThreadPool
 from multiprocessing import cpu_count
@@ -356,9 +356,9 @@ class ImageRow:
         self.image = image
         d = {
             'shortname': lambda i: self.statusStr() % i.shortname,
-            'oldfilesizestr': lambda i: size(i.oldfilesize, system=alternative)
+            'oldfilesizestr': lambda i: human_readable_size(i.oldfilesize)
                 if i.compressed else "",
-            'newfilesizestr': lambda i: size(i.newfilesize, system=alternative)
+            'newfilesizestr': lambda i: human_readable_size(i.newfilesize)
                 if i.compressed else "",
             'ratiostr': lambda i:
                 "%.1f%%" % (100 - (float(i.newfilesize) / i.oldfilesize * 100))
