@@ -42,7 +42,8 @@ class StartQT5(QMainWindow):
         QCoreApplication.setOrganizationDomain("trimage.org")
         QCoreApplication.setApplicationName("Trimage")
         self.settings = QSettings()
-        self.restoreGeometry(self.settings.value("geometry"))
+        if self.settings.value("geometry"):
+            self.restoreGeometry(self.settings.value("geometry"))
 
         # check if apps are installed
         if self.checkapps():
