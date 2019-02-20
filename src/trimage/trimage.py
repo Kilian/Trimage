@@ -398,8 +398,10 @@ class Image:
         self.reset()
         self.fullpath = fullpath
         if path.isfile(self.fullpath) and access(self.fullpath, WRITEABLE):
-            self.filetype = path.splitext(self.fullpath)[1]
-            if self.filetype in [".jpeg", ".jpg", ".png"]:
+            self.filetype = path.splitext(self.fullpath)[1][1:]
+            if self.filetype == "jpg":
+                self.filetype = "jpeg"
+            if self.filetype in ["jpeg", "png"]:
                 oldfile = QFileInfo(self.fullpath)
                 self.shortname = oldfile.fileName()
                 self.oldfilesize = oldfile.size()
