@@ -140,7 +140,8 @@ class StartQT5(QMainWindow):
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
-        fd.restoreState(self.settings.value("fdstate"))
+        if (self.settings.value("fdstate")):
+            fd.restoreState(self.settings.value("fdstate"))
         directory = self.settings.value("directory", QVariant(""))
         fd.setDirectory(directory)
 
