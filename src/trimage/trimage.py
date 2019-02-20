@@ -172,8 +172,8 @@ class StartQT5(QMainWindow):
         delegatorlist = []
         for fullpath in images:
             try: # recompress images already in the list
-                image = (i.image for i in self.imagelist
-                    if i.image.fullpath == fullpath).__next__()
+                image = next(i.image for i in self.imagelist
+                    if i.image.fullpath == fullpath)
                 if image.compressed:
                     image.reset()
                     image.recompression = True
