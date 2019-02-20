@@ -16,7 +16,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from filesize import *
-from imghdr import what as determinetype
 
 from queue import Queue
 from ThreadPool import ThreadPool
@@ -398,22 +397,13 @@ class Image:
         self.reset()
         self.fullpath = fullpath
         if path.isfile(self.fullpath) and access(self.fullpath, WRITEABLE):
-            self.filetype = determinetype(self.fullpath)
-            if self.filetype in ["jpeg", "png"]:
+            self.filetype = path.splitext(self.fullpath)[1]
+            if self.filetype in [".jpeg", ".jpg", ".png"]:
                 oldfile = QFileInfo(self.fullpath)
                 self.shortname = oldfile.fileName()
                 self.oldfilesize = oldfile.size()
                 self.icon = QIcon(self.fullpath)
                 self.valid = True
-
-    #def _determinetype(self):
-    #    """ Determine the filetype of the file using imghdr. """
-    #    filetype = determinetype(self.fullpath)
-    #    if filetype in ["jpeg", "png"]:
-    #        self.filetype = filetype
-    #    else:
-    #        self.filetype = None
-    #    return self.filetype
 
     def reset(self):
         self.failed = False
