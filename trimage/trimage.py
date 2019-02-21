@@ -40,8 +40,8 @@ class StartQT5(QMainWindow):
         if self.settings.value("geometry"):
             self.restoreGeometry(self.settings.value("geometry"))
 
-        # check if apps are installed
-        if self.checkapps():
+        # check if dependencies are installed
+        if not self.check_dependencies():
             quit()
 
         #add quit shortcut
@@ -252,29 +252,23 @@ class StartQT5(QMainWindow):
         if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
             self.systemtray.recompress.setEnabled(True)
 
-    def checkapps(self):
+    def check_dependencies(self):
         """Check if the required command line apps exist."""
         exe = ".exe" if (sys.platform == "win32") else ""
-        status = False
-        retcode = self.safe_call("jpegoptim" + exe + " --version")
-        if retcode != 0:
-            status = True
-            print("[error] please install jpegoptim", file=sys.stderr)
+        status = True
+        dependencies = {
+            "jpegoptim": "--version",
+            "optipng": "-v",
+            "advpng": "--version",
+            "pngcrush": "-version"
+        }
 
-        retcode = self.safe_call("optipng" + exe + " -v")
-        if retcode != 0:
-            status = True
-            print("[error] please install optipng", file=sys.stderr)
+        for elt in dependencies:
+            retcode = self.safe_call(elt + exe + " " + dependencies[elt])
+            if retcode != 0:
+                status = False
+                print("[error] please install {}".format(elt), file=sys.stderr)
 
-        retcode = self.safe_call("advpng" + exe + " --version")
-        if retcode != 0:
-            status = True
-            print("[error] please install advancecomp", file=sys.stderr)
-
-        retcode = self.safe_call("pngcrush" + exe + " -version")
-        if retcode != 0:
-            status = True
-            print("[error] please install pngcrush", file=sys.stderr)
         return status
 
     def safe_call(self, command):
