@@ -1,8 +1,14 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+#!/usr/bin/env python3
+
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 from os import path
 
 class TrimageTableView(QTableView):
+
+    drop_event_signal = pyqtSignal(list)
+
     """Init the table drop event."""
     def __init__(self, parent=None):
         super(TrimageTableView, self).__init__(parent)
@@ -21,12 +27,12 @@ class TrimageTableView(QTableView):
         event.accept()
         filelist = []
         for url in event.mimeData().urls():
-            filelist.append(unicode(url.toLocalFile()))
+            filelist.append(url.toLocalFile())
 
-        self.emit(SIGNAL("fileDropEvent"), (filelist))
+        self.drop_event_signal.emit(filelist)
 
 
-class Ui_trimage(object):
+class Ui_trimage():
     def get_image(self, image):
         """ Get the correct link to the images used in the UI """
         imagelink = path.join(path.dirname(path.dirname(path.realpath(__file__))), "trimage/" + image)
@@ -44,7 +50,7 @@ class Ui_trimage(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.gridLayout_2 = QGridLayout(self.centralwidget)
-        self.gridLayout_2.setMargin(0)
+        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setObjectName("gridLayout_2")
 
@@ -60,7 +66,7 @@ class Ui_trimage(object):
 
         self.verticalLayout = QVBoxLayout(self.widget)
         self.verticalLayout.setSpacing(0)
-        self.verticalLayout.setMargin(0)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
 
         self.frame = QFrame(self.widget)
@@ -68,12 +74,12 @@ class Ui_trimage(object):
 
         self.verticalLayout_2 = QVBoxLayout(self.frame)
         self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setMargin(0)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setSpacing(0)
-        self.horizontalLayout.setMargin(10)
+        self.horizontalLayout.setContentsMargins(10, 10, 10, 10)
         self.horizontalLayout.setObjectName("horizontalLayout")
 
         self.addfiles = QPushButton(self.frame)
@@ -93,7 +99,7 @@ class Ui_trimage(object):
         font.setPointSize(8)
         self.label.setFont(font)
         self.label.setFrameShadow(QFrame.Plain)
-        self.label.setMargin(1)
+        self.label.setContentsMargins(1, 1, 1, 1)
         self.label.setIndent(10)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
@@ -143,24 +149,22 @@ class Ui_trimage(object):
     def retranslateUi(self, trimage):
         """ Fill in the texts for all UI elements """
         trimage.setWindowTitle(QApplication.translate("trimage",
-            "Trimage image compressor", None, QApplication.UnicodeUTF8))
+            "Trimage image compressor", None))
         self.addfiles.setToolTip(QApplication.translate("trimage",
-            "Add file to the compression list", None,
-            QApplication.UnicodeUTF8))
+            "Add file to the compression list", None))
         self.addfiles.setText(QApplication.translate("trimage",
-            "&Add and compress", None, QApplication.UnicodeUTF8))
+            "&Add and compress", None))
         self.addfiles.setShortcut(QApplication.translate("trimage",
-            "Alt+A", None, QApplication.UnicodeUTF8))
+            "Alt+A", None))
         self.label.setText(QApplication.translate("trimage",
-            "Drag and drop images onto the table", None,
-            QApplication.UnicodeUTF8))
+            "Drag and drop images onto the table", None))
         self.recompress.setToolTip(QApplication.translate("trimage",
-            "Recompress all images", None, QApplication.UnicodeUTF8))
+            "Recompress all images", None))
         self.recompress.setText(QApplication.translate("trimage",
-            "&Recompress", None, QApplication.UnicodeUTF8))
+            "&Recompress", None))
         self.recompress.setShortcut(QApplication.translate("trimage",
-            "Alt+R", None, QApplication.UnicodeUTF8))
+            "Alt+R", None))
         self.processedfiles.setToolTip(QApplication.translate("trimage",
-            "Drag files in here", None, QApplication.UnicodeUTF8))
+            "Drag files in here", None))
         self.processedfiles.setWhatsThis(QApplication.translate("trimage",
-            "Drag files in here", None, QApplication.UnicodeUTF8))
+            "Drag files in here", None))

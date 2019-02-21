@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+
 import time
 import sys
 import errno
@@ -11,12 +12,12 @@ from shutil import copy
 from subprocess import call, PIPE
 from optparse import OptionParser
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from filesize import *
-from imghdr import what as determinetype
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
-from Queue import Queue
+from tools import human_readable_size
+from queue import Queue
 from ThreadPool import ThreadPool
 from multiprocessing import cpu_count
 
@@ -25,7 +26,7 @@ from ui import Ui_trimage
 VERSION = "1.0.5"
 
 
-class StartQT4(QMainWindow):
+class StartQT5(QMainWindow):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -40,7 +41,8 @@ class StartQT4(QMainWindow):
         QCoreApplication.setOrganizationDomain("trimage.org")
         QCoreApplication.setApplicationName("Trimage")
         self.settings = QSettings()
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+        if self.settings.value("geometry"):
+            self.restoreGeometry(self.settings.value("geometry"))
 
         # check if apps are installed
         if self.checkapps():
@@ -61,17 +63,12 @@ class StartQT4(QMainWindow):
         self.thread = Worker()
 
         # connect signals with slots
-        QObject.connect(self.ui.addfiles, SIGNAL("clicked()"),
-            self.file_dialog)
-        QObject.connect(self.ui.recompress, SIGNAL("clicked()"),
-            self.recompress_files)
-        QObject.connect(self.quit_shortcut, SIGNAL("activated()"),
-            qApp, SLOT('quit()'))
-        QObject.connect(self.ui.processedfiles, SIGNAL("fileDropEvent"),
-            self.file_drop)
-        QObject.connect(self.thread, SIGNAL("finished()"), self.update_table)
-        QObject.connect(self.thread, SIGNAL("terminated()"), self.update_table)
-        QObject.connect(self.thread, SIGNAL("updateUi"), self.update_table)
+        self.ui.addfiles.clicked.connect(self.file_dialog)
+        self.ui.recompress.clicked.connect(self.recompress_files)
+        self.quit_shortcut.activated.connect(self.close)
+        self.ui.processedfiles.drop_event_signal.connect(self.file_drop)
+        self.thread.finished.connect(self.update_table)
+        self.thread.update_ui_signal.connect(self.update_table)
 
         self.compressing_icon = QIcon(QPixmap(self.ui.get_image("pixmaps/compressing.gif")))
 
@@ -103,14 +100,14 @@ class StartQT4(QMainWindow):
 
         # make sure we quit after processing finished if using cli
         if options.filename or options.directory:
-            QObject.connect(self.thread, SIGNAL("finished()"), quit)
+            self.thread.finished.connect(quit)
             self.cli = True
 
         # send to correct function
         if options.filename:
-            self.file_from_cmd(options.filename.decode("utf-8"))
+            self.file_from_cmd(options.filename)
         if options.directory:
-            self.dir_from_cmd(options.directory.decode("utf-8"))
+            self.dir_from_cmd(options.directory)
 
         self.verbose = options.verbose
 
@@ -143,8 +140,9 @@ class StartQT4(QMainWindow):
     def file_dialog(self):
         """Open a file dialog and send the selected images to compress_file."""
         fd = QFileDialog(self)
-        fd.restoreState(self.settings.value("fdstate").toByteArray())
-        directory = self.settings.value("directory", QVariant("")).toString()
+        if (self.settings.value("fdstate")):
+            fd.restoreState(self.settings.value("fdstate"))
+        directory = self.settings.value("directory", QVariant(""))
         fd.setDirectory(directory)
 
         images = fd.getOpenFileNames(self,
@@ -154,9 +152,10 @@ class StartQT4(QMainWindow):
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
         self.settings.setValue("fdstate", QVariant(fd.saveState()))
+        images = images[0]
         if images:
-          self.settings.setValue("directory", QVariant(path.dirname(unicode(images[0]))))
-        self.delegator([unicode(fullpath) for fullpath in images])
+            self.settings.setValue("directory", QVariant(path.dirname(images[0])))
+            self.delegator([fullpath for fullpath in images])
 
     def recompress_files(self):
         """Send each file in the current file list to compress_file again."""
@@ -173,15 +172,15 @@ class StartQT4(QMainWindow):
         delegatorlist = []
         for fullpath in images:
             try: # recompress images already in the list
-                image = (i.image for i in self.imagelist
-                    if i.image.fullpath == fullpath).next()
+                image = next(i.image for i in self.imagelist
+                    if i.image.fullpath == fullpath)
                 if image.compressed:
                     image.reset()
                     image.recompression = True
                     delegatorlist.append(image)
             except StopIteration:
-            	if not path.isdir(fullpath):
-                    self. add_image(fullpath, delegatorlist)
+                if not path.isdir(fullpath):
+                    self.add_image(fullpath, delegatorlist)
                 else:
                     self.walk(fullpath, delegatorlist)
 
@@ -214,7 +213,7 @@ class StartQT4(QMainWindow):
                 self.systemtray.trayIcon.setToolTip("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
                 self.setWindowTitle("Trimage image compressor (" + str(len(self.imagelist)) + " files)")
         else:
-            print >> sys.stderr, u"[error] %s not a supported image file and/or not writeable" % image.fullpath
+            print("[error] {} not a supported image file and/or not writable".format(image.fullpath), file=sys.stderr)
 
     """
     UI Functions
@@ -264,22 +263,22 @@ class StartQT4(QMainWindow):
         retcode = self.safe_call("jpegoptim" + exe + " --version")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install jpegoptim")
+            print("[error] please install jpegoptim", file=sys.stderr)
 
         retcode = self.safe_call("optipng" + exe + " -v")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install optipng")
+            print("[error] please install optipng", file=sys.stderr)
 
         retcode = self.safe_call("advpng" + exe + " --version")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install advancecomp")
+            print("[error] please install advancecomp", file=sys.stderr)
 
         retcode = self.safe_call("pngcrush" + exe + " -version")
         if retcode != 0:
             status = True
-            sys.stderr.write("[error] please install pngcrush")
+            print("[error] please install pngcrush", file=sys.stderr)
         return status
 
     def safe_call(self, command):
@@ -287,7 +286,7 @@ class StartQT4(QMainWindow):
         while True:
             try:
                 return call(command, shell=True, stdout=PIPE)
-            except OSError, e:
+            except OSError as e:
                 if e.errno == errno.EINTR:
                     continue
                 else:
@@ -357,9 +356,9 @@ class ImageRow:
         self.image = image
         d = {
             'shortname': lambda i: self.statusStr() % i.shortname,
-            'oldfilesizestr': lambda i: size(i.oldfilesize, system=alternative)
+            'oldfilesizestr': lambda i: human_readable_size(i.oldfilesize)
                 if i.compressed else "",
-            'newfilesizestr': lambda i: size(i.newfilesize, system=alternative)
+            'newfilesizestr': lambda i: human_readable_size(i.newfilesize)
                 if i.compressed else "",
             'ratiostr': lambda i:
                 "%.1f%%" % (100 - (float(i.newfilesize) / i.oldfilesize * 100))
@@ -399,22 +398,15 @@ class Image:
         self.reset()
         self.fullpath = fullpath
         if path.isfile(self.fullpath) and access(self.fullpath, WRITEABLE):
-            self.filetype = determinetype(self.fullpath)
+            self.filetype = path.splitext(self.fullpath)[1][1:]
+            if self.filetype == "jpg":
+                self.filetype = "jpeg"
             if self.filetype in ["jpeg", "png"]:
                 oldfile = QFileInfo(self.fullpath)
                 self.shortname = oldfile.fileName()
                 self.oldfilesize = oldfile.size()
                 self.icon = QIcon(self.fullpath)
                 self.valid = True
-
-    #def _determinetype(self):
-    #    """ Determine the filetype of the file using imghdr. """
-    #    filetype = determinetype(self.fullpath)
-    #    if filetype in ["jpeg", "png"]:
-    #        self.filetype = filetype
-    #    else:
-    #        self.filetype = None
-    #    return self.filetype
 
     def reset(self):
         self.failed = False
@@ -431,8 +423,8 @@ class Image:
         self.compressing = True
         exe = ".exe" if (sys.platform == "win32") else ""
         runString = {
-            "jpeg": u"jpegoptim" + exe + " -f --strip-all '%(file)s'",
-            "png": u"optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
+            "jpeg": "jpegoptim" + exe + " -f --strip-all '%(file)s'",
+            "png": "optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
         }
         # Create a backup file
         copy(self.fullpath, self.fullpath + '~')
@@ -461,6 +453,8 @@ class Image:
 
 class Worker(QThread):
 
+    update_ui_signal = pyqtSignal()
+
     def __init__(self, parent=None):
         QThread.__init__(self, parent)
         self.toDisplay = Queue()
@@ -488,7 +482,7 @@ class Worker(QThread):
                                    tp._ThreadPool__jobs.empty()):
             image = self.toDisplay.get()
 
-            self.emit(SIGNAL("updateUi"))
+            self.update_ui_signal.emit()
 
             if not self.showapp and self.verbose: # we work via the commandline
                 if image.retcode == 0:
@@ -497,7 +491,7 @@ class Worker(QThread):
                         + ir['oldfilesizestr'] + ", New Size: "
                         + ir['newfilesizestr'] + ", Ratio: " + ir['ratiostr'])
                 else:
-                    print >> sys.stderr, u"[error] %s could not be compressed" % image.fullpath
+                    print("[error] {} could not be compressed".format(image.fullpath), file=sys.stderr)
 
 
 class Systray(QWidget):
@@ -511,15 +505,14 @@ class Systray(QWidget):
 
     def createActions(self):
         self.quitAction = QAction(self.tr("&Quit"), self)
-        QObject.connect(self.quitAction, SIGNAL("triggered()"),
-            qApp, SLOT("quit()"))
+        self.quitAction.triggered.connect(self.parent.close)
 
         self.addFiles = QAction(self.tr("&Add and compress"), self)
         icon = QIcon()
         icon.addPixmap(QPixmap(self.parent.ui.get_image(("pixmaps/list-add.png"))),
             QIcon.Normal, QIcon.Off)
         self.addFiles.setIcon(icon)
-        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.file_dialog)
+        self.addFiles.triggered.connect(self.parent.file_dialog)
 
         self.recompress = QAction(self.tr("&Recompress"), self)
         icon2 = QIcon()
@@ -527,10 +520,11 @@ class Systray(QWidget):
             QIcon.Normal, QIcon.Off)
         self.recompress.setIcon(icon2)
         self.recompress.setDisabled(True)
-        QObject.connect(self.addFiles, SIGNAL("triggered()"), self.parent.recompress_files)
+
+        self.addFiles.triggered.connect(self.parent.recompress_files)
 
         self.hideMain = QAction(self.tr("&Hide window"), self)
-        QObject.connect(self.hideMain, SIGNAL("triggered()"), self.parent.hide_main_window)
+        self.hideMain.triggered.connect(self.parent.hide_main_window)
 
     def createTrayIcon(self):
         self.trayIconMenu = QMenu(self)
@@ -550,7 +544,7 @@ class Systray(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    myapp = StartQT4()
+    myapp = StartQT5()
 
     if myapp.showapp:
         myapp.show()

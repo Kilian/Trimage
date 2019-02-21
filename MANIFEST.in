@@ -1,4 +1,3 @@
-include COPYING MANIFEST MANIFEST.in README trimage
+include COPYING MANIFEST MANIFEST.in README.md trimage
 recursive-include desktop *.svg *.desktop
 recursive-include src/ *.py *.png
-
