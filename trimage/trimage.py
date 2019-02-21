@@ -44,7 +44,7 @@ class StartQT5(QMainWindow):
         if not self.check_dependencies():
             quit()
 
-        #add quit shortcut
+        # add quit shortcut
         if hasattr(QKeySequence, "Quit"):
             self.quit_shortcut = QShortcut(QKeySequence(QKeySequence.Quit),
                 self)
@@ -186,7 +186,7 @@ class StartQT5(QMainWindow):
 
     def walk(self, dir, delegatorlist):
         """
-        Walks a directory, and executes a callback on each file
+        Walks a directory, and executes a callback on each file.
         """
         dir = path.abspath(dir)
         for file in [file for file in listdir(dir) if not file in [".","..",".svn",".git",".hg",".bzr",".cvs"]]:
@@ -199,7 +199,7 @@ class StartQT5(QMainWindow):
 
     def add_image(self, fullpath, delegatorlist):
         """
-        Adds an image file to the delegator list and update the tray and the title of the window
+        Adds an image file to the delegator list and update the tray and the title of the window.
         """
         image = Image(fullpath)
         if image.valid:
@@ -272,7 +272,7 @@ class StartQT5(QMainWindow):
         return status
 
     def safe_call(self, command):
-        """ cross-platform command-line check """
+        """Cross-platform command-line check."""
         while True:
             try:
                 return call(command, shell=True, stdout=PIPE)
@@ -342,7 +342,7 @@ class TriTableModel(QAbstractTableModel):
 class ImageRow:
 
     def __init__(self, image, waitingIcon=None):
-        """ Build the information visible in the table image row. """
+        """Build the information visible in the table image row."""
         self.image = image
         d = {
             'shortname': lambda i: self.statusStr() % i.shortname,
@@ -364,7 +364,7 @@ class ImageRow:
         self.d = d
 
     def statusStr(self):
-        """ Set the status message. """
+        """Set the status message."""
         if self.image.failed:
             return "ERROR: %s"
         if self.image.compressing:
@@ -383,7 +383,7 @@ class ImageRow:
 class Image:
 
     def __init__(self, fullpath):
-        """ gather image information. """
+        """Gather image information."""
         self.valid = False
         self.reset()
         self.fullpath = fullpath
@@ -405,7 +405,7 @@ class Image:
         self.recompression = False
 
     def compress(self):
-        """ Compress the image and return it to the thread. """
+        """Compress the image and return it to the thread."""
         if not self.valid:
             raise "Tried to compress invalid image (unsupported format or not \
             file)"
@@ -416,7 +416,7 @@ class Image:
             "jpeg": "jpegoptim" + exe + " -f --strip-all '%(file)s'",
             "png": "optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
         }
-        # Create a backup file
+        # create a backup file
         copy(self.fullpath, self.fullpath + '~')
         try:
             retcode = call(runString[self.filetype] % {"file": self.fullpath},
@@ -427,12 +427,12 @@ class Image:
             self.newfilesize = QFile(self.fullpath).size()
             self.compressed = True
 
-            # Checks the new file and copy the backup
+            # checks the new file and copy the backup
             if self.newfilesize >= self.oldfilesize:
                 copy(self.fullpath + '~', self.fullpath)
                 self.newfilesize = self.oldfilesize
 
-            # Removes the backup file
+            # removes the backup file
             remove(self.fullpath + '~')
         else:
             self.failed = True
