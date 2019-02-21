@@ -3,25 +3,21 @@
 import time
 import sys
 import errno
-from os import listdir
-from os import path
-from os import remove
-from os import access
-from os import W_OK as WRITEABLE
+from os import listdir, path, remove, access, W_OK
 from shutil import copy
 from subprocess import call, PIPE
 from optparse import OptionParser
+from multiprocessing import cpu_count
+from queue import Queue
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from tools import human_readable_size
-from queue import Queue
 from ThreadPool import ThreadPool
-from multiprocessing import cpu_count
-
 from ui import Ui_trimage
+
 
 VERSION = "1.0.5"
 
@@ -397,7 +393,7 @@ class Image:
         self.valid = False
         self.reset()
         self.fullpath = fullpath
-        if path.isfile(self.fullpath) and access(self.fullpath, WRITEABLE):
+        if path.isfile(self.fullpath) and access(self.fullpath, W_OK):
             self.filetype = path.splitext(self.fullpath)[1][1:]
             if self.filetype == "jpg":
                 self.filetype = "jpeg"
