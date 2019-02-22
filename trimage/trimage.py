@@ -14,15 +14,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from tools import human_readable_size
 from ThreadPool import ThreadPool
+from tools import human_readable_size
 from ui import Ui_trimage
 
 
 VERSION = "1.0.5"
 
 
-class StartQT5(QMainWindow):
+class StartQt(QMainWindow):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -53,7 +53,6 @@ class StartQT5(QMainWindow):
 
         # disable recompress
         self.ui.recompress.setEnabled(False)
-        #self.ui.recompress.hide()
 
         # make a worker thread
         self.thread = Worker()
@@ -75,11 +74,11 @@ class StartQT5(QMainWindow):
             self.systemtray = Systray(self)
 
     def commandline_options(self):
-        self.cli = False
         """Set up the command line options."""
+        self.cli = False
         parser = OptionParser(version="%prog " + VERSION,
             description="GUI front-end to compress png and jpg images via "
-                "optipng, advpng and jpegoptim")
+                "advpng, jpegoptim, optipng and pngcrush")
 
         parser.set_defaults(verbose=True)
         parser.add_option("-v", "--verbose", action="store_true",
@@ -141,14 +140,13 @@ class StartQT5(QMainWindow):
         directory = self.settings.value("directory", QVariant(""))
         fd.setDirectory(directory)
 
-        images = fd.getOpenFileNames(self,
+        images, _ = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
             directory,
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
         self.settings.setValue("fdstate", QVariant(fd.saveState()))
-        images = images[0]
         if images:
             self.settings.setValue("directory", QVariant(path.dirname(images[0])))
             self.delegator([fullpath for fullpath in images])
@@ -534,7 +532,7 @@ class Systray(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    myapp = StartQT5()
+    myapp = StartQt()
 
     if myapp.showapp:
         myapp.show()
