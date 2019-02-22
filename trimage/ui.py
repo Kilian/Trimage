@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from os import path
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from os import path
+
 
 class TrimageTableView(QTableView):
 
@@ -34,12 +36,12 @@ class TrimageTableView(QTableView):
 
 class Ui_trimage():
     def get_image(self, image):
-        """ Get the correct link to the images used in the UI """
+        """Get the correct link to the images used in the UI."""
         imagelink = path.join(path.dirname(path.dirname(path.realpath(__file__))), "trimage/" + image)
         return imagelink
 
     def setupUi(self, trimage):
-        """ Setup the entire UI """
+        """Setup the entire UI."""
         trimage.setObjectName("trimage")
         trimage.resize(600, 170)
 
@@ -147,7 +149,7 @@ class Ui_trimage():
         QMetaObject.connectSlotsByName(trimage)
 
     def retranslateUi(self, trimage):
-        """ Fill in the texts for all UI elements """
+        """Fill in the texts for all UI elements."""
         trimage.setWindowTitle(QApplication.translate("trimage",
             "Trimage image compressor", None))
         self.addfiles.setToolTip(QApplication.translate("trimage",
