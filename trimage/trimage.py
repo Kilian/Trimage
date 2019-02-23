@@ -2,10 +2,9 @@
 
 import time
 import sys
-import errno
 from os import listdir, path, remove, access, W_OK
 from shutil import copy
-from subprocess import call, PIPE
+
 from optparse import OptionParser
 from multiprocessing import cpu_count
 from queue import Queue
@@ -15,8 +14,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from ThreadPool import ThreadPool
-from tools import human_readable_size
 from ui import Ui_trimage
+from tools import *
 
 
 VERSION = "1.0.5"
@@ -41,7 +40,7 @@ class StartQt(QMainWindow):
             self.restoreGeometry(self.settings.value("geometry"))
 
         # check if dependencies are installed
-        if not self.check_dependencies():
+        if not check_dependencies():
             quit()
 
         # add quit shortcut
@@ -240,45 +239,11 @@ class StartQt(QMainWindow):
         # enable recompress button
         self.enable_recompress()
 
-    """
-    Helper functions
-    """
-
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
         if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
             self.systemtray.recompress.setEnabled(True)
-
-    def check_dependencies(self):
-        """Check if the required command line apps exist."""
-        exe = ".exe" if (sys.platform == "win32") else ""
-        status = True
-        dependencies = {
-            "jpegoptim": "--version",
-            "optipng": "-v",
-            "advpng": "--version",
-            "pngcrush": "-version"
-        }
-
-        for elt in dependencies:
-            retcode = self.safe_call(elt + exe + " " + dependencies[elt])
-            if retcode != 0:
-                status = False
-                print("[error] please install {}".format(elt), file=sys.stderr)
-
-        return status
-
-    def safe_call(self, command):
-        """Cross-platform command-line check."""
-        while True:
-            try:
-                return call(command, shell=True, stdout=PIPE)
-            except OSError as e:
-                if e.errno == errno.EINTR:
-                    continue
-                else:
-                    raise
 
     def hide_main_window(self):
         if self.isVisible():
