@@ -22,7 +22,6 @@ VERSION = "1.0.5"
 
 
 class StartQt(QMainWindow):
-
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
@@ -261,7 +260,6 @@ class StartQt(QMainWindow):
 
 
 class TriTableModel(QAbstractTableModel):
-
     def __init__(self, parent, imagelist, header, *args):
         """
         @param parent Qt parent object.
@@ -303,7 +301,6 @@ class TriTableModel(QAbstractTableModel):
 
 
 class ImageRow:
-
     def __init__(self, image, waitingIcon=None):
         """Build the information visible in the table image row."""
         self.image = image
@@ -344,7 +341,6 @@ class ImageRow:
 
 
 class Image:
-
     def __init__(self, fullpath):
         """Gather image information."""
         self.valid = False
@@ -405,7 +401,6 @@ class Image:
 
 
 class Worker(QThread):
-
     update_ui_signal = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -448,7 +443,6 @@ class Worker(QThread):
 
 
 class Systray(QWidget):
-
     def __init__(self, parent):
         QWidget.__init__(self)
         self.parent = parent
