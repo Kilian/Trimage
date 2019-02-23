@@ -347,7 +347,7 @@ class Image:
         self.reset()
         self.fullpath = fullpath
         if path.isfile(self.fullpath) and access(self.fullpath, W_OK):
-            self.filetype = path.splitext(self.fullpath)[1][1:]
+            self.filetype = path.splitext(self.fullpath)[1][1:].lower()
             if self.filetype == "jpg":
                 self.filetype = "jpeg"
             if self.filetype in ["jpeg", "png"]:
