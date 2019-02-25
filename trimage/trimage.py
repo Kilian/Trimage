@@ -2,10 +2,9 @@
 
 import time
 import sys
-import errno
 from os import listdir, path, remove, access, W_OK
 from shutil import copy
-from subprocess import call, PIPE
+
 from optparse import OptionParser
 from multiprocessing import cpu_count
 from queue import Queue
@@ -14,16 +13,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from tools import human_readable_size
 from ThreadPool import ThreadPool
 from ui import Ui_trimage
+from tools import *
 
 
 VERSION = "1.0.5"
 
 
-class StartQT5(QMainWindow):
-
+class StartQt(QMainWindow):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.ui = Ui_trimage()
@@ -41,7 +39,7 @@ class StartQT5(QMainWindow):
             self.restoreGeometry(self.settings.value("geometry"))
 
         # check if dependencies are installed
-        if not self.check_dependencies():
+        if not check_dependencies():
             quit()
 
         # add quit shortcut
@@ -53,7 +51,6 @@ class StartQT5(QMainWindow):
 
         # disable recompress
         self.ui.recompress.setEnabled(False)
-        #self.ui.recompress.hide()
 
         # make a worker thread
         self.thread = Worker()
@@ -75,11 +72,11 @@ class StartQT5(QMainWindow):
             self.systemtray = Systray(self)
 
     def commandline_options(self):
-        self.cli = False
         """Set up the command line options."""
+        self.cli = False
         parser = OptionParser(version="%prog " + VERSION,
             description="GUI front-end to compress png and jpg images via "
-                "optipng, advpng and jpegoptim")
+                "advpng, jpegoptim, optipng and pngcrush")
 
         parser.set_defaults(verbose=True)
         parser.add_option("-v", "--verbose", action="store_true",
@@ -141,14 +138,13 @@ class StartQT5(QMainWindow):
         directory = self.settings.value("directory", QVariant(""))
         fd.setDirectory(directory)
 
-        images = fd.getOpenFileNames(self,
+        images, _ = fd.getOpenFileNames(self,
             "Select one or more image files to compress",
             directory,
             # this is a fix for file dialog differentiating between cases
             "Image files (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG)")
 
         self.settings.setValue("fdstate", QVariant(fd.saveState()))
-        images = images[0]
         if images:
             self.settings.setValue("directory", QVariant(path.dirname(images[0])))
             self.delegator([fullpath for fullpath in images])
@@ -242,45 +238,11 @@ class StartQT5(QMainWindow):
         # enable recompress button
         self.enable_recompress()
 
-    """
-    Helper functions
-    """
-
     def enable_recompress(self):
         """Enable the recompress button."""
         self.ui.recompress.setEnabled(True)
         if QSystemTrayIcon.isSystemTrayAvailable() and not self.cli:
             self.systemtray.recompress.setEnabled(True)
-
-    def check_dependencies(self):
-        """Check if the required command line apps exist."""
-        exe = ".exe" if (sys.platform == "win32") else ""
-        status = True
-        dependencies = {
-            "jpegoptim": "--version",
-            "optipng": "-v",
-            "advpng": "--version",
-            "pngcrush": "-version"
-        }
-
-        for elt in dependencies:
-            retcode = self.safe_call(elt + exe + " " + dependencies[elt])
-            if retcode != 0:
-                status = False
-                print("[error] please install {}".format(elt), file=sys.stderr)
-
-        return status
-
-    def safe_call(self, command):
-        """Cross-platform command-line check."""
-        while True:
-            try:
-                return call(command, shell=True, stdout=PIPE)
-            except OSError as e:
-                if e.errno == errno.EINTR:
-                    continue
-                else:
-                    raise
 
     def hide_main_window(self):
         if self.isVisible():
@@ -298,7 +260,6 @@ class StartQT5(QMainWindow):
 
 
 class TriTableModel(QAbstractTableModel):
-
     def __init__(self, parent, imagelist, header, *args):
         """
         @param parent Qt parent object.
@@ -340,7 +301,6 @@ class TriTableModel(QAbstractTableModel):
 
 
 class ImageRow:
-
     def __init__(self, image, waitingIcon=None):
         """Build the information visible in the table image row."""
         self.image = image
@@ -381,14 +341,13 @@ class ImageRow:
 
 
 class Image:
-
     def __init__(self, fullpath):
         """Gather image information."""
         self.valid = False
         self.reset()
         self.fullpath = fullpath
         if path.isfile(self.fullpath) and access(self.fullpath, W_OK):
-            self.filetype = path.splitext(self.fullpath)[1][1:]
+            self.filetype = path.splitext(self.fullpath)[1][1:].lower()
             if self.filetype == "jpg":
                 self.filetype = "jpeg"
             if self.filetype in ["jpeg", "png"]:
@@ -442,7 +401,6 @@ class Image:
 
 
 class Worker(QThread):
-
     update_ui_signal = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -485,7 +443,6 @@ class Worker(QThread):
 
 
 class Systray(QWidget):
-
     def __init__(self, parent):
         QWidget.__init__(self)
         self.parent = parent
@@ -534,7 +491,7 @@ class Systray(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    myapp = StartQT5()
+    myapp = StartQt()
 
     if myapp.showapp:
         myapp.show()
