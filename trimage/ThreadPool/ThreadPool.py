@@ -90,7 +90,7 @@ class ThreadPool:
                 return_value = self.callable(*self.arguments) #IGNORE:W0142
             except Exception as excep: #IGNORE:W0703
                 logger = logging.getLogger("threadpool.worker")
-                logger.warning("A job in the ThreadPool raised an exception: " + excep)
+                logger.warning("A job in the ThreadPool raised an exception: ", excep)
                 #else do nothing cause we don't know what to do...
                 return
 
