@@ -4,6 +4,7 @@ import time
 import sys
 from os import listdir, path, remove, access, W_OK
 from shutil import copy
+
 from optparse import OptionParser
 from multiprocessing import cpu_count
 from queue import Queue
@@ -304,7 +305,7 @@ class ImageRow:
         """Build the information visible in the table image row."""
         self.image = image
         d = {
-            'shortname': lambda i: self.statusStr() % i.shortname,
+            'filename_w_ext': lambda i: self.statusStr() % i.filename_w_ext,
             'oldfilesizestr': lambda i: human_readable_size(i.oldfilesize)
                 if i.compressed else "",
             'newfilesizestr': lambda i: human_readable_size(i.newfilesize)
@@ -315,7 +316,7 @@ class ImageRow:
             'icon': lambda i: i.icon if i.compressed else waitingIcon,
             'fullpath': lambda i: i.fullpath, #only used by cli
         }
-        names = ['shortname', 'oldfilesizestr', 'newfilesizestr',
+        names = ['filename_w_ext', 'oldfilesizestr', 'newfilesizestr',
                       'ratiostr', 'icon']
         for i, n in enumerate(names):
             d[i] = d[n]
@@ -345,13 +346,14 @@ class Image:
         self.valid = False
         self.reset()
         self.fullpath = fullpath
+        self.filename_w_ext = path.basename(self.fullpath)
+        self.filename, self.filetype = path.splitext(self.filename_w_ext)
         if path.isfile(self.fullpath) and access(self.fullpath, W_OK):
-            self.filetype = path.splitext(self.fullpath)[1][1:].lower()
+            self.filetype = self.filetype[1:].lower()
             if self.filetype == "jpg":
                 self.filetype = "jpeg"
             if self.filetype in ["jpeg", "png"]:
                 oldfile = QFileInfo(self.fullpath)
-                self.shortname = oldfile.fileName()
                 self.oldfilesize = oldfile.size()
                 self.icon = QIcon(self.fullpath)
                 self.valid = True
@@ -375,7 +377,8 @@ class Image:
             "png": "optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
         }
         # create a backup file
-        copy(self.fullpath, self.fullpath + '~')
+        backupfullpath = '/tmp/' + self.filename_w_ext
+        copy(self.fullpath, backupfullpath)
         try:
             retcode = call(runString[self.filetype] % {"file": self.fullpath},
                 shell=True, stdout=PIPE)
@@ -387,11 +390,11 @@ class Image:
 
             # checks the new file and copy the backup
             if self.newfilesize >= self.oldfilesize:
-                copy(self.fullpath + '~', self.fullpath)
+                copy(backupfullpath, self.fullpath)
                 self.newfilesize = self.oldfilesize
 
             # removes the backup file
-            remove(self.fullpath + '~')
+            remove(backupfullpath)
         else:
             self.failed = True
         self.compressing = False
