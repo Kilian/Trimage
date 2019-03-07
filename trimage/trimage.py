@@ -4,7 +4,6 @@ import time
 import sys
 from os import listdir, path, remove, access, W_OK
 from shutil import copy
-
 from optparse import OptionParser
 from multiprocessing import cpu_count
 from queue import Queue
