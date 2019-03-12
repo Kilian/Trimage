@@ -1,3 +1,11 @@
+trimage (1.0.6-0ubuntu1) bionic; urgency=low
+
+  * Migrate to python 3 and python-qt 5
+  * fix bug with hanging thread
+  * remove hurry.filesize package
+
+ -- Kilian Valkhof <kilian@kilianvalkhof.com>  Tue, 12 Mar 2019 11:54:00 +0200
+
 trimage (1.0.5-0ubuntu1) jaunty; urgency=low
 
   * prevent images from becoming larger after recompression
@@ -70,4 +78,3 @@ trimage (1.0.0b-0ubuntu1) jaunty; urgency=low
 
   * Trimage image compressor
  -- Kilian Valkhof <help@trimage.org>   Tue, 23 Mar 2010 20:18:17 +0100
-

@@ -2,15 +2,13 @@ Source: trimage
 Section: graphics
 Priority: optional
 Maintainer: Kilian Valkhof <kilian@kilianvalkhof.com>
-Build-Depends: debhelper (>=7), python-support (>=0.8.7), python
-XS-Python-Version: >=3.4
-Standards-Version: 3.9.1
+Build-Depends: debhelper (>=7), python3
+Standards-Version: 3.9.2
 Homepage: http://trimage.org
 
 Package: trimage
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python-pyqt5 (>=5.7), optipng (>=0.6.2.1), advancecomp (>=1.15), jpegoptim (>=1.2.2), pngcrush (>=1.6.7)
-XB-Python-Version: ${python:Versions}
 Description: GUI and command-line interface to optimize image files
  Trimage is a cross-platform GUI and command-line interface to optimize image
  files via optipng, advpng, pngcrush and jpegoptim, depending on the filetype
