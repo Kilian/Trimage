@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf8">
+    <meta charset="utf8" />
     <title>Trimage (lossless) image compressor</title>
-    <link href="https://raw.github.com/Kilian/sencss/master/source/sen.css" rel="stylesheet" type="text/css">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <style>
       body {
         background:#fff
         font-size:13px;
+        font-family:sans-serif;
       }
       #wrap {
         position:relative;
@@ -67,153 +72,149 @@
     </style>
   </head>
 
-<body>
-  <div id="wrap">
-    <h1><img src="trimage-icon.png" alt=""> Trimage image compressor &ndash; 1.0.5</h1>
-    <span class="subtitle">A cross-platform tool for losslessly optimizing PNG and JPG files.</span>
-    <p class="tri">Trimage is a cross-platform GUI and command-line interface to optimize image
-    files for websites, using <a href="http://optipng.sourceforge.net/">optipng</a>, <a href="http://pmt.sourceforge.net/pngcrush/">pngcrush</a>,
-     <a href="http://advancemame.sourceforge.net/comp-readme.html">advpng</a> and
-     <a href="http://www.kokkonen.net/tjko/projects.html">jpegoptim</a>, depending on the filetype
-     (currently, PNG and JPG files are supported). It was inspired by
-     <a href="http://imageoptim.pornel.net/">imageoptim</a>. All image files are losslessy compressed
-     on the highest available compression levels, and EXIF and other metadata is removed. Trimage gives you various input functions to fit your
-     own workflow: A regular file dialog, dragging and dropping and various command line options.</p>
+  <body>
+    <div id="wrap">
+      <h1>
+        <img src="trimage-icon.png" alt="" /> Trimage image compressor &ndash;
+        1.0.5
+      </h1>
+      <span class="subtitle"
+        >A cross-platform tool for losslessly optimizing PNG and JPG files for
+        web.</span
+      >
+      <p class="tri">
+        Trimage is a cross-platform GUI and command-line interface to optimize
+        image files for websites, using
+        <a href="http://optipng.sourceforge.net/">optipng</a>,
+        <a href="http://pmt.sourceforge.net/pngcrush/">pngcrush</a>,
+        <a href="http://advancemame.sourceforge.net/comp-readme.html">advpng</a>
+        and <a href="http://www.kokkonen.net/tjko/projects.html">jpegoptim</a>,
+        depending on the filetype (currently, PNG and JPG files are supported).
+        It was inspired by
+        <a href="http://imageoptim.pornel.net/">imageoptim</a>. All image files
+        are losslessy compressed on the highest available compression levels,
+        and EXIF and other metadata is removed. Trimage gives you various input
+        functions to fit your own workflow: A regular file dialog, dragging and
+        dropping and various command line options.
+      </p>
 
-    <h2>Trimage in action</h2>
-    <img src="image.png" alt="a screenshot of Trimage">
+      <h2>Trimage in action</h2>
+      <img src="image.png" alt="a screenshot of Trimage" />
 
-    <div class="block2">
-      <h2>Download</h2>
+      <div class="block2">
+        <h2>Download</h2>
 
-      <h3><img src="debian.png" alt=""> Debian (sid)</h3>
-      <p>Trimage is available in the official Debian Sid repositories:</p>
-      <ol>
-        <li><code>sudo apt-get install trimage</code></li>
-      </ol>
+        <h3><img src="debian.png" alt="" /> Debian (sid)</h3>
+        <p>Trimage is available in the official Debian Sid repositories:</p>
+        <ol>
+          <li><code>sudo apt-get install trimage</code></li>
+        </ol>
 
-      <h3><img src="ubuntu.png" alt=""> Ubuntu</h3>
-      <p>If you're on Natty (11.04), Trimage is available in the official repositories:</p>
-      <a href="https://apps.ubuntu.com/cat/applications/trimage/"><img src="http://developer.ubuntu.com/wp-content/uploads/2012/06/downloadonubuntubutton.png"  title="Download for Ubuntu" alt="Download for Ubuntu button" width="122" height="49" /></a>
-      <p>Alternatively:</p>
-      <ol>
-        <li><code>sudo apt-get install trimage</code></li>
-      </ol>
-      <p>If you're on Maveric (10.10), Karmic (9.10) or Lucid (10.04), type the following commands into your console:</p>
-      <ol>
-        <li><code>sudo add-apt-repository ppa:kilian/trimage</code></li>
-        <li><code>sudo apt-get update</code></li>
-        <li><code>sudo apt-get install trimage</code></li>
-      </ol>
-      <p>If you are still on Jaunty, read <a href="https://launchpad.net/+help/soyuz/ppa-sources-list.html">this guide</a> on installing PPA's.</p>
+        <h3><img src="ubuntu.png" alt="" /> Ubuntu</h3>
+        <p>Trimage is available in the official repositories:</p>
+        <a href="https://apps.ubuntu.com/cat/applications/trimage/"
+          >Download for Ubuntu</a
+        >
+        <p>Alternatively:</p>
+        <ol>
+          <li><code>sudo apt-get install trimage</code></li>
+        </ol>
 
-      <h3><img src="arch.png" alt=""> Arch Linux</h3>
-      Trimage is available from AUR, to install, type:
-      <ol>
-        <li><code>yaourt -S trimage-git</code> </li>
-      </ol>
-      <h3><img src="mandriva.png" alt=""> Mandriva Linux 2010.1</h3>
-      Trimage is available Via two RPMs provided by <a href="http://mib.pianetalinux.org/mib/quick/basic-rpms/mib-rpms/918-trimage-105">Mandriva international backports</a>
-      <ol>
-        <li><a href="http://mib.pianetalinux.org/2010.1/32/basic/trimage-1.0.5-69mib2010.1.noarch.rpm">Trimage 1.0.5 32bit</a></li>
-        <li><a href="http://mib.pianetalinux.org/2010.1/64/basic/trimage-1.0.5-69mib2010.1.noarch.rpm">Trimage 1.0.5 63bit</a></li>
-      </ol>
-      <h3><img src="opensuse.png" alt=""> OpenSuse</h3>
-      <p>Trimage is available for a variety of versions: 11.3, 11.4 and Factory and SLE. You can find them on <a href="http://software.opensuse.org/search?q=Trimage&include_home=true">software.opensuse.org</a>.</p>
+        <h3><img src="arch.png" alt="" /> Arch Linux</h3>
+        Trimage is available from AUR, to install, type:
+        <ol>
+          <li><code>yaourt -S trimage</code></li>
+        </ol>
+        <h3><img src="linux.png" alt="" /> Other *nix</h3>
+        <ol>
+          <li>Download the source via git or bzr (see repositories)</li>
+          <li>
+            Make sure you have all the requirements installed (see requirements)
+          </li>
+          <li>Enter <code>python setup.py install</code> into your console</li>
+          <li>Launch by executing <code>trimage</code></li>
+        </ol>
+        <p>
+          Help us make .snaps, .appimages etc:
+          <a href="mailto:help@trimage.org">contact us</a> or
+          <a href="https://github.com/kilian/trimage/pulls"
+            >open a pull request</a
+          >
+        </p>
+        <!--
+          <h3><img src="mac.png" alt=""> Mac</h3>
+          <p>Trimage should be able to run on Mac. <a href="mailto:help@trimage.org">Help us with this</a></p>
+          <h3><img src="windows.png" alt=""> Windows</h3>
+          <p>Trimage should be able to run on Windows. <a href="mailto:help@trimage.org">Help us with this</a></p>
+        -->
+      </div>
+      <div class="block">
+        <h2>Repositories</h2>
+        <p>
+          <strong>Git:</strong> Trimage is primarily developed on
+          <a href="http://github.com/Kilian/Trimage">GitHub</a>.
+        </p>
+        <p>
+          <strong>Bzr:</strong> Trimage is also available on
+          <a href="https://launchpad.net/trimage">Launchpad</a>.
+        </p>
+        <p>Trimage is MIT licenced. We encourage contributions via GitHub.</p>
+      </div>
+      <div class="block">
+        <h2>Thanks</h2>
+        <p>The following people helped develop Trimage:</p>
+        <ul>
+          <li><a href="https://hugo-posnic.fr/">Hugo Posnic</a></li>
+          <li>Neil Wallace</li>
+          <li>Jeroen Goudsmit</li>
+          <li>Tarnay Kálmán</li>
+          <li>Thomas Lété</li>
+          <li>Kyrill Detinov</li>
+        </ul>
+      </div>
+      <div class="block">
+        <h2>Requirements</h2>
+        <ul>
+          <li>python <em>3</em></li>
+          <li>python-qt5 <em>5</em></li>
+          <li>optipng <em>0.6.2.1</em></li>
+          <li>pngcrush <em>1.6.7</em></li>
+          <li>advancecomp <em>1.15</em></li>
+          <li>jpegoptim <em>1.2.2</em></li>
+        </ul>
+      </div>
 
-      <h3><img src="linux.png" alt=""> Other *nix</h3>
-      <ol>
-        <li>Download the source via git or bzr (see repositories)</li>
-        <li>Make sure you have all the requirements installed (see requirements)</li>
-        <li>Enter <code>python setup.py install</code> into your console</li>
-        <li>Launch by executing <code>trimage</code></li>
-      </ol>
-      <p>Help us make .deb's, rpms's etc: <a href="mailto:help@trimage.org">contact us</a></p>
-      <h3><img src="mac.png" alt=""> Mac</h3>
-      <p>Trimage should be able to run on Mac. <a href="mailto:help@trimage.org">Help us with this</a></p>
-      <h3><img src="windows.png" alt=""> Windows</h3>
-      <p>Trimage should be able to run on Windows. <a href="mailto:help@trimage.org">Help us with this</a></p>
+      <div class="block2">
+        <h2>Command line options</h2>
+        <dl>
+          <dt>--version</dt>
+          <dd>show program's version number and exit</dd>
+          <dt>-h, --help</dt>
+          <dd>show this help message and exit</dd>
+          <dt>-v, --verbose</dt>
+          <dd>Verbose mode (default)</dd>
+          <dt>-q, --quiet</dt>
+          <dd>Quiet mode</dd>
+          <dt>-f FILENAME, --file=FILENAME</dt>
+          <dd>compresses image and exit</dd>
+          <dt>-d DIRECTORY, --directory=DIRECTORY</dt>
+          <dd>compresses images in directory and exit</dd>
+        </dl>
+      </div>
+      <div class="block">
+        <h2>Help</h2>
+        <p>
+          Please use <a href="https://github.com/Kilian/Trimage">GitHub</a> for
+          reporting bugs and email
+          <a href="mailto:help@trimage.org">help@trimage.org</a> for general
+          questions (though we are not a helpdesk!)
+        </p>
+      </div>
+      <p class="footer">
+        Trimage is &copy; 2010&ndash;2019
+        <a href="http://kilianvalkhof.com">Kilian Valkhof</a>,
+        <a href="http://paulchaplin.com">Paul Chaplin</a>
+      </p>
     </div>
-    <div class="block">
-      <h2>Repositories</h2>
-      <p><strong>Git:</strong> Trimage is primarily developed on <a href="http://github.com/Kilian/Trimage">GitHub</a>.</p>
-      <p><strong>Bzr:</strong> Trimage is also available on <a href="https://launchpad.net/trimage">Launchpad</a>.</p>
-      <p>Trimage is MIT licenced. We encourage contributions via GitHub.</p>
-    </div>
-    <div class="block">
-      <h2>Thanks</h2>
-      <p>The following people helped develop Trimage:</p>
-      <ul>
-        <li>Neil Wallace</li>
-        <li>Jeroen Goudsmit</li>
-        <li>Tarnay Kálmán</li>
-        <li>Thomas Lété</li>
-        <li>Kyrill Detinov</li>
-      </ul>
-    </div>
-    <div class="block">
-      <h2>Donate</h2>
-      <p>If you enjoy using Trimage, please buy us a coffee or a beer :)</p>
-      <a href='http://www.pledgie.com/campaigns/9607'><img alt='Click here to lend your support to: Trimage and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/9607.png?skin_name=chrome' border='0' /></a>
-      <script type="text/javascript">
-	      var flattr_url = 'http://trimage.org';
-	      var flattr_btn='compact';
-      </script>
-      <script src="http://api.flattr.com/button/load.js" type="text/javascript"></script>
-    </div>
-    <div class="block">
-      <h2>Requirements</h2>
-      <ul>
-        <li>python <em>2.6</em></li>
-        <li>python-qt4 <em>4.4</em></li>
-        <li>optipng <em>0.6.2.1</em></li>
-        <li>pngcrush <em>1.6.7</em></li>
-        <li>advancecomp <em>1.15</em></li>
-        <li>jpegoptim <em>1.2.2</em></li>
-      </ul>
-    </div>
-
-    <div class="block2">
-      <h2>Command line options</h2>
-      <dl>
-        <dt>--version</dt>
-        <dd>show program's version number and exit</dd>
-        <dt>-h, --help</dt>
-        <dd>show this help message and exit</dd>
-        <dt>-v, --verbose</dt>
-        <dd>Verbose mode (default)</dd>
-        <dt>-q, --quiet</dt>
-        <dd>Quiet mode</dd>
-        <dt>-f FILENAME, --file=FILENAME</dt>
-        <dd>compresses image and exit</dd>
-        <dt>-d DIRECTORY, --directory=DIRECTORY</dt>
-        <dd>compresses images in directory and exit</dd>
-       </dl>
-    </div>
-    <div class="block">
-      <h2>Help</h2>
-      <p>Please use <a href="http://github.com/Kilian/Trimage">GitHub</a> for reporting bugs and email <a href="mailto:help@trimage.org">help@trimage.org</a> for general questions (though we are not a helpdesk!)</p>
-    </div>
-
-    <h2>Planned features</h2>
-    <p>Version 1.1.0 final:</p>
-    <ul>
-      <li>Expand command line options</li>
-      <li>General refactoring</li>
-    </ul>
-    <p>Version 1.1.1 final:</p>
-    <ul>
-      <li>Use multiprocessing instead of threads</li>
-    </ul>
-
-    <p>Beyond that</p>
-    <ul>
-      <li>Deletion of rows in the table view</li>
-      <li>Integration with online services such as punypng</li>
-      <li><a href="mailto:help@trimage.org">Suggest something</a></li>
-    </ul>
-<p class="footer">Trimage is &copy; 2010 <a href="http://kilianvalkhof.com">Kilian Valkhof</a>, <a href="http://paulchaplin.com">Paul Chaplin</a>
-  </div>
   </body>
 </html>
-
