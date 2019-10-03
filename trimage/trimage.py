@@ -31,9 +31,10 @@ class StartQt(QMainWindow):
         self.verbose = True
         self.imagelist = []
 
-        QCoreApplication.setOrganizationName("Kilian Valkhof")
+        QCoreApplication.setOrganizationName("trimage.org")
         QCoreApplication.setOrganizationDomain("trimage.org")
         QCoreApplication.setApplicationName("Trimage")
+        QGuiApplication.setDesktopFileName("org.trimage.Trimage")
         self.settings = QSettings()
         if self.settings.value("geometry"):
             self.restoreGeometry(self.settings.value("geometry"))

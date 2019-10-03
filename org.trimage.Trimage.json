@@ -1,0 +1,123 @@
+{
+    "id": "org.trimage.Trimage",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "5.13",
+    "sdk": "org.kde.Sdk",
+    "command": "trimage",
+    "finish-args": [
+        "--share=network",
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--device=dri"
+    ],
+    "modules": [
+        {
+            "name" : "pyqt5",
+            "config-opts" : [
+                "--disable-static",
+                "--enable-x11"
+            ],
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.13.1/PyQt5_gpl-5.13.1.tar.gz",
+                    "sha256" : "54b7f456341b89eeb3930e786837762ea67f235e886512496c4152ebe106d4af"
+                },
+                {
+                    "type": "script",
+                    "commands": [
+                        "python3 configure.py --assume-shared --confirm-license --no-designer-plugin --no-qml-plugin --sysroot=/app --qsci-api --qsci-api-destdir=/app/qsci --sipdir=/app/share/sip --sip=/app/bin/sip --sip-incdir=/app/include QMAKE_CFLAGS_RELEASE='-I/usr/include/python3.7m/' QMAKE_CXXFLAGS_RELEASE='-I/usr/include/python3.7m/'"
+                    ],
+                    "dest-filename": "configure"
+                }
+            ],
+            "modules" : [
+                {
+                    "name" : "sip",
+                    "sources" : [
+                        {
+                            "type" : "archive",
+                            "url" : "https://www.riverbankcomputing.com/static/Downloads/sip/4.19.19/sip-4.19.19.tar.gz",
+                            "sha256" : "5436b61a78f48c7e8078e93a6b59453ad33780f80c644e5f3af39f94be1ede44"
+                        },
+                        {
+                            "type": "script",
+                            "commands": [
+                                "python3 configure.py --sip-module PyQt5.sip -b ${FLATPAK_DEST}/bin -d ${FLATPAK_DEST}/lib/python3.7/site-packages -e ${FLATPAK_DEST}/include -v ${FLATPAK_DEST}/share/sip --stubsdir=${FLATPAK_DEST}/lib/python3.7/site-packages"
+                            ],
+                            "dest-filename": "configure"
+                        }
+                    ],
+                    "cleanup" : [
+                        "/bin",
+                        "/include"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "jpegoptim",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/tjko/jpegoptim/archive/RELEASE.1.4.6.tar.gz",
+                    "sha256": "c44dcfac0a113c3bec13d0fc60faf57a0f9a31f88473ccad33ecdf210b4c0c52"
+                }
+            ]
+        },
+        {
+            "name": "optipng",
+            "build-options": {
+                "config-opts": [
+                    "--with-system-libs"
+                ]
+            },
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://downloads.sourceforge.net/project/optipng/OptiPNG/optipng-0.7.7/optipng-0.7.7.tar.gz",
+                    "sha256": "4f32f233cef870b3f95d3ad6428bfe4224ef34908f1b42b0badf858216654452"
+                }
+            ]
+        },
+        {
+            "name": "pngcrush",
+            "buildsystem": "simple",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://sourceforge.net/projects/pmt/files/pngcrush/1.8.13/pngcrush-1.8.13.tar.gz",
+                    "sha256": "bac37d4b2be88d7e88aadcde9661beb3a513a90e7d26784f906c1e2da8ba332e"
+                }
+            ],
+            "build-commands": [
+                "make -f Makefile",
+                "install -D pngcrush /app/bin/pngcrush"
+            ]
+        },
+        {
+            "name": "advpng",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/amadvance/advancecomp/releases/download/v2.1/advancecomp-2.1.tar.gz",
+                    "sha256": "3ac0875e86a8517011976f04107186d5c60d434954078bc502ee731480933eb8"
+                }
+            ]
+        },
+        {
+            "name": "trimage",
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --prefix=/app --no-deps ."
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "."
+                }
+            ]
+        }
+    ]
+}
