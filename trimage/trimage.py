@@ -371,10 +371,9 @@ class Image:
             file)"
         self.reset()
         self.compressing = True
-        exe = ".exe" if (sys.platform == "win32") else ""
         runString = {
-            "jpeg": "jpegoptim" + exe + " -f --strip-all '%(file)s'",
-            "png": "optipng" + exe + " -force -o7 '%(file)s'&&advpng" + exe + " -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
+            "jpeg": "jpegoptim -f --strip-all '%(file)s'",
+            "png": "optipng -force -o7 '%(file)s'&&advpng -z4 '%(file)s' && pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time '%(file)s' '%(file)s.bak' && mv '%(file)s.bak' '%(file)s'"
         }
         # create a backup file
         backupfullpath = '/tmp/' + self.filename_w_ext
