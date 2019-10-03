@@ -114,8 +114,8 @@
             ],
             "sources": [
                 {
-                    "type": "dir",
-                    "path": "."
+                    "type": "git",
+                    "path": "https://github.com/Kilian/Trimage"
                 }
             ]
         }
