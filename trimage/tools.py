@@ -7,7 +7,6 @@ from subprocess import call, PIPE
 
 def check_dependencies():
     """Check if the required command line apps exist."""
-    exe = ".exe" if (sys.platform == "win32") else ""
     status = True
     dependencies = {
         "jpegoptim": "--version",
@@ -17,7 +16,7 @@ def check_dependencies():
     }
 
     for elt in dependencies:
-        retcode = safe_call(elt + exe + " " + dependencies[elt])
+        retcode = safe_call(elt + " " + dependencies[elt])
         if retcode != 0:
             status = False
             print("[error] please install {}".format(elt), file=sys.stderr)
