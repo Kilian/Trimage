@@ -7,4 +7,4 @@ Type=Application
 Exec=trimage
 Categories=Application;Qt;Graphics;
 StartupNotify=true
-Keywords=compression,compressor,images,jpg,jpeg,png,web
+Keywords=compression;compressor;images;jpg;jpeg;png;web;
