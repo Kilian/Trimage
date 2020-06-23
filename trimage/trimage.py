@@ -304,6 +304,7 @@ class ImageRow:
     def __init__(self, image, waitingIcon=None):
         """Build the information visible in the table image row."""
         self.image = image
+
         d = {
             'filename_w_ext': lambda i: self.statusStr() % i.filename_w_ext,
             'oldfilesizestr': lambda i: human_readable_size(i.oldfilesize)
@@ -331,9 +332,9 @@ class ImageRow:
             message = "Compressing %s..."
             return message
         if not self.image.compressed and self.image.recompression:
-            return "Queued for recompression..."
+            return "Queued for recompression %s..."
         if not self.image.compressed:
-            return "Queued..."
+            return "Queued %s..."
         return "%s"
 
     def __getitem__(self, key):
