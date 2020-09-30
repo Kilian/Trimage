@@ -30,9 +30,6 @@ class ThreadPoolMixIn:
     def __init__(self, threadpool=None):
         if (threadpool == None):
             threadpool = ThreadPool()
-            self.__private_threadpool = True
-        else:
-            self.__private_threadpool = False
 
         self.__threadpool = threadpool
 
@@ -51,10 +48,6 @@ class ThreadPoolMixIn:
 
     def process_request(self, request, client_address):
         self.__threadpool.add_job(self.process_request_thread, [request, client_address])
-
-    def shutdown(self):
-        if (self.__private_threadpool): self.__threadpool.shutdown()
-
 
 class AddJobException(Exception):
     '''
