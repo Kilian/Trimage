@@ -409,9 +409,6 @@ class Worker(QThread):
         self.toDisplay = Queue()
         self.threadpool = ThreadPool(max_workers=cpu_count())
 
-    def __del__(self):
-        self.threadpool.shutdown()
-
     def compress_file(self, images, showapp, verbose, imagelist):
         """Start the worker thread."""
         for image in images:
