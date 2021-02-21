@@ -451,7 +451,7 @@ class Systray(QWidget):
 
     def createActions(self):
         self.quitAction = QAction(self.tr("&Quit"), self)
-        self.quitAction.triggered.connect(self.parent.close)
+        self.quitAction.triggered.connect(QCoreApplication.quit)
 
         self.addFiles = QAction(self.tr("&Add and compress"), self)
         icon = QIcon()
@@ -483,6 +483,7 @@ class Systray(QWidget):
 
         if QSystemTrayIcon.isSystemTrayAvailable():
             self.trayIcon = QSystemTrayIcon(self)
+            self.trayIcon.activated.connect(lambda reason: self.hideMain.activate(QAction.Trigger))
             self.trayIcon.setContextMenu(self.trayIconMenu)
             self.trayIcon.setToolTip("Trimage image compressor")
             self.trayIcon.setIcon(QIcon(self.parent.ui.get_image("pixmaps/trimage-icon.png")))
