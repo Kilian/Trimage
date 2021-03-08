@@ -306,7 +306,7 @@ class ImageRow:
         self.image = image
 
         d = {
-            'filename_w_ext': lambda i: self.statusStr() % i.filename_w_ext,
+            'filename_w_ext': lambda i: self.statusStr().format(i.filename_w_ext),
             'oldfilesizestr': lambda i: human_readable_size(i.oldfilesize)
                 if i.compressed else "",
             'newfilesizestr': lambda i: human_readable_size(i.newfilesize)
@@ -335,7 +335,7 @@ class ImageRow:
             return "Queued for recompression %s..."
         if not self.image.compressed:
             return "Queued %s..."
-        return "%s"
+        return "{0}"
 
     def __getitem__(self, key):
         return self.d[key](self.image)
