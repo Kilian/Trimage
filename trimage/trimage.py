@@ -327,14 +327,14 @@ class ImageRow:
     def statusStr(self):
         """Set the status message."""
         if self.image.failed:
-            return "ERROR: %s"
+            return "ERROR: {0}"
         if self.image.compressing:
-            message = "Compressing %s..."
+            message = "Compressing {0}..."
             return message
         if not self.image.compressed and self.image.recompression:
-            return "Queued for recompression %s..."
+            return "Queued for recompression {0}..."
         if not self.image.compressed:
-            return "Queued %s..."
+            return "Queued {0}..."
         return "{0}"
 
     def __getitem__(self, key):
